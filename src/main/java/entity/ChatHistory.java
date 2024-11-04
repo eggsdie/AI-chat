@@ -2,11 +2,11 @@ package entity;
 
 import java.util.ArrayList;
 
-public class Chat {
+public class ChatHistory {
     private final ArrayList<Message> chatLog = new ArrayList<Message>();
     private ArrayList<User> users = new ArrayList<User>();
 
-    public Chat(ArrayList<User> users) {
+    public ChatHistory(ArrayList<User> users) {
         this.users = users;
     }
 
