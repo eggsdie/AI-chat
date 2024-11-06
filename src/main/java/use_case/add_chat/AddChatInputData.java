@@ -1,17 +1,23 @@
 package use_case.add_chat;
 
+import java.util.List;
+
 import entity.User;
 
-import java.util.ArrayList;
-
 public class AddChatInputData {
-    private ArrayList<User> users = new ArrayList<User>();
+    private List<User> users;
+    private String chatName;
 
-    public AddChatInputData(ArrayList<User> users) {
+    public AddChatInputData(List<User> users, String chatName) {
         this.users = users;
+        this.chatName = chatName;
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return users;
+    }
+
+    public String getChatName() {
+        return chatName;
     }
 }
