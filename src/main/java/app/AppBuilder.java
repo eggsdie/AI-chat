@@ -5,10 +5,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.InMemoryFriendRepository;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.add_friend.AddFriendController;
+import interface_adapter.add_friend.AddFriendPresenter;
+import interface_adapter.add_friend.AddFriendViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -20,6 +24,9 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import use_case.add_friend.AddFriendInputBoundary;
+import use_case.add_friend.AddFriendInteractor;
+import use_case.add_friend.AddFriendOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
@@ -32,10 +39,7 @@ import use_case.logout.LogoutOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
-import view.LoggedInView;
-import view.LoginView;
-import view.SignupView;
-import view.ViewManager;
+import view.*;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -49,6 +53,7 @@ public class AppBuilder {
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final InMemoryFriendRepository friendRepository = new InMemoryFriendRepository(userDataAccessObject);
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -56,6 +61,8 @@ public class AppBuilder {
     private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
+    private AddFriendViewModel addFriendViewModel;
+    private AddFriendView addFriendView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -96,6 +103,17 @@ public class AppBuilder {
         loggedInViewModel = new LoggedInViewModel();
         loggedInView = new LoggedInView(loggedInViewModel);
         cardPanel.add(loggedInView, loggedInView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the AddFriend View to the application.
+     * @return this builder
+     */
+    public AppBuilder addAddFriendView() {
+        addFriendViewModel = new AddFriendViewModel();
+        addFriendView = new AddFriendView(addFriendViewModel);
+        cardPanel.add(addFriendView, addFriendView.getViewName());
         return this;
     }
 
@@ -149,6 +167,22 @@ public class AppBuilder {
 
         // Assign the logout controller to the loggedIn view
         loggedInView.setLogoutController(logoutController);
+        return this;
+    }
+
+    /**
+     * Adds the AddFriend Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addAddFriendUseCase() {
+        final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(viewManagerModel,
+                addFriendViewModel);
+
+        final AddFriendInputBoundary addFriendInteractor =
+                new AddFriendInteractor(friendRepository, addFriendOutputBoundary);
+
+        final AddFriendController addFriendController = new AddFriendController(addFriendInteractor);
+        loggedInView.setAddFriendController(addFriendController);
         return this;
     }
 
