@@ -1,26 +1,26 @@
 /*
 package entity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Chat {
-    private final ArrayList<Message> chatLog = new ArrayList<Message>();
-    private ArrayList<User> users = new ArrayList<User>();
+//    private final List<Message> chatLog = new List<Message>();
+    private final Friend friend;
 
-    public Chat(ArrayList<User> users) {
-        this.users = users;
+    public Chat(Friend friend) {
+        this.friend = friend;
     }
 
-    public void addMessage(Message message) {
-        chatLog.add(message);
-    }
+//    public void addMessage(Message message) {
+//        chatLog.add(message);
+//    }
+//
+//    public List<Message> getMessages() {
+//        return chatLog;
+//    }
 
-    public ArrayList<Message> getMessages() {
-        return chatLog;
-    }
-
-    public ArrayList<User> getUsers() {
-        return users;
+    public Friend getFriend() {
+        return friend;
     }
 }
  */
