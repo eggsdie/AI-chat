@@ -1,14 +1,12 @@
-package use_case.add_chat;
+package use_case.add_friend;
 
-import use_case.signup.SignupOutputData;
-
-public interface AddChatOutputBoundary {
+public interface AddFriendOutputBoundary {
 
     /**
      * Prepares the success view for the AddChat Use Case.
      * @param outputData the output data
      */
-    void prepareSuccessView(AddChatOutputData outputData);
+    void prepareSuccessView(AddFriendOutputData outputData);
 
     /**
      * Prepares the failure view for the AddChat Use Case.

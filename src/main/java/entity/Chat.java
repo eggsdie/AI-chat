@@ -3,24 +3,22 @@ package entity;
 import java.util.List;
 
 public class Chat {
-    private final List<Message> chatLog = new List<Message>();
-    private final List<User> users;
-    private final String name;
+//    private final List<Message> chatLog = new List<Message>();
+    private final Friend friend;
 
-    public Chat(List<User> users, String name) {
-        this.users = users;
-        this.name = name;
+    public Chat(Friend friend) {
+        this.friend = friend;
     }
 
-    public void addMessage(Message message) {
-        chatLog.add(message);
-    }
+//    public void addMessage(Message message) {
+//        chatLog.add(message);
+//    }
+//
+//    public List<Message> getMessages() {
+//        return chatLog;
+//    }
 
-    public List<Message> getMessages() {
-        return chatLog;
-    }
-
-    public List<User> getUsers() {
-        return users;
+    public Friend getFriend() {
+        return friend;
     }
 }

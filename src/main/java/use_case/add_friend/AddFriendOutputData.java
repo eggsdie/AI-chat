@@ -1,10 +1,10 @@
-package use_case.add_chat;
+package use_case.add_friend;
 
-public class AddChatOutputData {
+public class AddFriendOutputData {
 
     private final boolean useCaseFailed;
 
-    public AddChatOutputData(boolean useCaseFailed) {
+    public AddFriendOutputData(boolean useCaseFailed) {
         this.useCaseFailed = useCaseFailed;
     }
 
