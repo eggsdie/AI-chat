@@ -6,10 +6,12 @@ package entity;
 public class CommonUser implements User {
 
     private final String name;
+    private final String email;
     private final String password;
 
-    public CommonUser(String name, String password) {
+    public CommonUser(String name, String email, String password) {
         this.name = name;
+        this.email = email;
         this.password = password;
     }
 
@@ -19,8 +21,12 @@ public class CommonUser implements User {
     }
 
     @Override
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
-
 }
