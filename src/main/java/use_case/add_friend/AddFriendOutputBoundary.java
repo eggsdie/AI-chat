@@ -17,5 +17,5 @@ public interface AddFriendOutputBoundary {
     /**
      * Switches to the InChat View.
      */
-    void switchToInChatView();
+    void switchToLoggedInView();
 }

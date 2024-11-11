@@ -4,4 +4,5 @@ public interface AddFriendInputBoundary {
 
     void execute(AddFriendInputData addChatInputData);
 
+    void switchToLoggedInView();
 }

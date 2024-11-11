@@ -9,5 +9,10 @@ public interface AddFriendUserDataAccessInterface {
 
     boolean friendExists(String username);
 
+    boolean chatWithYourself(String yourUsername, String username);
+
     void saveFriend(Friend friend, Chat chat);
+
+    String getActiveUser();
+
 }

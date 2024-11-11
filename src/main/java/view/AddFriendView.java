@@ -1,8 +1,7 @@
 package view;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,32 +10,43 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.add_friend.AddFriendController;
 import interface_adapter.add_friend.AddFriendState;
 import interface_adapter.add_friend.AddFriendViewModel;
+import interface_adapter.login.LoginController;
 
-public class AddFriendView extends JPanel {
+public class AddFriendView extends JPanel implements PropertyChangeListener {
 
     private final String viewName = "add friend";
-    private AddFriendViewModel addFriendViewModel;
+    private final AddFriendViewModel addFriendViewModel;
     private AddFriendController addFriendController;
-    private JTextField userSearchField;
-    private JButton createNewChatButton;
-    private JButton backButton;
+    private LoginController loginController;
+
+    private final JTextField userSearchField = new JTextField(15);
+    private final JButton createNewChatButton;
+    private final JButton backButton;
 
     public AddFriendView(AddFriendViewModel addFriendViewModel) {
         this.addFriendViewModel = addFriendViewModel;
+        this.addFriendViewModel.addPropertyChangeListener(this);
+
+        final LabelTextPanel userSearch = new LabelTextPanel(
+                new JLabel("Search for user: "), userSearchField);
+
+        createNewChatButton = new JButton("Create new chat");
 
         createNewChatButton.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(createNewChatButton)) {
-                            final AddFriendState currentState = addFriendViewModel.getState();
+                evt -> {
+                    if (evt.getSource().equals(createNewChatButton)) {
+                        final AddFriendState currentState = addFriendViewModel.getState();
 
-                            addFriendController.execute(
-                                    currentState.getUsername()
-                            );
-                        }
+                        addFriendController.execute(
+                                currentState.getUsername()
+                        );
                     }
                 }
         );
+
+        backButton = new JButton("Back");
+
+        backButton.addActionListener(evt -> addFriendController.switchToLoggedInView());
 
         userSearchField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -62,18 +72,23 @@ public class AddFriendView extends JPanel {
             }
         });
 
-        // backButton.addActionListener() to be implemented when chat list view ready
+        final JPanel buttons = new JPanel();
+        buttons.add(backButton);
+        buttons.add(createNewChatButton);
 
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.add(Box.createVerticalStrut(45));
+        this.add(userSearch);
+        this.add(buttons);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
         final AddFriendState state = (AddFriendState) evt.getNewValue();
-        if (state.getFriendAlreadyAddedError() != null) {
-            JOptionPane.showMessageDialog(this, state.getFriendAlreadyAddedError());
+
+        if (state.getAddFriendError() != null) {
+            JOptionPane.showMessageDialog(this, state.getAddFriendError());
         }
-        if (state.getUserDoesNotExistError() != null) {
-            JOptionPane.showMessageDialog(this, state.getFriendAlreadyAddedError());
-        }
+
     }
 
     public String getViewName() {
@@ -83,5 +98,4 @@ public class AddFriendView extends JPanel {
     public void setAddFriendController(AddFriendController addFriendController) {
         this.addFriendController = addFriendController;
     }
-
 }
