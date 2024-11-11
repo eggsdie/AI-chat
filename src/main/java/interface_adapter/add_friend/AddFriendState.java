@@ -5,6 +5,16 @@ public class AddFriendState {
     private String username = "";
     private String userDoesNotExistError;
     private String friendAlreadyAddedError;
+    private String chatWithYourselfError;
+    private String addFriendError;
+
+    public String getAddFriendError() {
+        return addFriendError;
+    }
+
+    public void setAddFriendError(String addFriendError) {
+        this.addFriendError = addFriendError;
+    }
 
     public String getUsername() {
         return username;
@@ -18,6 +28,10 @@ public class AddFriendState {
         return friendAlreadyAddedError;
     }
 
+    public String getChatWithYourselfError() {
+        return chatWithYourselfError;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -28,6 +42,10 @@ public class AddFriendState {
 
     public void setFriendAlreadyAddedError(String friendAlreadyAddedError) {
         this.friendAlreadyAddedError = friendAlreadyAddedError;
+    }
+
+    public void setChatWithYourselfError(String chatWithYourselfError) {
+        this.chatWithYourselfError = chatWithYourselfError;
     }
 
     @Override

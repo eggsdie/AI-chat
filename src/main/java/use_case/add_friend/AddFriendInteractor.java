@@ -6,20 +6,24 @@ import entity.Friend;
 public class AddFriendInteractor implements AddFriendInputBoundary {
 
     private final AddFriendUserDataAccessInterface addFriendUserDataAccessInterface;
-    private final AddFriendOutputBoundary friendPresenter;
+    private final AddFriendOutputBoundary userPresenter;
 
     public AddFriendInteractor(AddFriendUserDataAccessInterface addFriendUserDataAccessInterface,
                                AddFriendOutputBoundary addFriendOutputBoundary) {
         this.addFriendUserDataAccessInterface = addFriendUserDataAccessInterface;
-        this.friendPresenter = addFriendOutputBoundary;
+        this.userPresenter = addFriendOutputBoundary;
     }
 
     public void execute(AddFriendInputData addFriendInputData) {
         if (!addFriendUserDataAccessInterface.userExists(addFriendInputData.getUser())) {
-            friendPresenter.prepareFailView("User does not exist.");
+            userPresenter.prepareFailView("User does not exist.");
         }
         else if (addFriendUserDataAccessInterface.friendExists(addFriendInputData.getUser())) {
-            friendPresenter.prepareFailView("Friend already added.");
+            userPresenter.prepareFailView("Friend already added.");
+        }
+        else if (addFriendUserDataAccessInterface.chatWithYourself(addFriendUserDataAccessInterface.getActiveUser(),
+                addFriendInputData.getUser())) {
+            userPresenter.prepareFailView("Can't make a chat with yourself!");
         }
         else {
             final Friend friend = new Friend(addFriendInputData.getUser());
@@ -27,7 +31,11 @@ public class AddFriendInteractor implements AddFriendInputBoundary {
             addFriendUserDataAccessInterface.saveFriend(friend, chat);
 
             final AddFriendOutputData addChatOutputData = new AddFriendOutputData(false);
-            friendPresenter.prepareSuccessView(addChatOutputData);
+            userPresenter.prepareSuccessView(addChatOutputData);
         }
+    }
+
+    public void switchToLoggedInView() {
+        userPresenter.switchToLoggedInView();
     }
 }
