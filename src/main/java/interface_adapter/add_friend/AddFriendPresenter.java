@@ -1,7 +1,7 @@
 package interface_adapter.add_friend;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.signup.SignupState;
+import interface_adapter.change_password.LoggedInViewModel;
 import use_case.add_friend.AddFriendOutputBoundary;
 import use_case.add_friend.AddFriendOutputData;
 
@@ -10,12 +10,15 @@ public class AddFriendPresenter implements AddFriendOutputBoundary {
     private final AddFriendViewModel addFriendViewModel;
     // private final InChatViewModel inChatViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final LoggedInViewModel loggedInViewModel;
 
     public AddFriendPresenter(ViewManagerModel viewManagerModel,
-                           AddFriendViewModel addFriendViewModel) {
+                           AddFriendViewModel addFriendViewModel,
+                              LoggedInViewModel loggedInViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.addFriendViewModel = addFriendViewModel;
         // this.inChatViewModel = inChatViewModel;
+        this.loggedInViewModel = loggedInViewModel;
     }
 
     @Override
@@ -31,18 +34,23 @@ public class AddFriendPresenter implements AddFriendOutputBoundary {
     @Override
     public void prepareFailView(String errorMessage) {
         final AddFriendState addFriendState = addFriendViewModel.getState();
-        if ("User does not exist.".equals(errorMessage)) {
-            addFriendState.setUserDoesNotExistError(errorMessage);
-        }
-        else if ("Friend already added.".equals(errorMessage)) {
-            addFriendState.setFriendAlreadyAddedError(errorMessage);
-        }
+//        if ("User does not exist.".equals(errorMessage)) {
+//            addFriendState.setUserDoesNotExistError(errorMessage);
+//        }
+//        else if ("Friend already added.".equals(errorMessage)) {
+//            addFriendState.setFriendAlreadyAddedError(errorMessage);
+//        }
+//        else if ("Can't make a chat with yourself!".equals(errorMessage)) {
+//            addFriendState.setChatWithYourselfError(errorMessage);
+//        }
+        addFriendState.setAddFriendError(errorMessage);
         addFriendViewModel.firePropertyChanged();
     }
 
     @Override
-    public void switchToInChatView() {
-        // viewManagerModel.setState(inChatViewModel.getViewName());
+    public void switchToLoggedInView() {
+        viewManagerModel.setState(loggedInViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
+
 }

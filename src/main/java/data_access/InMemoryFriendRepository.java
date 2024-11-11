@@ -5,7 +5,6 @@ import java.util.List;
 
 import entity.Chat;
 import entity.Friend;
-import entity.User;
 import use_case.add_friend.AddFriendUserDataAccessInterface;
 
 public class InMemoryFriendRepository implements AddFriendUserDataAccessInterface {
@@ -15,6 +14,11 @@ public class InMemoryFriendRepository implements AddFriendUserDataAccessInterfac
 
     public InMemoryFriendRepository(InMemoryUserDataAccessObject dao) {
         this.dao = dao;
+    }
+
+    @Override
+    public String getActiveUser() {
+        return dao.getCurrentUsername();
     }
 
     public boolean userExists(String username) {
@@ -31,8 +35,14 @@ public class InMemoryFriendRepository implements AddFriendUserDataAccessInterfac
         return false;
     }
 
+    @Override
+    public boolean chatWithYourself(String yourUsername, String username) {
+        return yourUsername.equals(username);
+    }
+
     public void saveFriend(Friend friend, Chat chat) {
         friends.add(friend);
         chats.add(chat);
     }
+
 }

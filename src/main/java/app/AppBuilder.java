@@ -41,6 +41,13 @@ import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import view.*;
 
+
+import interface_adapter.friend_search.FriendSearchController;
+import interface_adapter.friend_search.FriendSearchPresenter;
+import use_case.friend_search.FriendSearchInputBoundary;
+import use_case.friend_search.FriendSearchInteractor;
+import use_case.friend_search.FriendSearchOutputBoundary;
+
 /**
  * The AppBuilder class is responsible for putting together the pieces of
  * our CA architecture; piece by piece.
@@ -51,7 +58,6 @@ public class AppBuilder {
 
     private final UserFactory userFactory = new CommonUserFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
-    private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
     private final InMemoryFriendRepository friendRepository = new InMemoryFriendRepository(userDataAccessObject);
 
@@ -176,13 +182,25 @@ public class AppBuilder {
      */
     public AppBuilder addAddFriendUseCase() {
         final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(viewManagerModel,
-                addFriendViewModel);
+                addFriendViewModel, loggedInViewModel);
 
         final AddFriendInputBoundary addFriendInteractor =
                 new AddFriendInteractor(friendRepository, addFriendOutputBoundary);
 
         final AddFriendController addFriendController = new AddFriendController(addFriendInteractor);
-        loggedInView.setAddFriendController(addFriendController);
+        addFriendView.setAddFriendController(addFriendController);
+        return this;
+    }
+
+    public AppBuilder addFriendSearchUseCase() {
+        final FriendSearchOutputBoundary friendSearchOutputBoundary = new FriendSearchPresenter(viewManagerModel,
+                addFriendViewModel);
+
+        final FriendSearchInputBoundary friendSearchInteractor =
+                new FriendSearchInteractor(friendSearchOutputBoundary);
+
+        final FriendSearchController friendSearchController = new FriendSearchController(friendSearchInteractor);
+        loggedInView.setFriendSearchController(friendSearchController);
         return this;
     }
 
