@@ -20,8 +20,8 @@ public class AddFriendController {
     /**
      * Executes the "switch to LoginView" Use Case.
      */
-    public void switchToInChatView() {
-        // addFriendInputBoundary.switchToInChatView();
+    public void switchToLoggedInView() {
+        addFriendUseCaseInteractor.switchToLoggedInView();
     }
 
 }
