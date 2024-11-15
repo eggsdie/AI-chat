@@ -1,21 +1,21 @@
-package use_case.ChatList;
+package view;
 
 import entity.ChatEntry;
+import use_case.ChatList.ChatListManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ChatListUI {
+public class ChatListView {
     private JFrame frame;
     private JPanel chatListPanel;
     private ChatListManager chatListManager;
     private JTextField chatSearchField;
     private String searchPlaceholder = "Search chats...";
 
-    public ChatListUI() {
+    public ChatListView() {
         frame = new JFrame("Chat Messenger");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 600);
@@ -176,6 +176,6 @@ public class ChatListUI {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(ChatListUI::new);
+        SwingUtilities.invokeLater(ChatListView::new);
     }
 }
