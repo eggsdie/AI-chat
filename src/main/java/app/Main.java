@@ -23,7 +23,7 @@ public class Main {
                                             .addLoginView()
                                             .addSignupView()
                                             .addLoggedInView()
-                                            .addAddFriendView()
+                                            .addChatListView()
                                             .addFriendSearchUseCase()
                                             .addSignupUseCase()
                                             .addLoginUseCase()

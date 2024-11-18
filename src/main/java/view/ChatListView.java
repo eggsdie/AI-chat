@@ -1,28 +1,54 @@
 package view;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import data_access.InMemoryFriendRepository;
 import entity.ChatEntry;
+import interface_adapter.add_friend.ChatListController;
+import interface_adapter.add_friend.ChatListState;
+import interface_adapter.add_friend.ChatListViewModel;
 import use_case.ChatList.ChatListManager;
+import use_case.ChatList.ChatListOutputBoundary;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class ChatListView {
+public class ChatListView extends JPanel implements PropertyChangeListener {
+    private final String viewName = "chat list";
+
     private JFrame frame;
     private JPanel chatListPanel;
     private ChatListManager chatListManager;
     private JTextField chatSearchField;
     private String searchPlaceholder = "Search chats...";
+    private ChatListViewModel chatListViewModel;
+    private ChatListController chatListController;
+    private InMemoryFriendRepository friendRepository;
+    private ChatListOutputBoundary chatListOutputBoundary;
 
-    public ChatListView() {
+    // user search
+    private final JTextField userSearchField = new JTextField(15);
+    private final JButton addFriendButton;
+
+    public ChatListView(InMemoryFriendRepository friendRepository, ChatListOutputBoundary chatListOutputBoundary,
+                       ChatListViewModel chatListViewModel) {
+        this.chatListViewModel = chatListViewModel;
+        this.chatListViewModel.addPropertyChangeListener(this);
+        this.friendRepository = friendRepository;
+        this.chatListOutputBoundary = chatListOutputBoundary;
+
         frame = new JFrame("Chat Messenger");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 600);
-        frame.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
         // Initialize Use Case
-        chatListManager = new ChatListManager();
+        chatListManager = new ChatListManager(friendRepository, chatListOutputBoundary);
 
         // Top panel with chat search and add friend button
         JPanel topPanel = new JPanel();
@@ -60,13 +86,13 @@ public class ChatListView {
             }
         });
 
-        JButton addFriendButton = new JButton("Add Friend");
+        addFriendButton = new JButton("Add Friend");
         addFriendButton.setPreferredSize(new Dimension(120, 30));
 
         topPanel.add(chatSearchField, BorderLayout.CENTER);
         topPanel.add(addFriendButton, BorderLayout.EAST);
 
-        frame.add(topPanel, BorderLayout.NORTH);
+        this.add(topPanel, BorderLayout.NORTH);
 
         // Middle panel for chat list
         chatListPanel = new JPanel();
@@ -74,7 +100,7 @@ public class ChatListView {
         JScrollPane chatListScrollPane = new JScrollPane(chatListPanel);
         chatListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        frame.add(chatListScrollPane, BorderLayout.CENTER);
+        this.add(chatListScrollPane, BorderLayout.CENTER);
 
         // Bottom panel with return and settings buttons
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -84,24 +110,24 @@ public class ChatListView {
         bottomPanel.add(returnButton, BorderLayout.WEST);
         bottomPanel.add(settingsButton, BorderLayout.EAST);
 
-        frame.add(bottomPanel, BorderLayout.SOUTH);
+        this.add(bottomPanel, BorderLayout.SOUTH);
 
         // Action for adding a friend
         addFriendButton.addActionListener(e -> {
-            String friendName = JOptionPane.showInputDialog(frame, "Enter Friend's Name:");
-            if (friendName != null && !friendName.trim().isEmpty()) {
-                boolean added = chatListManager.addChat(friendName, "Hello! This is a new conversation.");
-                if (added) {
-                    refreshChatList(""); // Refresh the full list
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Chat already exists!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            final ChatListState currentState = chatListViewModel.getState();
+            String friendName = JOptionPane.showInputDialog(this, "Enter Friend's Name:");
+
+            currentState.setUsername(friendName);
+            chatListViewModel.setState(currentState);
+
+            if (currentState.getUsername() != null && !currentState.getUsername().trim().isEmpty()) {
+                chatListController.addChat(currentState.getUsername(), "Hello! This is a new conversation.");
             }
+
         });
 
         // Initial rendering
         refreshChatList(""); // Empty query for the full list
-        frame.setVisible(true);
     }
 
     // Refresh chat list display
@@ -175,7 +201,25 @@ public class ChatListView {
         chatFrame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(ChatListView::new);
+    public String getViewName() {
+        return viewName;
     }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final ChatListState state = (ChatListState) evt.getNewValue();
+
+        if (state.getAddFriendError() != null) {
+            JOptionPane.showMessageDialog(this, state.getAddFriendError());
+        }
+
+    }
+
+    public void setChatListController(ChatListController chatListController) {
+        this.chatListController = chatListController;
+    }
+
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(ChatListView::new);
+//    }
 }

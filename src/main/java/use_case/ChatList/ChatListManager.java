@@ -1,43 +1,64 @@
 package use_case.ChatList;
 
+import entity.Chat;
 import entity.ChatEntry;
+import entity.Friend;
+import use_case.add_friend.AddFriendOutputBoundary;
+import use_case.add_friend.AddFriendOutputData;
+import use_case.add_friend.AddFriendUserDataAccessInterface;
+
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatListManager {
-    private List<ChatEntry> chatList;
+public class ChatListManager implements ChatListInputBoundary {
+    private final AddFriendUserDataAccessInterface addFriendUserDataAccessInterface;
+    private final ChatListOutputBoundary userPresenter;
 
-    public ChatListManager() {
-        this.chatList = new ArrayList<>();
+    public ChatListManager(AddFriendUserDataAccessInterface addFriendUserDataAccessInterface,
+                           ChatListOutputBoundary chatListOutputBoundary) {
+        this.addFriendUserDataAccessInterface = addFriendUserDataAccessInterface;
+        this.userPresenter = chatListOutputBoundary;
     }
 
+    @Override
     // Add a new chat entry
-    public boolean addChat(String name, String messagePreview) {
-        if (name == null || name.isEmpty()) return false;
-
-        for (ChatEntry chat : chatList) {
-            if (chat.getName().equalsIgnoreCase(name)) {
-                return false; // Prevent duplicate chats
-            }
+    public void addChat(ChatListInputData chatListInputData, String messagePreview) {
+        if (!addFriendUserDataAccessInterface.userExists(chatListInputData.getUser())) {
+            userPresenter.prepareFailView("User does not exist.");
         }
+        else if (addFriendUserDataAccessInterface.friendExists(chatListInputData.getUser())) {
+            userPresenter.prepareFailView("Friend already added.");
+        }
+        else if (addFriendUserDataAccessInterface.chatWithYourself(addFriendUserDataAccessInterface.getActiveUser(),
+                chatListInputData.getUser())) {
+            userPresenter.prepareFailView("Can't make a chat with yourself!");
+        }
+        else {
+            final Friend friend = new Friend(chatListInputData.getUser());
+            final ChatEntry chat = new ChatEntry(chatListInputData.getUser(), LocalTime.now(), messagePreview);
 
-        chatList.add(new ChatEntry(name, java.time.LocalTime.now(), messagePreview));
-        return true;
+            // chatList.add(new ChatEntry(chatListInputData.getUser(), java.time.LocalTime.now(), messagePreview));
+            addFriendUserDataAccessInterface.saveFriend(friend, chat);
+
+            final AddFriendOutputData addChatOutputData = new AddFriendOutputData(false);
+            userPresenter.prepareSuccessView(addChatOutputData);
+        }
     }
 
     // Remove a chat entry
     public boolean removeChat(String name) {
-        return chatList.removeIf(chat -> chat.getName().equalsIgnoreCase(name));
+        return addFriendUserDataAccessInterface.getAllChats().removeIf(chat -> chat.getName().equalsIgnoreCase(name));
     }
 
     // Retrieve all chats
     public List<ChatEntry> getAllChats() {
-        return new ArrayList<>(chatList);
+        return addFriendUserDataAccessInterface.getAllChats();
     }
 
     // Find a chat by name
     public ChatEntry findChat(String name) {
-        for (ChatEntry chat : chatList) {
+        for (ChatEntry chat : addFriendUserDataAccessInterface.getAllChats()) {
             if (chat.getName().equalsIgnoreCase(name)) {
                 return chat;
             }

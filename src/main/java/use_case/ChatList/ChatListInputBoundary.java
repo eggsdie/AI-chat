@@ -1,7 +1,10 @@
 package use_case.ChatList;
 
+import use_case.add_friend.AddFriendInputData;
+
 public interface ChatListInputBoundary {
-    boolean addChat(String name, String messagePreview);
+    void addChat(ChatListInputData chatListInputData, String messagePreview);
     boolean removeChat(String name);
+
 }
 
