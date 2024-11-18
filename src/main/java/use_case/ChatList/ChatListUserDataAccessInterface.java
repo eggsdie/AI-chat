@@ -1,11 +1,11 @@
-package use_case.add_friend;
+package use_case.ChatList;
 
 import entity.ChatEntry;
 import entity.Friend;
 
 import java.util.List;
 
-public interface AddFriendUserDataAccessInterface {
+public interface ChatListUserDataAccessInterface {
 
     boolean userExists(String username);
 

@@ -1,7 +1,6 @@
 package use_case.ChatList;
 
 import entity.ChatEntry;
-import use_case.add_friend.AddFriendOutputData;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public interface ChatListOutputBoundary {
      * Prepares the success view for the AddChat Use Case.
      * @param outputData the output data
      */
-    void prepareSuccessView(AddFriendOutputData outputData);
+    void prepareSuccessView(ChatListOutputData outputData);
 
     /**
      * Prepares the failure view for the AddChat Use Case.

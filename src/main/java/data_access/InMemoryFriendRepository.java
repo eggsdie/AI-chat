@@ -5,9 +5,9 @@ import java.util.List;
 
 import entity.ChatEntry;
 import entity.Friend;
-import use_case.add_friend.AddFriendUserDataAccessInterface;
+import use_case.ChatList.ChatListUserDataAccessInterface;
 
-public class InMemoryFriendRepository implements AddFriendUserDataAccessInterface {
+public class InMemoryFriendRepository implements ChatListUserDataAccessInterface {
     private final List<Friend> friends = new ArrayList<>();
     private final ArrayList<ChatEntry> chats = new ArrayList<>();
     private final InMemoryUserDataAccessObject dao;

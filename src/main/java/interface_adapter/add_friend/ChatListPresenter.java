@@ -4,7 +4,7 @@ import entity.ChatEntry;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.LoggedInViewModel;
 import use_case.ChatList.ChatListOutputBoundary;
-import use_case.add_friend.AddFriendOutputData;
+import use_case.ChatList.ChatListOutputData;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class ChatListPresenter implements ChatListOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(AddFriendOutputData outputData) {
+    public void prepareSuccessView(ChatListOutputData outputData) {
         // On success, switch to the in chat view.
 //        final InChatState inChatState = inChatViewModel.getState();
 //        this.inChatViewModel.setState(inChatState);
@@ -57,4 +57,5 @@ public class ChatListPresenter implements ChatListOutputBoundary {
     public void presentError(String errorMessage) {
         System.out.println("Error: " + errorMessage);
     }
+
 }
