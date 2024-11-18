@@ -5,7 +5,7 @@ import java.util.List;
 
 import entity.ChatEntry;
 import entity.Friend;
-import use_case.ChatList.ChatListUserDataAccessInterface;
+import use_case.chat_list.ChatListUserDataAccessInterface;
 
 public class InMemoryFriendRepository implements ChatListUserDataAccessInterface {
     private final List<Friend> friends = new ArrayList<>();

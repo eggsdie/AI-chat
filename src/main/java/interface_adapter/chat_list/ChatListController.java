@@ -1,7 +1,7 @@
-package interface_adapter.add_friend;
+package interface_adapter.chat_list;
 
-import use_case.ChatList.ChatListInputBoundary;
-import use_case.ChatList.ChatListInputData;
+import use_case.chat_list.ChatListInputBoundary;
+import use_case.chat_list.ChatListInputData;
 
 public class ChatListController {
 
@@ -20,12 +20,5 @@ public class ChatListController {
     public boolean removeChat(String name) {
         return chatListUseCaseInteractor.removeChat(name);
     }
-
-    /**
-     * Executes the "switch to LoginView" Use Case.
-     */
-//    public void switchToLoggedInView() {
-//        chatListUseCaseInteractor.switchToLoggedInView();
-//    }
 
 }

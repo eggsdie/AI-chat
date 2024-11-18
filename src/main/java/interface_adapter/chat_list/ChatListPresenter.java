@@ -1,10 +1,9 @@
-package interface_adapter.add_friend;
+package interface_adapter.chat_list;
 
 import entity.ChatEntry;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.change_password.LoggedInViewModel;
-import use_case.ChatList.ChatListOutputBoundary;
-import use_case.ChatList.ChatListOutputData;
+import use_case.chat_list.ChatListOutputBoundary;
+import use_case.chat_list.ChatListOutputData;
 
 import java.util.List;
 
@@ -37,12 +36,6 @@ public class ChatListPresenter implements ChatListOutputBoundary {
         chatListState.setAddFriendError(errorMessage);
         chatListViewModel.firePropertyChanged();
     }
-
-//    @Override
-//    public void switchToLoggedInView() {
-//        viewManagerModel.setState(loggedInViewModel.getViewName());
-//        viewManagerModel.firePropertyChanged();
-//    }
 
     @Override
     public void presentChatList(List<ChatEntry> chatList) {

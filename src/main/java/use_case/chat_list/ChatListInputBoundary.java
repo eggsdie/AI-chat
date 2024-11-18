@@ -1,4 +1,4 @@
-package use_case.ChatList;
+package use_case.chat_list;
 
 public interface ChatListInputBoundary {
     void addChat(ChatListInputData chatListInputData, String messagePreview);
