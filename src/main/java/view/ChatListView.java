@@ -5,15 +5,13 @@ import java.beans.PropertyChangeListener;
 
 import data_access.InMemoryFriendRepository;
 import entity.ChatEntry;
-import interface_adapter.add_friend.ChatListController;
-import interface_adapter.add_friend.ChatListState;
-import interface_adapter.add_friend.ChatListViewModel;
-import use_case.ChatList.ChatListManager;
-import use_case.ChatList.ChatListOutputBoundary;
+import interface_adapter.chat_list.ChatListController;
+import interface_adapter.chat_list.ChatListState;
+import interface_adapter.chat_list.ChatListViewModel;
+import use_case.chat_list.ChatListManager;
+import use_case.chat_list.ChatListOutputBoundary;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -31,8 +29,6 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     private InMemoryFriendRepository friendRepository;
     private ChatListOutputBoundary chatListOutputBoundary;
 
-    // user search
-    private final JTextField userSearchField = new JTextField(15);
     private final JButton addFriendButton;
 
     public ChatListView(InMemoryFriendRepository friendRepository, ChatListOutputBoundary chatListOutputBoundary,
@@ -219,7 +215,4 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         this.chatListController = chatListController;
     }
 
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(ChatListView::new);
-//    }
 }

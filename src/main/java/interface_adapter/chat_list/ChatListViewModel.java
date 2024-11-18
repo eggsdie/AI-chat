@@ -1,4 +1,4 @@
-package interface_adapter.add_friend;
+package interface_adapter.chat_list;
 
 import interface_adapter.ViewModel;
 

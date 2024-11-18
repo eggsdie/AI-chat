@@ -1,4 +1,4 @@
-package use_case.ChatList;
+package use_case.chat_list;
 
 import entity.ChatEntry;
 import entity.Friend;

@@ -1,4 +1,4 @@
-package use_case.ChatList;
+package use_case.chat_list;
 
 public class ChatListInputData {
     private final String username;
