@@ -24,11 +24,10 @@ public class Main {
                                             .addSignupView()
                                             .addLoggedInView()
                                             .addChatListView()
-                                            .addFriendSearchUseCase()
                                             .addSignupUseCase()
                                             .addLoginUseCase()
                                             .addChangePasswordUseCase()
-                                            .addAddFriendUseCase()
+                                            .addChatListUseCase()
                                             .addLogoutUseCase()
                                             .build();
 
