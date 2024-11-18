@@ -3,7 +3,6 @@ package data_access;
 import java.util.ArrayList;
 import java.util.List;
 
-import entity.Chat;
 import entity.ChatEntry;
 import entity.Friend;
 import use_case.add_friend.AddFriendUserDataAccessInterface;

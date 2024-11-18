@@ -1,6 +1,5 @@
 package use_case.ChatList;
 
-import entity.Chat;
 import entity.ChatEntry;
 import entity.Friend;
 import use_case.add_friend.AddFriendOutputBoundary;

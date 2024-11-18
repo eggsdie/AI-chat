@@ -16,7 +16,6 @@ import javax.swing.event.DocumentListener;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
-import interface_adapter.friend_search.FriendSearchController;
 import interface_adapter.logout.LogoutController;
 
 /**
@@ -28,7 +27,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final LoggedInViewModel loggedInViewModel;
     private final JLabel passwordErrorField = new JLabel();
     private ChangePasswordController changePasswordController;
-    private FriendSearchController friendSearchController;
     private LogoutController logoutController;
 
     private JLabel username;
@@ -102,8 +100,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 }
         );
 
-        addFriend.addActionListener(evt -> friendSearchController.switchToAddFriendView());
-
         logOut.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
                 evt -> {
@@ -164,10 +160,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
-    }
-
-    public void setFriendSearchController(FriendSearchController friendSearchController) {
-        this.friendSearchController = friendSearchController;
     }
 
 }
