@@ -1,9 +1,9 @@
 package interface_adapter.add_friend;
 
-public class AddFriendState {
+public class ChatListState {
 
     private String username = "";
-    private String userDoesNotExistError;
+    // private String userDoesNotExistError;
     private String friendAlreadyAddedError;
     private String chatWithYourselfError;
     private String addFriendError;
@@ -20,9 +20,9 @@ public class AddFriendState {
         return username;
     }
 
-    public String getUserDoesNotExistError() {
-        return userDoesNotExistError;
-    }
+//    public String getUserDoesNotExistError() {
+//        return userDoesNotExistError;
+//    }
 
     public String getFriendAlreadyAddedError() {
         return friendAlreadyAddedError;
@@ -36,9 +36,9 @@ public class AddFriendState {
         this.username = username;
     }
 
-    public void setUserDoesNotExistError(String userDoesNotExistError) {
-        this.userDoesNotExistError = userDoesNotExistError;
-    }
+//    public void setUserDoesNotExistError(String userDoesNotExistError) {
+//        this.userDoesNotExistError = userDoesNotExistError;
+//    }
 
     public void setFriendAlreadyAddedError(String friendAlreadyAddedError) {
         this.friendAlreadyAddedError = friendAlreadyAddedError;
