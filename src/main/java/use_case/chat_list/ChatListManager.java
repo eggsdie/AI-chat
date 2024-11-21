@@ -42,7 +42,7 @@ public class ChatListManager implements ChatListInputBoundary {
 
     // Remove a chat entry
     public boolean removeChat(String name) {
-        return chatListUserDataAccessInterface.getAllChats().removeIf(chat -> chat.getName().equalsIgnoreCase(name));
+        return chatListUserDataAccessInterface.getAllChats().removeIf(chat -> chat.getOtherUser().equalsIgnoreCase(name));
     }
 
     // Retrieve all chats
@@ -53,7 +53,7 @@ public class ChatListManager implements ChatListInputBoundary {
     // Find a chat by name
     public ChatEntry findChat(String name) {
         for (ChatEntry chat : chatListUserDataAccessInterface.getAllChats()) {
-            if (chat.getName().equalsIgnoreCase(name)) {
+            if (chat.getOtherUser().equalsIgnoreCase(name)) {
                 return chat;
             }
         }

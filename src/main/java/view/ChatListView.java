@@ -134,7 +134,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
         // Filter chats by query
         for (ChatEntry chat : chats) {
-            if (query.isEmpty() || chat.getName().toLowerCase().contains(query.toLowerCase())) {
+            if (query.isEmpty() || chat.getOtherUser().toLowerCase().contains(query.toLowerCase())) {
                 JPanel chatItemPanel = createChatItemPanel(chat);
                 chatListPanel.add(chatItemPanel);
             }
@@ -155,7 +155,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         chatItemPanel.setPreferredSize(new Dimension(0, 60)); // 0 width allows resizing
         chatItemPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel nameLabel = new JLabel(chatEntry.getName());
+        JLabel nameLabel = new JLabel(chatEntry.getOtherUser());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         JLabel timeLabel = new JLabel(chatEntry.getLastMessageTime());
@@ -186,13 +186,13 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
     // Opens a new chat window for the selected friend
     private void openChatWindow(ChatEntry chatEntry) {
-        JFrame chatFrame = new JFrame("Chat with " + chatEntry.getName());
+        JFrame chatFrame = new JFrame("Chat with " + chatEntry.getOtherUser());
         chatFrame.setSize(400, 400);
         chatFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JTextArea chatArea = new JTextArea();
         chatArea.setEditable(false);
-        chatArea.setText("Chat with " + chatEntry.getName() + "\n\n" + chatEntry.getLastMessagePreview());
+        chatArea.setText("Chat with " + chatEntry.getOtherUser() + "\n\n" + chatEntry.getLastMessagePreview());
         chatFrame.add(new JScrollPane(chatArea), BorderLayout.CENTER);
 
         chatFrame.setVisible(true);
