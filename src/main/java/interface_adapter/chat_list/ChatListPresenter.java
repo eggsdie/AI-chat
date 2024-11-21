@@ -41,7 +41,7 @@ public class ChatListPresenter implements ChatListOutputBoundary {
     public void presentChatList(List<ChatEntry> chatList) {
         System.out.println("Chat List:");
         for (ChatEntry chat : chatList) {
-            System.out.println(chat.getName() + " - " + chat.getLastMessagePreview()
+            System.out.println(chat.getOtherUser() + " - " + chat.getLastMessagePreview()
                    + " at " + chat.getLastMessageTime());
         }
     }
