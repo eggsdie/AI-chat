@@ -19,10 +19,10 @@ public class ChatListManager implements ChatListInputBoundary {
     @Override
     // Add a new chat entry
     public void addChat(ChatListInputData chatListInputData, String messagePreview) {
-        if (!chatListUserDataAccessInterface.userExists(chatListInputData.getUser())) {
-            userPresenter.prepareFailView("User does not exist.");
-        }
-        else if (chatListUserDataAccessInterface.friendExists(chatListInputData.getUser())) {
+        //if (!chatListUserDataAccessInterface.userExists(chatListInputData.getUser())) {
+            //userPresenter.prepareFailView("User does not exist.");
+        //}
+        if (chatListUserDataAccessInterface.friendExists(chatListInputData.getUser())) {
             userPresenter.prepareFailView("Friend already added.");
         }
         else if (chatListUserDataAccessInterface.chatWithYourself(chatListUserDataAccessInterface.getActiveUser(),

@@ -118,6 +118,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
             if (currentState.getUsername() != null && !currentState.getUsername().trim().isEmpty()) {
                 chatListController.addChat(currentState.getUsername(), "Hello! This is a new conversation.");
+                refreshChatList("");
             }
 
         });
