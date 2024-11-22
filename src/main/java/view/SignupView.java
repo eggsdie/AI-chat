@@ -28,30 +28,24 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         this.signupViewModel = signupViewModel;
         signupViewModel.addPropertyChangeListener(this);
 
-        // Set layout and background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        // Title Label
         JLabel title = new JLabel("Sign up");
         title.setFont(new Font("Arial", Font.BOLD, 24));
         title.setForeground(Color.BLACK);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Name Field
         nameInputField = createTextField("Username");
         nameInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Email Field
         emailInputField = createTextField("Email");
         emailInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Password Field (using JPasswordField)
         passwordInputField = createPasswordField("Password");
         passwordInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Sign Up Button with blue background and white text
         signUpButton = createStyledButton("Sign Up", new Color(66, 133, 244), Color.WHITE);
         signUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         signUpButton.addActionListener(evt -> {
@@ -62,7 +56,6 @@ public class SignupView extends JPanel implements PropertyChangeListener {
             );
         });
 
-        // Login Link
         loginLink = new JLabel("Already have an account? Log In");
         loginLink.setFont(new Font("Arial", Font.PLAIN, 12));
         loginLink.setForeground(new Color(66, 133, 244));
@@ -74,14 +67,12 @@ public class SignupView extends JPanel implements PropertyChangeListener {
             }
         });
 
-        // Google Sign Up Button
         googleSignUpButton = createStyledButton("Sign up with Google", Color.WHITE, Color.BLACK);
         googleSignUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         googleSignUpButton.addActionListener(evt ->
                 JOptionPane.showMessageDialog(this, "Google Sign Up not implemented.")
         );
 
-        // Adding components to the panel
         add(Box.createVerticalStrut(10));
         add(title);
         add(Box.createVerticalStrut(20));
@@ -150,8 +141,7 @@ public class SignupView extends JPanel implements PropertyChangeListener {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
 
-        // Set placeholder text
-        field.setEchoChar((char) 0); // Show text
+        field.setEchoChar((char) 0); 
         field.setText(placeholder);
         field.setForeground(Color.GRAY);
 
@@ -161,13 +151,13 @@ public class SignupView extends JPanel implements PropertyChangeListener {
                 if (currentText.equals(placeholder)) {
                     field.setText("");
                     field.setForeground(Color.BLACK);
-                    field.setEchoChar('\u2022'); // Unicode bullet character
+                    field.setEchoChar('\u2022'); 
                 }
             }
 
             public void focusLost(java.awt.event.FocusEvent evt) {
                 if (field.getPassword().length == 0) {
-                    field.setEchoChar((char) 0); // Show text
+                    field.setEchoChar((char) 0); 
                     field.setForeground(Color.GRAY);
                     field.setText(placeholder);
                 }
@@ -175,7 +165,6 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         });
     }
 
-    // Helper method to create a styled button
     private JButton createStyledButton(String text, Color bgColor, Color fgColor) {
         JButton button = new JButton(text) {
             @Override
@@ -209,7 +198,6 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         return button;
     }
 
-    // Helper method to create a divider label
     private JLabel createDividerLabel(String text) {
         JLabel divider = new JLabel(text);
         divider.setFont(new Font("Arial", Font.PLAIN, 12));
