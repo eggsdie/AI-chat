@@ -1,32 +1,25 @@
 package view;
 
-import entity.ChatEntry;
-import use_case.ChatList.ChatListManager;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import entity.ChatEntry;
+import use_case.ChatList.ChatListManager;
 
-public class ChatListView {
-    private JFrame frame;
-    private JPanel chatListPanel;
-    private ChatListManager chatListManager;
-    private JTextField chatSearchField;
-    private String searchPlaceholder = "Search chats...";
+public class ChatListView extends JPanel {
+    private final JPanel chatListPanel;
+    private final ChatListManager chatListManager;
+    private final JTextField chatSearchField;
+    private final String searchPlaceholder = "Search chats...";
 
-    public ChatListView() {
-        frame = new JFrame("Chat Messenger");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 600);
-        frame.setLayout(new BorderLayout());
+    public ChatListView(ChatListManager chatListManager) {
+        this.chatListManager = chatListManager;
 
-        // Initialize Use Case
-        chatListManager = new ChatListManager();
+        this.setLayout(new BorderLayout());
 
         // Top panel with chat search and add friend button
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BorderLayout());
+        JPanel topPanel = new JPanel(new BorderLayout());
         chatSearchField = new JTextField(searchPlaceholder);
         chatSearchField.setForeground(Color.GRAY);
 
@@ -65,52 +58,56 @@ public class ChatListView {
 
         topPanel.add(chatSearchField, BorderLayout.CENTER);
         topPanel.add(addFriendButton, BorderLayout.EAST);
-
-        frame.add(topPanel, BorderLayout.NORTH);
+        this.add(topPanel, BorderLayout.NORTH);
 
         // Middle panel for chat list
         chatListPanel = new JPanel();
         chatListPanel.setLayout(new BoxLayout(chatListPanel, BoxLayout.Y_AXIS));
         JScrollPane chatListScrollPane = new JScrollPane(chatListPanel);
         chatListScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        frame.add(chatListScrollPane, BorderLayout.CENTER);
+        this.add(chatListScrollPane, BorderLayout.CENTER);
 
         // Bottom panel with return and settings buttons
         JPanel bottomPanel = new JPanel(new BorderLayout());
         JButton returnButton = new JButton("Return to Chat List");
         JButton settingsButton = new JButton("Settings");
 
+        // Action for return button
+        returnButton.addActionListener(e -> {
+            resetSearch();
+        });
+
         bottomPanel.add(returnButton, BorderLayout.WEST);
         bottomPanel.add(settingsButton, BorderLayout.EAST);
-
-        frame.add(bottomPanel, BorderLayout.SOUTH);
+        this.add(bottomPanel, BorderLayout.SOUTH);
 
         // Action for adding a friend
         addFriendButton.addActionListener(e -> {
-            String friendName = JOptionPane.showInputDialog(frame, "Enter Friend's Name:");
+            String friendName = JOptionPane.showInputDialog(this, "Enter Friend's Name:");
             if (friendName != null && !friendName.trim().isEmpty()) {
                 boolean added = chatListManager.addChat(friendName, "Hello! This is a new conversation.");
                 if (added) {
-                    refreshChatList(""); // Refresh the full list
+                    refreshChatList(""); // Refresh the full list and place the new chat at the top
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Chat already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Chat already exists!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-
         // Initial rendering
         refreshChatList(""); // Empty query for the full list
-        frame.setVisible(true);
     }
 
     // Refresh chat list display
+    // Refresh chat list display
     private void refreshChatList(String query) {
         chatListPanel.removeAll();
+
+        // Get chats in reverse order to show the newest at the top
         List<ChatEntry> chats = chatListManager.getAllChats();
 
-        // Filter chats by query
-        for (ChatEntry chat : chats) {
+        // Filter and add chats
+        for (int i = chats.size() - 1; i >= 0; i--) { // Iterate in reverse order
+            ChatEntry chat = chats.get(i);
             if (query.isEmpty() || chat.getName().toLowerCase().contains(query.toLowerCase())) {
                 JPanel chatItemPanel = createChatItemPanel(chat);
                 chatListPanel.add(chatItemPanel);
@@ -118,6 +115,13 @@ public class ChatListView {
         }
         chatListPanel.revalidate();
         chatListPanel.repaint();
+    }
+
+    // Reset search bar and refresh the full chat list
+    private void resetSearch() {
+        chatSearchField.setText(searchPlaceholder);
+        chatSearchField.setForeground(Color.GRAY);
+        refreshChatList(""); // Refresh the full list
     }
 
     // Creates a styled panel for each chat entry
@@ -150,32 +154,6 @@ public class ChatListView {
         chatItemPanel.add(textPanel, BorderLayout.CENTER);
         chatItemPanel.add(timeLabel, BorderLayout.EAST);
 
-        // Add click event for chat block
-        chatItemPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                openChatWindow(chatEntry);
-            }
-        });
-
         return chatItemPanel;
-    }
-
-    // Opens a new chat window for the selected friend
-    private void openChatWindow(ChatEntry chatEntry) {
-        JFrame chatFrame = new JFrame("Chat with " + chatEntry.getName());
-        chatFrame.setSize(400, 400);
-        chatFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        JTextArea chatArea = new JTextArea();
-        chatArea.setEditable(false);
-        chatArea.setText("Chat with " + chatEntry.getName() + "\n\n" + chatEntry.getLastMessagePreview());
-        chatFrame.add(new JScrollPane(chatArea), BorderLayout.CENTER);
-
-        chatFrame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(ChatListView::new);
     }
 }
