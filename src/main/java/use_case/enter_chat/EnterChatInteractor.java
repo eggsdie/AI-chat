@@ -1,5 +1,7 @@
 package use_case.enter_chat;
 
+import entity.ChatEntry;
+
 public class EnterChatInteractor implements EnterChatInputBoundary {
     private final EnterChatOutputBoundary userPresenter;
 
@@ -9,8 +11,9 @@ public class EnterChatInteractor implements EnterChatInputBoundary {
 
     @Override
     public void execute(EnterChatInputData inputData) {
+        final ChatEntry chatEntry = inputData.getChatEntry();
         final EnterChatOutputData enterChatOutputData = new EnterChatOutputData(false,
-                inputData.getChatEntry());
+                chatEntry);
         userPresenter.prepareSuccessView(enterChatOutputData);
     }
 

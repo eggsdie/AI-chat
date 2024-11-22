@@ -13,6 +13,6 @@ public class EnterChatOutputData {
     }
 
     public ChatEntry getChatEntry() {
-        return chatEntry;
+        return this.chatEntry;
     }
 }
