@@ -35,6 +35,7 @@ import use_case.signup.SignupOutputBoundary;
 import view.LoggedInView;
 import view.LoginView;
 import view.SignupView;
+import view.LandingView;
 import view.ViewManager;
 
 /**
@@ -64,6 +65,19 @@ public class AppBuilder {
             String newState = (String) evt.getNewValue();
             cardLayout.show(cardPanel, newState);
         });
+    }
+
+    /**
+     * Adds the Landing View to the application.
+     * @return this builder
+     */
+    public AppBuilder addLandingView() {
+        LandingView landingView = new LandingView(
+                evt -> viewManagerModel.setState("log in"),  // Navigate to Login View
+                evt -> viewManagerModel.setState("sign up")  // Navigate to Signup View
+        );
+        cardPanel.add(landingView, landingView.getViewName());
+        return this;
     }
 
     /**
@@ -120,7 +134,7 @@ public class AppBuilder {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginOutputBoundary);
 
-        final LoginController loginController = new LoginController(loginInteractor);
+        final LoginController loginController = new LoginController(loginInteractor, viewManagerModel);
         loginView.setLoginController(loginController);
         return this;
     }
@@ -143,17 +157,16 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase() {
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel, loggedInViewModel, signupViewModel); // Redirect to SignupViewModel
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel, loggedInViewModel, signupViewModel);
         final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
-        final LogoutController logoutController = new LogoutController(logoutInteractor);
 
-        // Assign the logout controller to the loggedIn view
+        final LogoutController logoutController = new LogoutController(logoutInteractor, viewManagerModel);
         loggedInView.setLogoutController(logoutController);
         return this;
     }
 
     /**
-     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
+     * Creates the JFrame for the application and initially sets the LandingView to be displayed.
      * @return the application
      */
     public JFrame build() {
@@ -161,7 +174,7 @@ public class AppBuilder {
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.add(cardPanel);
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState("landing");
         viewManagerModel.firePropertyChanged();
 
         return application;
