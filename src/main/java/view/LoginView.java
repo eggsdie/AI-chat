@@ -27,26 +27,21 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         this.loginViewModel = loginViewModel;
         loginViewModel.addPropertyChangeListener(this);
 
-        // Set layout and background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        // Title Label
         JLabel title = new JLabel("Log In");
         title.setFont(new Font("Arial", Font.BOLD, 24));
         title.setForeground(Color.BLACK);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Username Field
         usernameInputField = createTextField("Username");
         usernameInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Password Field
         passwordInputField = createPasswordField("Password");
         passwordInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Login Button
         loginButton = createStyledButton("Log In", new Color(66, 133, 244), Color.WHITE);
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.addActionListener(evt -> {
@@ -56,12 +51,10 @@ public class LoginView extends JPanel implements PropertyChangeListener {
             );
         });
 
-        // Cancel Button
         cancelButton = createStyledButton("Cancel", Color.WHITE, Color.BLACK);
         cancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         cancelButton.addActionListener(evt -> loginController.switchToSignupView());
 
-        // Adding components to the panel
         add(Box.createVerticalStrut(10));
         add(title);
         add(Box.createVerticalStrut(20));
@@ -74,14 +67,12 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         add(cancelButton);
     }
 
-    // Helper method to create and style JTextField with a placeholder
     private JTextField createTextField(String placeholder) {
         JTextField textField = new JTextField(15);
         styleTextField(textField, placeholder);
         return textField;
     }
 
-    // Helper method to create and style JPasswordField with a placeholder
     private JPasswordField createPasswordField(String placeholder) {
         JPasswordField passwordField = new JPasswordField(15);
         stylePasswordField(passwordField, placeholder);
@@ -124,7 +115,6 @@ public class LoginView extends JPanel implements PropertyChangeListener {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
 
-        // Set placeholder text
         field.setEchoChar((char) 0); // Show text
         field.setText(placeholder);
         field.setForeground(Color.GRAY);
@@ -168,7 +158,6 @@ public class LoginView extends JPanel implements PropertyChangeListener {
 
             @Override
             protected void paintBorder(Graphics g) {
-                // No border needed
             }
         };
 
@@ -197,7 +186,6 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    // Reset fields to placeholders
     public void resetFields() {
         usernameInputField.setText("Username");
         usernameInputField.setForeground(Color.GRAY);
