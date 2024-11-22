@@ -91,14 +91,12 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         add(googleSignUpButton);
     }
 
-    // Helper method to create and style JTextField with a placeholder hint
     private JTextField createTextField(String placeholder) {
         JTextField textField = new JTextField(15);
         styleTextField(textField, placeholder);
         return textField;
     }
 
-    // Helper method to create and style JPasswordField with a placeholder hint
     private JPasswordField createPasswordField(String placeholder) {
         JPasswordField passwordField = new JPasswordField(15);
         stylePasswordField(passwordField, placeholder);
@@ -184,7 +182,6 @@ public class SignupView extends JPanel implements PropertyChangeListener {
 
             @Override
             protected void paintBorder(Graphics g) {
-                // No border needed
             }
         };
 
@@ -210,7 +207,6 @@ public class SignupView extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         SignupState state = (SignupState) evt.getNewValue();
 
-        // Display any error messages
         if (state.getNameError() != null) {
             JOptionPane.showMessageDialog(this, state.getNameError());
         }
