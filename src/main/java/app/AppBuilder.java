@@ -16,6 +16,9 @@ import interface_adapter.chat_list.ChatListViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.enter_chat.EnterChatController;
+import interface_adapter.enter_chat.EnterChatPresenter;
+import interface_adapter.enter_chat.InChatViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -30,6 +33,9 @@ import use_case.chat_list.ChatListOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.enter_chat.EnterChatInputBoundary;
+import use_case.enter_chat.EnterChatInteractor;
+import use_case.enter_chat.EnterChatOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -62,6 +68,8 @@ public class AppBuilder {
     private LoginView loginView;
     private ChatListViewModel chatListViewModel;
     private ChatListView chatListView;
+    private InChatViewModel inChatViewModel;
+    private InChatView inChatView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -106,7 +114,7 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the AddFriend View to the application.
+     * Adds the ChatList View to the application.
      * @return this builder
      */
     public AppBuilder addChatListView() {
@@ -114,6 +122,17 @@ public class AppBuilder {
         final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(
                 viewManagerModel, chatListViewModel);
         chatListView = new ChatListView(friendRepository, chatListOutputBoundary, chatListViewModel);
+        cardPanel.add(chatListView, chatListView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the InChat View to the application.
+     * @return this builder
+     */
+    public AppBuilder addInChatView() {
+        inChatViewModel = new InChatViewModel();
+        inChatView = new InChatView(inChatViewModel);
         cardPanel.add(chatListView, chatListView.getViewName());
         return this;
     }
@@ -185,6 +204,22 @@ public class AppBuilder {
 
         final ChatListController chatListController = new ChatListController(chatListInteractor);
         chatListView.setChatListController(chatListController);
+        return this;
+    }
+
+    /**
+     * Adds the EnterChat Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addEnterChatUseCase() {
+        final EnterChatOutputBoundary enterChatOutputBoundary = new EnterChatPresenter(viewManagerModel,
+                inChatViewModel);
+
+        final EnterChatInputBoundary enterChatInteractor =
+                new EnterChatInteractor(enterChatOutputBoundary);
+
+        final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
+        inChatView.setEnterChatController(enterChatController);
         return this;
     }
 
