@@ -8,6 +8,9 @@ import entity.ChatEntry;
 import interface_adapter.chat_list.ChatListController;
 import interface_adapter.chat_list.ChatListState;
 import interface_adapter.chat_list.ChatListViewModel;
+import interface_adapter.enter_chat.EnterChatController;
+import interface_adapter.enter_chat.InChatState;
+import interface_adapter.enter_chat.InChatViewModel;
 import use_case.chat_list.ChatListManager;
 import use_case.chat_list.ChatListOutputBoundary;
 
@@ -28,6 +31,8 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     private ChatListController chatListController;
     private InMemoryFriendRepository friendRepository;
     private ChatListOutputBoundary chatListOutputBoundary;
+    private EnterChatController enterChatController;
+    private InChatViewModel inChatViewModel;
 
     private final JButton addFriendButton;
 
@@ -177,7 +182,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         chatItemPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                openChatWindow(chatEntry);
+                enterChatController.execute(chatEntry);
             }
         });
 
@@ -214,6 +219,10 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
     public void setChatListController(ChatListController chatListController) {
         this.chatListController = chatListController;
+    }
+
+    public void setEnterChatController(EnterChatController enterChatController) {
+        this.enterChatController = enterChatController;
     }
 
 }

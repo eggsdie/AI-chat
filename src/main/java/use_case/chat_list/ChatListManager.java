@@ -35,7 +35,7 @@ public class ChatListManager implements ChatListInputBoundary {
 
             chatListUserDataAccessInterface.saveFriend(friend, chat);
 
-            final ChatListOutputData addChatOutputData = new ChatListOutputData(false);
+            final ChatListOutputData addChatOutputData = new ChatListOutputData(false, chat);
             userPresenter.prepareSuccessView(addChatOutputData);
         }
     }
