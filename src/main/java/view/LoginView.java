@@ -1,153 +1,198 @@
 package view;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 
 /**
- * The View for when the user is logging into the program.
+ * The View for the Login Use Case.
  */
-public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
-
+public class LoginView extends JPanel implements PropertyChangeListener {
     private final String viewName = "log in";
+
     private final LoginViewModel loginViewModel;
-
-    private final JTextField usernameInputField = new JTextField(15);
-    private final JLabel usernameErrorField = new JLabel();
-
-    private final JPasswordField passwordInputField = new JPasswordField(15);
-    private final JLabel passwordErrorField = new JLabel();
-
-    private final JButton logIn;
-    private final JButton cancel;
+    private final JTextField usernameInputField;
+    private final JPasswordField passwordInputField;
     private LoginController loginController;
 
+    private final JButton loginButton;
+    private final JButton cancelButton;
+
     public LoginView(LoginViewModel loginViewModel) {
-
         this.loginViewModel = loginViewModel;
-        this.loginViewModel.addPropertyChangeListener(this);
+        loginViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel("Login Screen");
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.WHITE);
+        setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+
+        JLabel title = new JLabel("Log In");
+        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setForeground(Color.BLACK);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel("Username"), usernameInputField);
-        final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
+        usernameInputField = createTextField("Username");
+        usernameInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final JPanel buttons = new JPanel();
-        logIn = new JButton("log in");
-        buttons.add(logIn);
-        cancel = new JButton("cancel");
-        buttons.add(cancel);
+        passwordInputField = createPasswordField("Password");
+        passwordInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        logIn.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(logIn)) {
-                            final LoginState currentState = loginViewModel.getState();
-
-                            loginController.execute(
-                                    currentState.getUsername(),
-                                    currentState.getPassword()
-                            );
-                        }
-                    }
-                }
-        );
-
-        cancel.addActionListener(this);
-
-        usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void documentListenerHelper() {
-                final LoginState currentState = loginViewModel.getState();
-                currentState.setUsername(usernameInputField.getText());
-                loginViewModel.setState(currentState);
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
+        loginButton = createStyledButton("Log In", new Color(66, 133, 244), Color.WHITE);
+        loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loginButton.addActionListener(evt -> {
+            loginController.execute(
+                    usernameInputField.getText(),
+                    new String(passwordInputField.getPassword())
+            );
         });
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        cancelButton = createStyledButton("Cancel", Color.WHITE, Color.BLACK);
+        cancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        cancelButton.addActionListener(evt -> loginController.switchToSignupView());
 
-        passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void documentListenerHelper() {
-                final LoginState currentState = loginViewModel.getState();
-                currentState.setPassword(new String(passwordInputField.getPassword()));
-                loginViewModel.setState(currentState);
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-        });
-
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(usernameErrorField);
-        this.add(passwordInfo);
-        this.add(buttons);
+        add(Box.createVerticalStrut(10));
+        add(title);
+        add(Box.createVerticalStrut(20));
+        add(usernameInputField);
+        add(Box.createVerticalStrut(15));
+        add(passwordInputField);
+        add(Box.createVerticalStrut(20));
+        add(loginButton);
+        add(Box.createVerticalStrut(10));
+        add(cancelButton);
     }
 
-    /**
-     * React to a button click that results in evt.
-     * @param evt the ActionEvent to react to
-     */
-    public void actionPerformed(ActionEvent evt) {
-        System.out.println("Click " + evt.getActionCommand());
+    private JTextField createTextField(String placeholder) {
+        JTextField textField = new JTextField(15);
+        styleTextField(textField, placeholder);
+        return textField;
+    }
+
+    private JPasswordField createPasswordField(String placeholder) {
+        JPasswordField passwordField = new JPasswordField(15);
+        stylePasswordField(passwordField, placeholder);
+        return passwordField;
+    }
+
+    private void styleTextField(JTextField field, String placeholder) {
+        field.setFont(new Font("Arial", Font.PLAIN, 16));
+        field.setPreferredSize(new Dimension(300, 40));
+        field.setMaximumSize(new Dimension(300, 40));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+        field.setText(placeholder);
+        field.setForeground(Color.GRAY);
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (field.getText().equals(placeholder)) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (field.getText().isEmpty()) {
+                    field.setForeground(Color.GRAY);
+                    field.setText(placeholder);
+                }
+            }
+        });
+    }
+
+    private void stylePasswordField(JPasswordField field, String placeholder) {
+        field.setFont(new Font("Arial", Font.PLAIN, 16));
+        field.setPreferredSize(new Dimension(300, 40));
+        field.setMaximumSize(new Dimension(300, 40));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+
+        field.setEchoChar((char) 0); // Show text
+        field.setText(placeholder);
+        field.setForeground(Color.GRAY);
+
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                String currentText = new String(field.getPassword());
+                if (currentText.equals(placeholder)) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                    field.setEchoChar('\u2022'); // Unicode bullet character
+                }
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (field.getPassword().length == 0) {
+                    field.setEchoChar((char) 0); // Show text
+                    field.setForeground(Color.GRAY);
+                    field.setText(placeholder);
+                }
+            }
+        });
+    }
+
+    private JButton createStyledButton(String text, Color bgColor, Color fgColor) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(bgColor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.setColor(fgColor);
+                g2.setFont(getFont());
+                FontMetrics fm = g2.getFontMetrics();
+                int x = (getWidth() - fm.stringWidth(getText())) / 2;
+                int y = (getHeight() + fm.getAscent()) / 2 - fm.getDescent();
+                g2.drawString(getText(), x, y);
+                g2.dispose();
+            }
+
+            @Override
+            protected void paintBorder(Graphics g) {
+            }
+        };
+
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setPreferredSize(new Dimension(300, 40));
+        button.setMaximumSize(new Dimension(300, 40));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return button;
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final LoginState state = (LoginState) evt.getNewValue();
-        setFields(state);
-        usernameErrorField.setText(state.getLoginError());
+        LoginState state = (LoginState) evt.getNewValue();
+        usernameInputField.setText(state.getUsername());
+        if (state.getPassword() == null || state.getPassword().isEmpty()) {
+            passwordInputField.setEchoChar((char) 0); // Show placeholder text
+            passwordInputField.setText("Password");
+            passwordInputField.setForeground(Color.GRAY);
+        } else {
+            passwordInputField.setEchoChar('\u2022'); // Unicode bullet character
+            passwordInputField.setText(state.getPassword());
+            passwordInputField.setForeground(Color.BLACK);
+        }
     }
 
-    private void setFields(LoginState state) {
-        usernameInputField.setText(state.getUsername());
-        passwordInputField.setText(state.getPassword());
+    public void resetFields() {
+        usernameInputField.setText("Username");
+        usernameInputField.setForeground(Color.GRAY);
+
+        passwordInputField.setEchoChar((char) 0); // Show placeholder text
+        passwordInputField.setText("Password");
+        passwordInputField.setForeground(Color.GRAY);
     }
 
     public String getViewName() {
