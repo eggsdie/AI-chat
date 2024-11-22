@@ -11,28 +11,23 @@ public class LandingView extends JPanel {
     private final String viewName = "landing";
 
     public LandingView(ActionListener loginListener, ActionListener signupListener) {
-        // Set layout and background color
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
-        // Title Label
         JLabel title = new JLabel("Welcome to AI CHAT!");
         title.setFont(new Font("Arial", Font.BOLD, 24));
         title.setForeground(Color.BLACK);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Login Button
         JButton loginButton = createStyledButton("Login", new Color(66, 133, 244), Color.WHITE, false);
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.addActionListener(loginListener);
 
-        // Signup Button with a visible border
         JButton signupButton = createStyledButton("Signup", Color.WHITE, Color.BLACK, true);
         signupButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         signupButton.addActionListener(signupListener);
 
-        // Adding components to the panel
         add(Box.createVerticalStrut(20));
         add(title);
         add(Box.createVerticalStrut(30));
@@ -70,7 +65,6 @@ public class LandingView extends JPanel {
 
             @Override
             protected void paintBorder(Graphics g) {
-                // No border needed; custom paint handles it
             }
         };
 
