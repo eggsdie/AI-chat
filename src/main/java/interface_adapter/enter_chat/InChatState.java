@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public class InChatState {
 
-    private ChatEntry chatEntry = new ChatEntry("", LocalTime.now(), "");
+    private ChatEntry chatEntry;
 
     public ChatEntry getChatEntry() {
         return chatEntry;

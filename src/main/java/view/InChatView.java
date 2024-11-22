@@ -4,11 +4,13 @@ import entity.ChatEntry;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.InChatState;
 import interface_adapter.enter_chat.InChatViewModel;
+import interface_adapter.login.LoginState;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalTime;
 
 public class InChatView extends JPanel implements PropertyChangeListener {
 
@@ -18,18 +20,23 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     private JTextField textEntryField = new JTextField();
     private JTextArea chatArea = new JTextArea();
     private EnterChatController enterChatController;
-    private ChatEntry chatEntry;
+    private JLabel otherUser = new JLabel();
+    private JButton enterButton = new JButton("Send");
 
     public InChatView(InChatViewModel inChatViewModel) {
         this.inChatViewModel = inChatViewModel;
         this.inChatViewModel.addPropertyChangeListener(this);
 
         this.setLayout(new BorderLayout());
-        chatArea.setEditable(false);
-        // chatArea.setText("Chat with " + chatEntry.getOtherUser() + "\n\n" + chatEntry.getLastMessagePreview());
+        //chatArea.setEditable(false);
+        //chatArea.setPreferredSize(new Dimension(300, 150));
+
+        this.add(otherUser, BorderLayout.NORTH);
         bottomPanel.add(textEntryField, BorderLayout.CENTER);
+        bottomPanel.add(enterButton, BorderLayout.EAST);
         this.add(chatArea, BorderLayout.CENTER);
         this.add(bottomPanel, BorderLayout.SOUTH);
+
     }
 
     public String getViewName() {
@@ -39,7 +46,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final InChatState state = (InChatState) evt.getNewValue();
-        chatEntry = state.getChatEntry();
+        otherUser.setText(state.getChatEntry().getOtherUser());
     }
 
     public void setEnterChatController(EnterChatController enterChatController) {
