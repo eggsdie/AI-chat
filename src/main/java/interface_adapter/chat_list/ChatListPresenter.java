@@ -22,12 +22,7 @@ public class ChatListPresenter implements ChatListOutputBoundary {
 
     @Override
     public void prepareSuccessView(ChatListOutputData outputData) {
-        // On success, switch to the in chat view.
-//        final InChatState inChatState = inChatViewModel.getState();
-//        this.inChatViewModel.setState(inChatState);
-//        inChatViewModel.firePropertyChanged();
-//        viewManagerModel.setState(inChatViewModel.getViewName());
-//        viewManagerModel.firePropertyChanged();
+
     }
 
     @Override

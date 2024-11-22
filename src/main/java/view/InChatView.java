@@ -1,14 +1,11 @@
 package view;
 
 import entity.ChatEntry;
-import interface_adapter.change_password.LoggedInState;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.InChatState;
 import interface_adapter.enter_chat.InChatViewModel;
-import interface_adapter.login.LoginController;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,6 +13,7 @@ import java.beans.PropertyChangeListener;
 public class InChatView extends JPanel implements PropertyChangeListener {
 
     private String viewName = "in chat";
+    private final InChatViewModel inChatViewModel;
     private JPanel bottomPanel = new JPanel(new BorderLayout());
     private JTextField textEntryField = new JTextField();
     private JTextArea chatArea = new JTextArea();
@@ -23,6 +21,8 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     private ChatEntry chatEntry;
 
     public InChatView(InChatViewModel inChatViewModel) {
+        this.inChatViewModel = inChatViewModel;
+        this.inChatViewModel.addPropertyChangeListener(this);
 
         this.setLayout(new BorderLayout());
         chatArea.setEditable(false);

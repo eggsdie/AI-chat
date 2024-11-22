@@ -26,9 +26,10 @@ public class EnterChatPresenter implements EnterChatOutputBoundary {
         final InChatState inChatState = inChatViewModel.getState();
         inChatState.setChatEntry(outputData.getChatEntry());
         this.inChatViewModel.setState(inChatState);
-        inChatViewModel.firePropertyChanged();
-        viewManagerModel.setState(inChatViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
+        this.inChatViewModel.firePropertyChanged();
+
+        this.viewManagerModel.setState(inChatViewModel.getViewName());
+        this.viewManagerModel.firePropertyChanged();
     }
 
     @Override

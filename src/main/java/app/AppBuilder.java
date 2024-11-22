@@ -133,7 +133,7 @@ public class AppBuilder {
     public AppBuilder addInChatView() {
         inChatViewModel = new InChatViewModel();
         inChatView = new InChatView(inChatViewModel);
-        cardPanel.add(chatListView, chatListView.getViewName());
+        cardPanel.add(inChatView, inChatView.getViewName());
         return this;
     }
 
@@ -198,12 +198,17 @@ public class AppBuilder {
     public AppBuilder addChatListUseCase() {
         final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(viewManagerModel,
                 chatListViewModel);
+        final EnterChatOutputBoundary enterChatOutputBoundary = new EnterChatPresenter(viewManagerModel,
+                inChatViewModel);
 
         final ChatListInputBoundary chatListInteractor =
                 new ChatListManager(friendRepository, chatListOutputBoundary);
+        final EnterChatInputBoundary enterChatInteracter = new EnterChatInteractor(enterChatOutputBoundary);
 
         final ChatListController chatListController = new ChatListController(chatListInteractor);
         chatListView.setChatListController(chatListController);
+        final EnterChatController enterChatController = new EnterChatController(enterChatInteracter);
+        chatListView.setEnterChatController(enterChatController);
         return this;
     }
 
