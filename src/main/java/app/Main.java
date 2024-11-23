@@ -20,6 +20,7 @@ public class Main {
         UIManager.setLookAndFeel(new FlatLightLaf());
         // TODO: add the Logout Use Case to the app using the appBuilder
         final JFrame application = appBuilder
+                                            .addLandingView()
                                             .addLoginView()
                                             .addSignupView()
                                             .addLoggedInView()
