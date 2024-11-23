@@ -2,6 +2,7 @@ package interface_adapter.enter_chat;
 
 import entity.ChatEntry;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.chat_list.ChatListViewModel;
 import use_case.chat_list.ChatListOutputBoundary;
 import use_case.chat_list.ChatListOutputData;
 import use_case.enter_chat.EnterChatOutputBoundary;
@@ -13,11 +14,13 @@ public class EnterChatPresenter implements EnterChatOutputBoundary {
 
     private final InChatViewModel inChatViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final ChatListViewModel chatListViewModel;
 
     public EnterChatPresenter(ViewManagerModel viewManagerModel,
-                              InChatViewModel inChatViewModel) {
+                              InChatViewModel inChatViewModel, ChatListViewModel chatListViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.inChatViewModel = inChatViewModel;
+        this.chatListViewModel = chatListViewModel;
     }
 
     @Override
@@ -35,6 +38,11 @@ public class EnterChatPresenter implements EnterChatOutputBoundary {
     @Override
     public void prepareFailView(String errorMessage) {
 
+    }
+
+    public void switchToChatListView() {
+        viewManagerModel.setState(chatListViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
 }
