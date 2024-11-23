@@ -1,12 +1,10 @@
 package view;
 
 import entity.ChatEntry;
-import entity.CommonUser;
 import entity.Message;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.InChatState;
 import interface_adapter.enter_chat.InChatViewModel;
-import interface_adapter.login.LoginState;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +18,6 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
 public class InChatView extends JPanel implements PropertyChangeListener {
 
@@ -36,7 +33,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
 
     private JPanel bottomPanel = new JPanel(new BorderLayout());
     private JTextField textEntryField = new JTextField();
-    private JButton enterButton = new JButton("Send");
+    private JButton sendButton = new JButton("Send");
 
     private EnterChatController enterChatController;
 
@@ -56,7 +53,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         topPanel.add(otherUser, BorderLayout.EAST);
 
         bottomPanel.add(textEntryField, BorderLayout.CENTER);
-        bottomPanel.add(enterButton, BorderLayout.EAST);
+        bottomPanel.add(sendButton, BorderLayout.EAST);
 
         textEntryField.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -80,13 +77,14 @@ public class InChatView extends JPanel implements PropertyChangeListener {
             }
         });
 
-        enterButton.addActionListener(
+        sendButton.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(enterButton)) {
+                        if (evt.getSource().equals(sendButton)) {
                             final InChatState currentState = inChatViewModel.getState();
                             currentState.addMessage(new Message(currentState.getChatEntry().getCurrentUser(),
                                     textEntryField.getText(), LocalTime.now()));
+                            textEntryField.setText("");
                             refreshMessages(currentState.getChatEntry());
                             inChatViewModel.setState(currentState);
                         }
@@ -121,7 +119,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
 
     public JPanel createMessagePanel(Message message) {
         final JPanel messagePanel = new JPanel(new BorderLayout());
-        messagePanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        messagePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.lightGray));
         messagePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         messagePanel.setPreferredSize(new Dimension(0, 60)); // 0 width allows resizing
         messagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
