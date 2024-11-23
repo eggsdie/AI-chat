@@ -53,12 +53,6 @@ import view.LandingView;
 import view.ViewManager;
 import view.*;
 
-import interface_adapter.friend_search.FriendSearchController;
-import interface_adapter.friend_search.FriendSearchPresenter;
-import use_case.friend_search.FriendSearchInputBoundary;
-import use_case.friend_search.FriendSearchInteractor;
-import use_case.friend_search.FriendSearchOutputBoundary;
-
 /**
  * The AppBuilder class is responsible for putting together the pieces of
  * our CA architecture; piece by piece.
