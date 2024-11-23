@@ -2,6 +2,7 @@ package use_case.chat_list;
 
 import entity.ChatEntry;
 import entity.Friend;
+import entity.User;
 
 import java.util.List;
 
@@ -11,11 +12,11 @@ public interface ChatListUserDataAccessInterface {
 
     boolean friendExists(String username);
 
-    boolean chatWithYourself(String yourUsername, String username);
+    boolean chatWithYourself(User yourUsername, String username);
 
     void saveFriend(Friend friend, ChatEntry chat);
 
-    String getActiveUser();
+    User getActiveUser();
 
     public List<ChatEntry> getAllChats();
 

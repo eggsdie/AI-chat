@@ -9,7 +9,6 @@ import interface_adapter.chat_list.ChatListController;
 import interface_adapter.chat_list.ChatListState;
 import interface_adapter.chat_list.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
-import interface_adapter.enter_chat.InChatViewModel;
 import use_case.chat_list.ChatListManager;
 import use_case.chat_list.ChatListOutputBoundary;
 
@@ -115,12 +114,12 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         addFriendButton.addActionListener(e -> {
             final ChatListState currentState = chatListViewModel.getState();
             String friendName = JOptionPane.showInputDialog(this, "Enter Friend's Name:");
-
-            currentState.setUsername(friendName);
+            currentState.setOtherUser(friendName);
             chatListViewModel.setState(currentState);
 
-            if (currentState.getUsername() != null && !currentState.getUsername().trim().isEmpty()) {
-                chatListController.addChat(currentState.getUsername(), "Hello! This is a new conversation.");
+            if (currentState.getOtherUser() != null && !currentState.getOtherUser().trim().isEmpty()) {
+                chatListController.addChat(currentState.getCurrentUser(), currentState.getOtherUser(),
+                        "Hello! This is a new conversation.");
                 refreshChatList("");
             }
 
@@ -208,7 +207,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final ChatListState state = (ChatListState) evt.getNewValue();
-
+        state.setCurrentUser(friendRepository.getActiveUser());
         if (state.getAddFriendError() != null) {
             JOptionPane.showMessageDialog(this, state.getAddFriendError());
         }

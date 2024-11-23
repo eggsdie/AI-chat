@@ -12,6 +12,10 @@ public class ChatListOutputData {
         this.chatEntry = chatEntry;
     }
 
+    public ChatEntry getChatEntry() {
+        return chatEntry;
+    }
+
     public boolean isUseCaseFailed() {
         return useCaseFailed;
     }

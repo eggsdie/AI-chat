@@ -22,16 +22,17 @@ public class ChatListManager implements ChatListInputBoundary {
         //if (!chatListUserDataAccessInterface.userExists(chatListInputData.getUser())) {
             //userPresenter.prepareFailView("User does not exist.");
         //}
-        if (chatListUserDataAccessInterface.friendExists(chatListInputData.getUser())) {
+        if (chatListUserDataAccessInterface.friendExists(chatListInputData.getOtherUser())) {
             userPresenter.prepareFailView("Friend already added.");
         }
         else if (chatListUserDataAccessInterface.chatWithYourself(chatListUserDataAccessInterface.getActiveUser(),
-                chatListInputData.getUser())) {
+                chatListInputData.getOtherUser())) {
             userPresenter.prepareFailView("Can't make a chat with yourself!");
         }
         else {
-            final Friend friend = new Friend(chatListInputData.getUser());
-            final ChatEntry chat = new ChatEntry(chatListInputData.getUser(), LocalTime.now(), messagePreview);
+            final Friend friend = new Friend(chatListInputData.getOtherUser());
+            final ChatEntry chat = new ChatEntry(chatListInputData.getCurrentUser(), chatListInputData.getOtherUser(),
+                    LocalTime.now(), messagePreview);
 
             chatListUserDataAccessInterface.saveFriend(friend, chat);
 
