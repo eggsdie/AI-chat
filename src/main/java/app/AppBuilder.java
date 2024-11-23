@@ -10,12 +10,15 @@ import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.add_friend.AddFriendController;
-import interface_adapter.add_friend.AddFriendPresenter;
-import interface_adapter.add_friend.AddFriendViewModel;
+import interface_adapter.chat_list.ChatListController;
+import interface_adapter.chat_list.ChatListPresenter;
+import interface_adapter.chat_list.ChatListViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.enter_chat.EnterChatController;
+import interface_adapter.enter_chat.EnterChatPresenter;
+import interface_adapter.enter_chat.InChatViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -24,12 +27,15 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import use_case.add_friend.AddFriendInputBoundary;
-import use_case.add_friend.AddFriendInteractor;
-import use_case.add_friend.AddFriendOutputBoundary;
+import use_case.chat_list.ChatListInputBoundary;
+import use_case.chat_list.ChatListManager;
+import use_case.chat_list.ChatListOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.enter_chat.EnterChatInputBoundary;
+import use_case.enter_chat.EnterChatInteractor;
+import use_case.enter_chat.EnterChatOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -45,7 +51,6 @@ import view.LoginView;
 import view.SignupView;
 import view.LandingView;
 import view.ViewManager;
-
 import view.*;
 
 import interface_adapter.friend_search.FriendSearchController;
@@ -73,8 +78,10 @@ public class AppBuilder {
     private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
-    private AddFriendViewModel addFriendViewModel;
-    private AddFriendView addFriendView;
+    private ChatListViewModel chatListViewModel;
+    private ChatListView chatListView;
+    private InChatViewModel inChatViewModel;
+    private InChatView inChatView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -132,13 +139,26 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the AddFriend View to the application.
+     * Adds the ChatList View to the application.
      * @return this builder
      */
-    public AppBuilder addAddFriendView() {
-        addFriendViewModel = new AddFriendViewModel();
-        addFriendView = new AddFriendView(addFriendViewModel);
-        cardPanel.add(addFriendView, addFriendView.getViewName());
+    public AppBuilder addChatListView() {
+        chatListViewModel = new ChatListViewModel();
+        final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(
+                viewManagerModel, chatListViewModel);
+        chatListView = new ChatListView(friendRepository, chatListOutputBoundary, chatListViewModel);
+        cardPanel.add(chatListView, chatListView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the InChat View to the application.
+     * @return this builder
+     */
+    public AppBuilder addInChatView() {
+        inChatViewModel = new InChatViewModel();
+        inChatView = new InChatView(inChatViewModel);
+        cardPanel.add(inChatView, inChatView.getViewName());
         return this;
     }
 
@@ -160,7 +180,8 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLoginUseCase() {
-        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, chatListViewModel,
+                loginViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor, viewManagerModel);
@@ -199,27 +220,35 @@ public class AppBuilder {
      * Adds the AddFriend Use Case to the application.
      * @return this builder
      */
-    public AppBuilder addAddFriendUseCase() {
-        final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(viewManagerModel,
-                addFriendViewModel, loggedInViewModel);
+    public AppBuilder addChatListUseCase() {
+        final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(viewManagerModel,
+                chatListViewModel);
+        final EnterChatOutputBoundary enterChatOutputBoundary =
+                new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
 
-        final AddFriendInputBoundary addFriendInteractor =
-                new AddFriendInteractor(friendRepository, addFriendOutputBoundary);
+        final ChatListInputBoundary chatListInteractor =
+                new ChatListManager(friendRepository, chatListOutputBoundary);
+        final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(enterChatOutputBoundary);
 
-        final AddFriendController addFriendController = new AddFriendController(addFriendInteractor);
-        addFriendView.setAddFriendController(addFriendController);
+        final ChatListController chatListController = new ChatListController(chatListInteractor);
+        chatListView.setChatListController(chatListController);
+        final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
+        chatListView.setEnterChatController(enterChatController);
         return this;
     }
 
-    public AppBuilder addFriendSearchUseCase() {
-        final FriendSearchOutputBoundary friendSearchOutputBoundary = new FriendSearchPresenter(viewManagerModel,
-                addFriendViewModel);
+    /**
+     * Adds the EnterChat Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addEnterChatUseCase() {
+        final EnterChatOutputBoundary enterChatOutputBoundary =
+                new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
 
-        final FriendSearchInputBoundary friendSearchInteractor =
-                new FriendSearchInteractor(friendSearchOutputBoundary);
+        final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(enterChatOutputBoundary);
 
-        final FriendSearchController friendSearchController = new FriendSearchController(friendSearchInteractor);
-        loggedInView.setFriendSearchController(friendSearchController);
+        final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
+        inChatView.setEnterChatController(enterChatController);
         return this;
     }
 
@@ -237,4 +266,5 @@ public class AppBuilder {
 
         return application;
     }
+
 }
