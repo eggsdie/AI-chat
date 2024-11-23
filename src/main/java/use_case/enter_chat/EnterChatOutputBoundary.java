@@ -19,7 +19,8 @@ public interface EnterChatOutputBoundary {
     void prepareFailView(String errorMessage);
 
     /**
-     * Switches to the InChat View.
+     * Switches to the ChatList View.
      */
+    void switchToChatListView();
 }
 

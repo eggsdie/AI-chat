@@ -55,6 +55,8 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         bottomPanel.add(textEntryField, BorderLayout.CENTER);
         bottomPanel.add(sendButton, BorderLayout.EAST);
 
+        backButton.addActionListener(evt -> enterChatController.switchToChatListView());
+
         textEntryField.getDocument().addDocumentListener(new DocumentListener() {
 
             private void documentListenerHelper() {

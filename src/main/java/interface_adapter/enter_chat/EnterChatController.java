@@ -20,4 +20,8 @@ public class EnterChatController {
         enterChatUseCaseInteractor.execute(enterChatInputData);
     }
 
+    public void switchToChatListView() {
+        enterChatUseCaseInteractor.switchToChatListView();
+    }
+
 }

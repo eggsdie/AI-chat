@@ -199,7 +199,7 @@ public class AppBuilder {
         final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(viewManagerModel,
                 chatListViewModel);
         final EnterChatOutputBoundary enterChatOutputBoundary =
-                new EnterChatPresenter(viewManagerModel, inChatViewModel);
+                new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
 
         final ChatListInputBoundary chatListInteractor =
                 new ChatListManager(friendRepository, chatListOutputBoundary);
@@ -209,6 +209,21 @@ public class AppBuilder {
         chatListView.setChatListController(chatListController);
         final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
         chatListView.setEnterChatController(enterChatController);
+        return this;
+    }
+
+    /**
+     * Adds the EnterChat Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addEnterChatUseCase() {
+        final EnterChatOutputBoundary enterChatOutputBoundary =
+                new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
+
+        final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(enterChatOutputBoundary);
+
+        final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
+        inChatView.setEnterChatController(enterChatController);
         return this;
     }
 

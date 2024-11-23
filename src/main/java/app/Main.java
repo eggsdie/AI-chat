@@ -29,6 +29,7 @@ public class Main {
                                             .addLoginUseCase()
                                             .addChangePasswordUseCase()
                                             .addChatListUseCase()
+                                            .addEnterChatUseCase()
                                             .addLogoutUseCase()
                                             .build();
 
