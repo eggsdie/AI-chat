@@ -5,6 +5,7 @@ import java.util.List;
 
 import entity.ChatEntry;
 import entity.Friend;
+import entity.User;
 import use_case.chat_list.ChatListUserDataAccessInterface;
 
 public class InMemoryFriendRepository implements ChatListUserDataAccessInterface {
@@ -17,8 +18,8 @@ public class InMemoryFriendRepository implements ChatListUserDataAccessInterface
     }
 
     @Override
-    public String getActiveUser() {
-        return dao.getCurrentUsername();
+    public User getActiveUser() {
+        return dao.getCurrentUser();
     }
 
     public boolean userExists(String username) {
@@ -36,8 +37,8 @@ public class InMemoryFriendRepository implements ChatListUserDataAccessInterface
     }
 
     @Override
-    public boolean chatWithYourself(String yourUsername, String username) {
-        return yourUsername.equals(username);
+    public boolean chatWithYourself(User currentUser, String username) {
+        return currentUser.getName().equals(username);
     }
 
     public void saveFriend(Friend friend, ChatEntry chat) {

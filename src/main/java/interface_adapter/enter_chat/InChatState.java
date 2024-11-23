@@ -1,8 +1,7 @@
 package interface_adapter.enter_chat;
 
 import entity.ChatEntry;
-
-import java.time.LocalTime;
+import entity.Message;
 
 public class InChatState {
 
@@ -14,6 +13,10 @@ public class InChatState {
 
     public void setChatEntry(ChatEntry chatEntry) {
         this.chatEntry = chatEntry;
+    }
+
+    public void addMessage(Message message) {
+        this.chatEntry.addMessage(message);
     }
 
 }

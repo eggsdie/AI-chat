@@ -1,8 +1,11 @@
 package interface_adapter.chat_list;
 
+import entity.User;
+
 public class ChatListState {
 
-    private String username = "";
+    private User currentUser;
+    private String otherUser = "";
     private String addFriendError;
 
     public String getAddFriendError() {
@@ -13,18 +16,26 @@ public class ChatListState {
         this.addFriendError = addFriendError;
     }
 
-    public String getUsername() {
-        return username;
+    public User getCurrentUser() {
+        return currentUser;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setCurrentUser(User username) {
+        this.currentUser = username;
+    }
+
+    public String getOtherUser() {
+        return otherUser;
+    }
+
+    public void setOtherUser(String username) {
+        this.otherUser = username;
     }
 
     @Override
     public String toString() {
         return "AddFriendState{"
-                + "username='" + username + '\''
+                + "username='" + otherUser + '\''
                 + '}';
     }
 

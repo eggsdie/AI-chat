@@ -30,7 +30,6 @@ public class Main {
                                             .addChangePasswordUseCase()
                                             .addChatListUseCase()
                                             .addLogoutUseCase()
-                                            .addEnterChatUseCase()
                                             .build();
 
         application.pack();

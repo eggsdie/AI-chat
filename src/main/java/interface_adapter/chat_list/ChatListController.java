@@ -1,5 +1,6 @@
 package interface_adapter.chat_list;
 
+import entity.User;
 import use_case.chat_list.ChatListInputBoundary;
 import use_case.chat_list.ChatListInputData;
 
@@ -11,8 +12,8 @@ public class ChatListController {
         this.chatListUseCaseInteractor = chatListUseCaseInteractor;
     }
 
-    public void addChat(String name, String messagePreview) {
-        final ChatListInputData chatListInputData = new ChatListInputData(name);
+    public void addChat(User currentUser, String otherUser, String messagePreview) {
+        final ChatListInputData chatListInputData = new ChatListInputData(currentUser, otherUser);
 
         chatListUseCaseInteractor.addChat(chatListInputData, messagePreview);
     }

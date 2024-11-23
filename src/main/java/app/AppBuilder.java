@@ -198,33 +198,17 @@ public class AppBuilder {
     public AppBuilder addChatListUseCase() {
         final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(viewManagerModel,
                 chatListViewModel);
-        final EnterChatOutputBoundary enterChatOutputBoundary = new EnterChatPresenter(viewManagerModel,
-                inChatViewModel);
+        final EnterChatOutputBoundary enterChatOutputBoundary =
+                new EnterChatPresenter(viewManagerModel, inChatViewModel);
 
         final ChatListInputBoundary chatListInteractor =
                 new ChatListManager(friendRepository, chatListOutputBoundary);
-        final EnterChatInputBoundary enterChatInteracter = new EnterChatInteractor(enterChatOutputBoundary);
+        final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(enterChatOutputBoundary);
 
         final ChatListController chatListController = new ChatListController(chatListInteractor);
         chatListView.setChatListController(chatListController);
-        final EnterChatController enterChatController = new EnterChatController(enterChatInteracter);
-        chatListView.setEnterChatController(enterChatController);
-        return this;
-    }
-
-    /**
-     * Adds the EnterChat Use Case to the application.
-     * @return this builder
-     */
-    public AppBuilder addEnterChatUseCase() {
-        final EnterChatOutputBoundary enterChatOutputBoundary = new EnterChatPresenter(viewManagerModel,
-                inChatViewModel);
-
-        final EnterChatInputBoundary enterChatInteractor =
-                new EnterChatInteractor(enterChatOutputBoundary);
-
         final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
-        inChatView.setEnterChatController(enterChatController);
+        chatListView.setEnterChatController(enterChatController);
         return this;
     }
 
