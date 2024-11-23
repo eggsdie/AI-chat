@@ -1,12 +1,18 @@
-package use_case.add_friend;
+package use_case.send_message;
 
-public interface AddFriendOutputBoundary {
+import entity.ChatEntry;
+
+import java.util.List;
+
+public interface SendMessageOutputBoundary {
+    void presentChatList(List<ChatEntry> chatList);
+    void presentError(String errorMessage);
 
     /**
      * Prepares the success view for the AddChat Use Case.
      * @param outputData the output data
      */
-    void prepareSuccessView(AddFriendOutputData outputData);
+    void prepareSuccessView(SendMessageOutputData outputData);
 
     /**
      * Prepares the failure view for the AddChat Use Case.
@@ -17,5 +23,5 @@ public interface AddFriendOutputBoundary {
     /**
      * Switches to the InChat View.
      */
-    void switchToLoggedInView();
 }
+

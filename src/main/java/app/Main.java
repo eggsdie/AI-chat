@@ -24,12 +24,13 @@ public class Main {
                                             .addLoginView()
                                             .addSignupView()
                                             .addLoggedInView()
-                                            .addAddFriendView()
-                                            .addFriendSearchUseCase()
+                                            .addChatListView()
+                                            .addInChatView()
                                             .addSignupUseCase()
                                             .addLoginUseCase()
                                             .addChangePasswordUseCase()
-                                            .addAddFriendUseCase()
+                                            .addChatListUseCase()
+                                            .addEnterChatUseCase()
                                             .addLogoutUseCase()
                                             .build();
 

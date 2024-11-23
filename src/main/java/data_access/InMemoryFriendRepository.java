@@ -3,13 +3,14 @@ package data_access;
 import java.util.ArrayList;
 import java.util.List;
 
-import entity.Chat;
+import entity.ChatEntry;
 import entity.Friend;
-import use_case.add_friend.AddFriendUserDataAccessInterface;
+import entity.User;
+import use_case.chat_list.ChatListUserDataAccessInterface;
 
-public class InMemoryFriendRepository implements AddFriendUserDataAccessInterface {
+public class InMemoryFriendRepository implements ChatListUserDataAccessInterface {
     private final List<Friend> friends = new ArrayList<>();
-    private final List<Chat> chats = new ArrayList<>();
+    private final ArrayList<ChatEntry> chats = new ArrayList<>();
     private final InMemoryUserDataAccessObject dao;
 
     public InMemoryFriendRepository(InMemoryUserDataAccessObject dao) {
@@ -17,8 +18,8 @@ public class InMemoryFriendRepository implements AddFriendUserDataAccessInterfac
     }
 
     @Override
-    public String getActiveUser() {
-        return dao.getCurrentUsername();
+    public User getActiveUser() {
+        return dao.getCurrentUser();
     }
 
     public boolean userExists(String username) {
@@ -36,13 +37,17 @@ public class InMemoryFriendRepository implements AddFriendUserDataAccessInterfac
     }
 
     @Override
-    public boolean chatWithYourself(String yourUsername, String username) {
-        return yourUsername.equals(username);
+    public boolean chatWithYourself(User currentUser, String username) {
+        return currentUser.getName().equals(username);
     }
 
-    public void saveFriend(Friend friend, Chat chat) {
+    public void saveFriend(Friend friend, ChatEntry chat) {
         friends.add(friend);
         chats.add(chat);
+    }
+
+    public List<ChatEntry> getAllChats() {
+        return chats;
     }
 
 }
