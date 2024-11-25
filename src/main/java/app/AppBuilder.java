@@ -10,12 +10,12 @@ import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.chat_list.ChatListController;
-import interface_adapter.chat_list.ChatListPresenter;
-import interface_adapter.chat_list.ChatListViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.chat_list.ChatListController;
+import interface_adapter.chat_list.ChatListPresenter;
+import interface_adapter.chat_list.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.EnterChatPresenter;
 import interface_adapter.enter_chat.InChatViewModel;
@@ -27,6 +27,10 @@ import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.settings.SettingsController;
+import interface_adapter.settings.SettingsPresenter;
+import interface_adapter.settings.SettingsViewModel;
+import okhttp3.internal.http2.Settings;
 import use_case.chat_list.ChatListInputBoundary;
 import use_case.chat_list.ChatListManager;
 import use_case.chat_list.ChatListOutputBoundary;
@@ -45,6 +49,9 @@ import use_case.logout.LogoutOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+import use_case.settings.SettingsInputBoundary;
+import use_case.settings.SettingsInteractor;
+import use_case.settings.SettingsOutputBoundary;
 
 import view.LoggedInView;
 import view.LoginView;
@@ -76,6 +83,9 @@ public class AppBuilder {
     private ChatListView chatListView;
     private InChatViewModel inChatViewModel;
     private InChatView inChatView;
+
+    private SettingsViewModel settingsViewModel;
+    private SettingsView settingsView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -155,6 +165,14 @@ public class AppBuilder {
         cardPanel.add(inChatView, inChatView.getViewName());
         return this;
     }
+
+    public AppBuilder addSettingsView() {
+        settingsViewModel = new SettingsViewModel();
+        settingsView = new SettingsView(settingsViewModel);
+        cardPanel.add(settingsView, settingsView.getViewName());
+        return this;
+    }
+
 
     /**
      * Adds the Signup Use Case to the application.
@@ -243,6 +261,16 @@ public class AppBuilder {
 
         final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
         inChatView.setEnterChatController(enterChatController);
+        return this;
+    }
+
+    public AppBuilder addSettingsUseCase() {
+        final SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(viewManagerModel, settingsViewModel,
+                chatListViewModel);
+        final SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
+
+        final SettingsController settingsController = new SettingsController(settingsInteractor);
+        settingsView.setSettingsController(settingsController);
         return this;
     }
 
