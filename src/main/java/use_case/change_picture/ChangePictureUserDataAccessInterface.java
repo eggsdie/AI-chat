@@ -1,3 +1,4 @@
+/*
 package use_case.change_picture;
 
 import entity.User;
@@ -5,3 +6,4 @@ import entity.User;
 public interface ChangePictureUserDataAccessInterface {
     void changePicture(User user);
 }
+*/

@@ -237,15 +237,20 @@ public class AppBuilder {
                 chatListViewModel);
         final EnterChatOutputBoundary enterChatOutputBoundary =
                 new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
+        final SettingsOutputBoundary settingsOutputBoundary =
+                new SettingsPresenter(viewManagerModel, settingsViewModel, chatListViewModel);
 
         final ChatListInputBoundary chatListInteractor =
                 new ChatListManager(friendRepository, chatListOutputBoundary);
         final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(enterChatOutputBoundary);
+        final SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
 
         final ChatListController chatListController = new ChatListController(chatListInteractor);
         chatListView.setChatListController(chatListController);
         final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
         chatListView.setEnterChatController(enterChatController);
+        final SettingsController settingsController = new SettingsController(settingsInteractor);
+        chatListView.setSettingsController(settingsController);
         return this;
     }
 

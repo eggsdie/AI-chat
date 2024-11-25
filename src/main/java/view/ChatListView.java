@@ -128,11 +128,12 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
         });
 
-        settingsButton.addActionListener(e -> {
-            final ChatListState currentState = chatListViewModel.getState();
-            this.settingsController.execute(currentState.getCurrentUser());
+        settingsButton.addActionListener(evt -> {
+            if (evt.getSource().equals(settingsButton)) {
+                final ChatListState currentState = chatListViewModel.getState();
+                this.settingsController.execute(currentState.getCurrentUser());
             }
-        );
+        });
 
         // Initial rendering
         refreshChatList(""); // Empty query for the full list
