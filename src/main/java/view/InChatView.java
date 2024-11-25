@@ -80,16 +80,14 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         });
 
         sendButton.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(sendButton)) {
-                            final InChatState currentState = inChatViewModel.getState();
-                            currentState.addMessage(new Message(currentState.getChatEntry().getCurrentUser(),
-                                    textEntryField.getText(), LocalTime.now()));
-                            textEntryField.setText("");
-                            refreshMessages(currentState.getChatEntry());
-                            inChatViewModel.setState(currentState);
-                        }
+                evt -> {
+                    if (evt.getSource().equals(sendButton)) {
+                        final InChatState currentState = inChatViewModel.getState();
+                        currentState.addMessage(new Message(currentState.getChatEntry().getCurrentUser(),
+                                textEntryField.getText(), LocalTime.now()));
+                        textEntryField.setText("");
+                        refreshMessages(currentState.getChatEntry());
+                        inChatViewModel.setState(currentState);
                     }
                 }
         );
