@@ -12,4 +12,13 @@ public class SettingsInputData {
     public User getCurrentUser() {
         return currentUser;
     }
+    public String getUsername() {
+        return currentUser.getName();
+    }
+    public String getEmail() {
+        return currentUser.getEmail();
+    }
+    public String getPassword() {
+        return currentUser.getPassword();
+    }
 }
