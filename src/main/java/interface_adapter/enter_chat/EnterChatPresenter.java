@@ -1,14 +1,9 @@
 package interface_adapter.enter_chat;
 
-import entity.ChatEntry;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.chat_list.ChatListViewModel;
-import use_case.chat_list.ChatListOutputBoundary;
-import use_case.chat_list.ChatListOutputData;
 import use_case.enter_chat.EnterChatOutputBoundary;
 import use_case.enter_chat.EnterChatOutputData;
-
-import java.util.List;
 
 public class EnterChatPresenter implements EnterChatOutputBoundary {
 

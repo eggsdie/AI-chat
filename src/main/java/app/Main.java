@@ -26,11 +26,13 @@ public class Main {
                                             .addLoggedInView()
                                             .addChatListView()
                                             .addInChatView()
+                                            .addSettingsView()
                                             .addSignupUseCase()
                                             .addLoginUseCase()
                                             .addChangePasswordUseCase()
                                             .addChatListUseCase()
                                             .addEnterChatUseCase()
+                                            .addSettingsUseCase()
                                             .addLogoutUseCase()
                                             .build();
 
