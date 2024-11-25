@@ -5,10 +5,12 @@ import java.beans.PropertyChangeListener;
 
 import data_access.InMemoryFriendRepository;
 import entity.ChatEntry;
+import interface_adapter.change_password.LoggedInState;
 import interface_adapter.chat_list.ChatListController;
 import interface_adapter.chat_list.ChatListState;
 import interface_adapter.chat_list.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
+import interface_adapter.settings.SettingsController;
 import use_case.chat_list.ChatListManager;
 import use_case.chat_list.ChatListOutputBoundary;
 
@@ -30,6 +32,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     private InMemoryFriendRepository friendRepository;
     private ChatListOutputBoundary chatListOutputBoundary;
     private EnterChatController enterChatController;
+    private SettingsController settingsController;
 
     private final JButton addFriendButton;
 
@@ -125,6 +128,12 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
         });
 
+        settingsButton.addActionListener(e -> {
+            final ChatListState currentState = chatListViewModel.getState();
+            this.settingsController.execute(currentState.getCurrentUser());
+            }
+        );
+
         // Initial rendering
         refreshChatList(""); // Empty query for the full list
     }
@@ -211,7 +220,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         if (state.getAddFriendError() != null) {
             JOptionPane.showMessageDialog(this, state.getAddFriendError());
         }
-
+        chatListViewModel.setState(state);
     }
 
     public void setChatListController(ChatListController chatListController) {
@@ -222,4 +231,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         this.enterChatController = enterChatController;
     }
 
+    public void setSettingsController(SettingsController settingsController) {
+        this.settingsController = settingsController;
+    }
 }

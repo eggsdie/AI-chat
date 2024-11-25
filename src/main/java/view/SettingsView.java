@@ -1,12 +1,24 @@
 package view;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import interface_adapter.chat_list.ChatListController;
+import interface_adapter.logout.LogoutController;
+import interface_adapter.settings.SettingsController;
+import interface_adapter.settings.SettingsState;
+import interface_adapter.settings.SettingsViewModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.*;
 
-public class SettingsView extends JPanel {
+public class SettingsView extends JPanel implements PropertyChangeListener {
+    private final String viewName = "settings";
+    private final SettingsViewModel settingsViewModel;
+    
     private final JLabel profilePicture;
     private final JLabel usernameLabel;
     private final JLabel emailLabel;
@@ -18,16 +30,14 @@ public class SettingsView extends JPanel {
     private final JTextField currentPasswordField;
     private final JTextField newPasswordField;
     private final JTextField retypeNewPasswordField;
+    private ChatListController chatListController;
+    private LogoutController logoutController;
+    private SettingsController settingsController;
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Settings");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 500);
-        frame.add(new SettingsView("User123", "user@example.com", "password123"));
-        frame.setVisible(true);
-    }
+    public SettingsView(SettingsViewModel settingsViewModel) {
+        this.settingsViewModel = settingsViewModel;
+        this.settingsViewModel.addPropertyChangeListener(this);
 
-    public SettingsView(String username, String email, String current_password) {
         // Main layout
         this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -48,8 +58,8 @@ public class SettingsView extends JPanel {
         // User info (Username and email)
         final JPanel userInfoPanel = new JPanel();
         userInfoPanel.setLayout(new BoxLayout(userInfoPanel, BoxLayout.Y_AXIS));
-        usernameLabel = new JLabel(username);
-        emailLabel = new JLabel(email);
+        usernameLabel = new JLabel();
+        emailLabel = new JLabel();
         userInfoPanel.add(usernameLabel);
         userInfoPanel.add(emailLabel);
         profilePanel.add(Box.createHorizontalStrut(10));
@@ -117,14 +127,16 @@ public class SettingsView extends JPanel {
             }
         });
 
-        changePasswordButton.addActionListener(e -> {
+        // How to save new password and get current password
+        changePasswordButton.addActionListener(evt -> {
             // Get the input from the text fields
+            final SettingsState currentState = settingsViewModel.getState();
             final String enteredCurrentPassword = currentPasswordField.getText();
             final String enteredNewPassword = newPasswordField.getText();
             final String retypeNewPassword = retypeNewPasswordField.getText();
 
             // Validate current password
-            if (!enteredCurrentPassword.equals(current_password)) {
+            if (!enteredCurrentPassword.equals(currentState.getPassword())) {
                 JOptionPane.showMessageDialog(null, "Current password is incorrect!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -144,20 +156,33 @@ public class SettingsView extends JPanel {
             // If all validations pass, update the password
             // set user new password using enteredNewPassword
             JOptionPane.showMessageDialog(null, "Password successfully changed!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
+            currentState.setPassword(enteredNewPassword);
+            
             // Clear the text fields
             currentPasswordField.setText("");
             newPasswordField.setText("");
             retypeNewPasswordField.setText("");
         });
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleLogout();
-            }
+
+        logoutButton.addActionListener(e -> {
+            final SettingsState currentState = settingsViewModel.getState();
+            logoutController.execute(currentState.getUsername());
+
+        });
+
+        chatListButton.addActionListener(evt -> {
+            settingsController.switchToChatListView();
         });
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final SettingsState state = (SettingsState) evt.getNewValue();
+        usernameLabel.setText(state.getUsername());
+        emailLabel.setText(state.getEmail());
+    }
+
+    // How to save profile picture into user
     private void uploadProfilePicture() {
         // Use a JFileChooser to let the user select an image file
         final JFileChooser fileChooser = new JFileChooser();
@@ -174,6 +199,15 @@ public class SettingsView extends JPanel {
         }
     }
 
-    private void handleLogout() {
+    public String getViewName() {
+        return viewName;
+    }
+
+    public void setLogoutController(LogoutController logoutController) {
+        this.logoutController = logoutController;
+    }
+
+    public void setSettingsController(SettingsController settingsController) {
+        this.settingsController = settingsController;
     }
 }
