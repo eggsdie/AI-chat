@@ -7,11 +7,9 @@ import use_case.settings.SettingsInputData;
 
 public class SettingsController {
     private final SettingsInputBoundary settingsUseCaseInteractor;
-    private final ViewManagerModel viewManagerModel;
 
-    public SettingsController(SettingsInputBoundary settingsUseCaseInteractor, ViewManagerModel viewManagerModel) {
+    public SettingsController(SettingsInputBoundary settingsUseCaseInteractor) {
         this.settingsUseCaseInteractor = settingsUseCaseInteractor;
-        this.viewManagerModel = viewManagerModel;
     }
 
     public void execute(User currentUser) {
@@ -20,7 +18,7 @@ public class SettingsController {
         settingsUseCaseInteractor.execute(settingsInputData);
     }
 
-    public void switchToSettingsView() {
-        viewManagerModel.setState("settings");
+    public void switchToChatListView() {
+        settingsUseCaseInteractor.switchToChatListView();
     }
 }
