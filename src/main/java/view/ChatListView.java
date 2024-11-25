@@ -110,6 +110,11 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
         this.add(bottomPanel, BorderLayout.SOUTH);
 
+        // Action for return button
+        returnButton.addActionListener(e -> {
+            resetSearch();
+        });
+
         // Action for adding a friend
         addFriendButton.addActionListener(e -> {
             final ChatListState currentState = chatListViewModel.getState();
@@ -132,10 +137,13 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     // Refresh chat list display
     private void refreshChatList(String query) {
         chatListPanel.removeAll();
+
+        // Get chats in reverse order to show the newest at the top
         List<ChatEntry> chats = chatListManager.getAllChats();
 
-        // Filter chats by query
-        for (ChatEntry chat : chats) {
+        // Filter and add chats
+        for (int i = chats.size() - 1; i >= 0; i--) { // Iterate in reverse order
+            ChatEntry chat = chats.get(i);
             if (query.isEmpty() || chat.getOtherUser().toLowerCase().contains(query.toLowerCase())) {
                 JPanel chatItemPanel = createChatItemPanel(chat);
                 chatListPanel.add(chatItemPanel);
@@ -143,6 +151,13 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         }
         chatListPanel.revalidate();
         chatListPanel.repaint();
+    }
+
+    // Reset search bar and refresh the full chat list
+    private void resetSearch() {
+        chatSearchField.setText(searchPlaceholder);
+        chatSearchField.setForeground(Color.GRAY);
+        refreshChatList(""); // Refresh the full list
     }
 
     // Creates a styled panel for each chat entry
