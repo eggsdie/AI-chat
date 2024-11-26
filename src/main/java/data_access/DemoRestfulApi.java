@@ -1,5 +1,6 @@
 package data_access;
 
+import com.google.gson.JsonArray;
 import okhttp3.*;
 
 import java.time.LocalDateTime;
@@ -43,7 +44,7 @@ public class DemoRestfulApi {
         }
     }
 
-    public JsonObject getAllUsersJSON() {
+    public JsonArray getAllUsersJSON() {
         String addedTag = "users";
         String completeUrl = url + addedTag;
 
@@ -54,18 +55,25 @@ public class DemoRestfulApi {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
-                return JsonParser.parseString(response.body().string()).getAsJsonObject();
+                // Parse the response body into a JSON Array
+                return JsonParser.parseString(response.body().string()).getAsJsonArray();
             } else {
+                // Return an array with an error object if the request fails
+                JsonArray errorArray = new JsonArray();
                 JsonObject errorJson = new JsonObject();
                 errorJson.addProperty("error", "Request failed");
                 errorJson.addProperty("statusCode", response.code());
-                return errorJson;
+                errorArray.add(errorJson);
+                return errorArray;
             }
         } catch (Exception e) {
+            // Return an array with an exception object if an error occurs
+            JsonArray exceptionArray = new JsonArray();
             JsonObject exceptionJson = new JsonObject();
             exceptionJson.addProperty("error", "Request failed due to an exception");
             exceptionJson.addProperty("message", e.getMessage());
-            return exceptionJson;
+            exceptionArray.add(exceptionJson);
+            return exceptionArray;
         }
     }
 
@@ -213,7 +221,7 @@ public class DemoRestfulApi {
         }
     }
 
-    public JsonObject getAllMessagesJSON() {
+    public JsonArray getAllMessagesJSON() {
         String addedTag = "messages";
         String completeUrl = url + addedTag;
 
@@ -224,18 +232,25 @@ public class DemoRestfulApi {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
-                return JsonParser.parseString(response.body().string()).getAsJsonObject();
+                // Parse the response body into a JSON Array
+                return JsonParser.parseString(response.body().string()).getAsJsonArray();
             } else {
+                // Return an array with an error object if the request fails
+                JsonArray errorArray = new JsonArray();
                 JsonObject errorJson = new JsonObject();
                 errorJson.addProperty("error", "Request failed");
                 errorJson.addProperty("statusCode", response.code());
-                return errorJson;
+                errorArray.add(errorJson);
+                return errorArray;
             }
         } catch (Exception e) {
+            // Return an array with an exception object if an error occurs
+            JsonArray exceptionArray = new JsonArray();
             JsonObject exceptionJson = new JsonObject();
             exceptionJson.addProperty("error", "Request failed due to an exception");
             exceptionJson.addProperty("message", e.getMessage());
-            return exceptionJson;
+            exceptionArray.add(exceptionJson);
+            return exceptionArray;
         }
     }
 
