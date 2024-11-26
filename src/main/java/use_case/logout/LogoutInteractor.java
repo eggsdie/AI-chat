@@ -4,22 +4,38 @@ package use_case.logout;
  * The Logout Interactor.
  */
 public class LogoutInteractor implements LogoutInputBoundary {
-    private LogoutUserDataAccessInterface userDataAccessObject;
-    private LogoutOutputBoundary logoutPresenter;
+    private final LogoutUserDataAccessInterface userDataAccessObject;
+    private final LogoutOutputBoundary logoutPresenter;
 
-    public LogoutInteractor(LogoutUserDataAccessInterface userDataAccessInterface,
-                            LogoutOutputBoundary logoutOutputBoundary) {
-        // TODO: save the DAO and Presenter in the instance variables.
-        // Which parameter is the DAO and which is the presenter?
+    /**
+     * Constructor for the LogoutInteractor.
+     *
+     * @param userDataAccessObject The data access interface for user data.
+     * @param logoutPresenter      The presenter to handle logout output.
+     */
+    public LogoutInteractor(LogoutUserDataAccessInterface userDataAccessObject,
+                            LogoutOutputBoundary logoutPresenter) {
+        this.userDataAccessObject = userDataAccessObject;
+        this.logoutPresenter = logoutPresenter;
     }
 
+    /**
+     * Executes the Logout Use Case.
+     *
+     * @param logoutInputData Input data containing the username to log out.
+     */
     @Override
     public void execute(LogoutInputData logoutInputData) {
-        // TODO: implement the logic of the Logout Use Case (depends on the LogoutInputData.java TODO)
-        // * get the username out of the input data,
-        // * set the username to null in the DAO
-        // * instantiate the `LogoutOutputData`, which needs to contain the username.
-        // * tell the presenter to prepare a success view.
+        // Get the username from the input data
+        String username = logoutInputData.getUsername();
+
+        // Clear the current user session
+        userDataAccessObject.setCurrentUsername(null);
+
+        // Prepare the output data with success status
+        LogoutOutputData outputData = new LogoutOutputData(username, true);
+
+        // Notify the presenter of the successful logout
+        logoutPresenter.prepareSuccessView(outputData);
     }
 }
-

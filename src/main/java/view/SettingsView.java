@@ -11,192 +11,333 @@ import interface_adapter.settings.SettingsViewModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.*;
 
+/**
+ * A professional-looking and polished Settings View with a structured layout.
+ */
 public class SettingsView extends JPanel implements PropertyChangeListener {
+
+    // View name for state management
     private final String viewName = "settings";
+
+    // ViewModel for state management
     private final SettingsViewModel settingsViewModel;
-    
-    private final JLabel profilePicture;
-    private final JLabel usernameLabel;
-    private final JLabel emailLabel;
-    private final JButton uploadButton;
-    private final JButton changePasswordButton;
-    private final JButton logoutButton;
-    private final JButton chatListButton;
-    private final JButton settingsButton;
-    private final JTextField currentPasswordField;
-    private final JTextField newPasswordField;
-    private final JTextField retypeNewPasswordField;
+
+    // Components for user profile
+    private JLabel profilePicture;
+    private JLabel usernameLabel;
+    private JLabel emailLabel;
+    private JButton uploadButton;
+
+    // Components for password management
+    private JTextField currentPasswordField;
+    private JTextField newPasswordField;
+    private JTextField retypeNewPasswordField;
+    private JButton changePasswordButton;
+
+    // Navigation and logout buttons
+    private JButton logoutButton;
+    private JButton chatListButton;
+    private JButton settingsButton;
+
+    // Controllers for interaction
     private ChatListController chatListController;
     private LogoutController logoutController;
     private SettingsController settingsController;
 
+    /**
+     * Constructor for the Settings View.
+     *
+     * @param settingsViewModel The ViewModel that manages the settings state.
+     */
     public SettingsView(SettingsViewModel settingsViewModel) {
+        // Assign the ViewModel
         this.settingsViewModel = settingsViewModel;
+
+        // Add a property change listener to the ViewModel
         this.settingsViewModel.addPropertyChangeListener(this);
 
-        // Main layout
-        this.setLayout(new BorderLayout());
-        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // Set the layout manager
+        setLayout(new BorderLayout());
 
-        // Top panel: Profile info
-        final JPanel profilePanel = new JPanel();
-        profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.X_AXIS));
-        profilePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // Set padding around the edges of the panel
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Profile picture area for displaying an image
-        profilePicture = new JLabel();
-        profilePicture.setPreferredSize(new Dimension(60, 60));
-        profilePicture.setOpaque(true);
-        profilePicture.setBackground(Color.GRAY);
-        profilePicture.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        profilePanel.add(profilePicture);
+        // Add the header panel
+        add(createHeaderPanel(), BorderLayout.NORTH);
 
-        // User info (Username and email)
-        final JPanel userInfoPanel = new JPanel();
-        userInfoPanel.setLayout(new BoxLayout(userInfoPanel, BoxLayout.Y_AXIS));
-        usernameLabel = new JLabel();
-        emailLabel = new JLabel();
-        userInfoPanel.add(usernameLabel);
-        userInfoPanel.add(emailLabel);
-        profilePanel.add(Box.createHorizontalStrut(10));
-        profilePanel.add(userInfoPanel);
+        // Add the profile information panel
+        add(createProfileInfoPanel(), BorderLayout.CENTER);
 
-        // Upload button
-        uploadButton = new JButton("Upload");
-        profilePanel.add(Box.createHorizontalGlue());
-        profilePanel.add(uploadButton);
-
-        this.add(profilePanel, BorderLayout.NORTH);
-
-        // Center panel: Password management
-        final JPanel passwordPanel = new JPanel();
-        passwordPanel.setLayout(new GridLayout(4, 2, 10, 10));
-        passwordPanel.setBorder(BorderFactory.createTitledBorder("Change Password"));
-
-        // Fields for password management
-        passwordPanel.add(new JLabel("Current Password:"));
-        currentPasswordField = new JTextField();
-        passwordPanel.add(currentPasswordField);
-
-        passwordPanel.add(new JLabel("New Password:"));
-        newPasswordField = new JTextField();
-        passwordPanel.add(newPasswordField);
-
-        passwordPanel.add(new JLabel("Retype New Password:"));
-        retypeNewPasswordField = new JTextField();
-        passwordPanel.add(retypeNewPasswordField);
-
-        // Change Password Button
-        changePasswordButton = new JButton("Change Password");
-        passwordPanel.add(changePasswordButton);
-
-        this.add(passwordPanel, BorderLayout.CENTER);
-
-        // Bottom panel: Logout and navigation
-        final JPanel bottomPanel = new JPanel(new BorderLayout());
-
-        logoutButton = new JButton("Logout");
-        final JPanel logoutPanel = new JPanel();
-        logoutPanel.add(logoutButton);
-
-        // Create the panel
-        final JPanel panel = new JPanel(new BorderLayout());
-
-        // Create the buttons
-        chatListButton = new JButton("Chat List");
-        settingsButton = new JButton("Settings");
-
-        // Add the buttons to the panel
-        panel.add(chatListButton, BorderLayout.WEST);
-        panel.add(settingsButton, BorderLayout.EAST);
-
-        bottomPanel.add(logoutPanel, BorderLayout.CENTER);
-        bottomPanel.add(panel, BorderLayout.SOUTH);
-
-        this.add(bottomPanel, BorderLayout.SOUTH);
-
-        // Action Listeners
-        uploadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                uploadProfilePicture();
-            }
-        });
-
-        // How to save new password and get current password
-        changePasswordButton.addActionListener(evt -> {
-            // Get the input from the text fields
-            final SettingsState currentState = settingsViewModel.getState();
-            final String enteredCurrentPassword = currentPasswordField.getText();
-            final String enteredNewPassword = newPasswordField.getText();
-            final String retypeNewPassword = retypeNewPasswordField.getText();
-
-            // Validate current password
-            if (!enteredCurrentPassword.equals(currentState.getPassword())) {
-                JOptionPane.showMessageDialog(null, "Current password is incorrect!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Validate new password match
-            if (!enteredNewPassword.equals(retypeNewPassword)) {
-                JOptionPane.showMessageDialog(null, "New passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Validate that the new password is not empty
-            if (enteredNewPassword.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "New password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // If all validations pass, update the password
-            // set user new password using enteredNewPassword
-            JOptionPane.showMessageDialog(null, "Password successfully changed!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            currentState.setPassword(enteredNewPassword);
-            
-            // Clear the text fields
-            currentPasswordField.setText("");
-            newPasswordField.setText("");
-            retypeNewPasswordField.setText("");
-        });
-
-        logoutButton.addActionListener(e -> {
-            final SettingsState currentState = settingsViewModel.getState();
-            logoutController.execute(currentState.getUsername());
-
-        });
-
-        chatListButton.addActionListener(evt -> {
-            settingsController.switchToChatListView();
-        });
+        // Add the bottom navigation panel
+        add(createBottomPanel(), BorderLayout.SOUTH);
     }
 
+    /**
+     * Creates the header panel containing the page title.
+     */
+    private JPanel createHeaderPanel() {
+        // Create the header panel
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        // Create a label for the title
+        JLabel titleLabel = new JLabel("Settings");
+
+        // Set font properties for the title
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+
+        // Add the title label to the header panel
+        headerPanel.add(titleLabel);
+
+        return headerPanel; // Return the header panel
+    }
+
+    /**
+     * Creates the panel for displaying user profile information.
+     */
+    private JPanel createProfileInfoPanel() {
+        // Create the main profile info panel
+        JPanel profileInfoPanel = new JPanel();
+
+        // Set the layout manager to BorderLayout
+        profileInfoPanel.setLayout(new BorderLayout(20, 20));
+
+        // Add a border with a title
+        profileInfoPanel.setBorder(BorderFactory.createTitledBorder("Profile Information"));
+
+        // Create the profile picture label
+        profilePicture = new JLabel();
+
+        // Set the preferred size for the profile picture
+        profilePicture.setPreferredSize(new Dimension(80, 80));
+
+        // Make the profile picture background opaque
+        profilePicture.setOpaque(true);
+
+        // Set a light gray background for the profile picture
+        profilePicture.setBackground(Color.LIGHT_GRAY);
+
+        // Center align the profile picture
+        profilePicture.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Add a gray border around the profile picture
+        profilePicture.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+
+        // Create the upload button
+        uploadButton = new JButton("Upload Picture");
+
+        // Add an action listener to the upload button
+        uploadButton.addActionListener(this::uploadProfilePicture);
+
+        // Create a panel to hold the profile picture and upload button
+        JPanel profilePicturePanel = new JPanel();
+
+        // Set the layout manager to BorderLayout
+        profilePicturePanel.setLayout(new BorderLayout());
+
+        // Add the profile picture to the center of the panel
+        profilePicturePanel.add(profilePicture, BorderLayout.CENTER);
+
+        // Add the upload button to the bottom of the panel
+        profilePicturePanel.add(uploadButton, BorderLayout.SOUTH);
+
+        // Create the username label
+        usernameLabel = createStyledLabel("");
+
+        // Create the email label
+        emailLabel = createStyledLabel("");
+
+        // Create a panel for user information
+        JPanel userInfoPanel = new JPanel();
+
+        // Set the layout manager to BoxLayout
+        userInfoPanel.setLayout(new BoxLayout(userInfoPanel, BoxLayout.Y_AXIS));
+
+        // Add the username label to the user info panel
+        userInfoPanel.add(createStyledLabel("Username:"));
+        userInfoPanel.add(usernameLabel);
+
+        // Add some vertical space
+        userInfoPanel.add(Box.createVerticalStrut(10));
+
+        // Add the email label to the user info panel
+        userInfoPanel.add(createStyledLabel("Email:"));
+        userInfoPanel.add(emailLabel);
+
+        // Add the profile picture panel to the left of the main panel
+        profileInfoPanel.add(profilePicturePanel, BorderLayout.WEST);
+
+        // Add the user info panel to the center of the main panel
+        profileInfoPanel.add(userInfoPanel, BorderLayout.CENTER);
+
+        // Add the password management panel to the bottom of the main panel
+        profileInfoPanel.add(createPasswordPanel(), BorderLayout.SOUTH);
+
+        return profileInfoPanel; // Return the profile info panel
+    }
+
+    /**
+     * Creates the panel for managing user passwords.
+     */
+    private JPanel createPasswordPanel() {
+        // Create the password panel
+        JPanel passwordPanel = new JPanel();
+
+        // Set the layout manager to GridLayout
+        passwordPanel.setLayout(new GridLayout(4, 2, 15, 15));
+
+        // Add a border with a title
+        passwordPanel.setBorder(BorderFactory.createTitledBorder("Change Password"));
+
+        // Add the current password label and field
+        passwordPanel.add(createStyledLabel("Current Password:"));
+        currentPasswordField = createTextField();
+        passwordPanel.add(currentPasswordField);
+
+        // Add the new password label and field
+        passwordPanel.add(createStyledLabel("New Password:"));
+        newPasswordField = createTextField();
+        passwordPanel.add(newPasswordField);
+
+        // Add the retype new password label and field
+        passwordPanel.add(createStyledLabel("Retype New Password:"));
+        retypeNewPasswordField = createTextField();
+        passwordPanel.add(retypeNewPasswordField);
+
+        // Create the change password button
+        changePasswordButton = createStyledButton("Change Password");
+
+        // Add an action listener to the change password button
+        changePasswordButton.addActionListener(this::changePassword);
+
+        // Add the change password button to the password panel
+        passwordPanel.add(changePasswordButton);
+
+        return passwordPanel; // Return the password panel
+    }
+
+    /**
+     * Creates the bottom panel with navigation and logout buttons.
+     */
+    private JPanel createBottomPanel() {
+        // Create the bottom panel
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+
+        // Create the logout button
+        logoutButton = createStyledButton("Logout");
+
+        // Add an action listener to the logout button
+        logoutButton.addActionListener(e -> {
+            final SettingsState state = settingsViewModel.getState();
+            logoutController.execute(state.getUsername());
+        });
+
+        // Create the chat list button
+        chatListButton = createStyledButton("Chat List");
+
+        // Add an action listener to the chat list button
+        chatListButton.addActionListener(e -> settingsController.switchToChatListView());
+
+        // Create the settings button
+        settingsButton = createStyledButton("Settings");
+
+        // Create a panel for navigation buttons
+        JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+
+        // Add the chat list and settings buttons to the navigation panel
+        navPanel.add(chatListButton);
+        navPanel.add(settingsButton);
+
+        // Add the logout button to the top of the bottom panel
+        bottomPanel.add(logoutButton, BorderLayout.NORTH);
+
+        // Add the navigation panel to the bottom of the bottom panel
+        bottomPanel.add(navPanel, BorderLayout.SOUTH);
+
+        return bottomPanel; // Return the bottom panel
+    }
+
+    /**
+     * Handles the change password action.
+     */
+    private void changePassword(ActionEvent e) {
+        SettingsState state = settingsViewModel.getState();
+        String currentPassword = currentPasswordField.getText();
+        String newPassword = newPasswordField.getText();
+        String retypePassword = retypeNewPasswordField.getText();
+
+        if (!currentPassword.equals(state.getPassword())) {
+            JOptionPane.showMessageDialog(this, "Current password is incorrect!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (!newPassword.equals(retypePassword)) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            state.setPassword(newPassword);
+        }
+
+        currentPasswordField.setText("");
+        newPasswordField.setText("");
+        retypeNewPasswordField.setText("");
+    }
+
+    /**
+     * Handles the profile picture upload action.
+     */
+    private void uploadProfilePicture(ActionEvent e) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg", "gif"));
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+            Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            profilePicture.setIcon(new ImageIcon(scaledImage));
+        }
+    }
+
+    /**
+     * Updates the view based on changes in the ViewModel.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final SettingsState state = (SettingsState) evt.getNewValue();
+        SettingsState state = (SettingsState) evt.getNewValue();
         usernameLabel.setText(state.getUsername());
         emailLabel.setText(state.getEmail());
     }
 
-    // How to save profile picture into user
-    private void uploadProfilePicture() {
-        // Use a JFileChooser to let the user select an image file
-        final JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg", "gif"));
-        final int result = fileChooser.showOpenDialog(this);
+    /**
+     * Utility method to create a styled label.
+     */
+    private JLabel createStyledLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Arial", Font.PLAIN, 14));
+        return label;
+    }
 
-        if (result == JFileChooser.APPROVE_OPTION) {
-            final File selectedFile = fileChooser.getSelectedFile();
-            final ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
+    /**
+     * Utility method to create a styled text field.
+     */
+    private JTextField createTextField() {
+        JTextField textField = new JTextField();
+        textField.setFont(new Font("Arial", Font.PLAIN, 14));
+        return textField;
+    }
 
-            // Resize the image to fit the profile picture area
-            final Image scaledImage = imageIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-            profilePicture.setIcon(new ImageIcon(scaledImage));
-        }
+    /**
+     * Utility method to create a styled button.
+     */
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.setFocusPainted(false);
+        button.setBackground(new Color(59, 89, 152));
+        button.setForeground(Color.WHITE);
+        return button;
     }
 
     public String getViewName() {
