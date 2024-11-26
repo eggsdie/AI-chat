@@ -224,6 +224,9 @@ public class AppBuilder {
 
         final LogoutController logoutController = new LogoutController(logoutInteractor, viewManagerModel);
         loggedInView.setLogoutController(logoutController);
+        // Connect controller to the view
+        settingsView.setLogoutController(logoutController);
+        // Ensure the Settings view can also log out
         return this;
     }
 
