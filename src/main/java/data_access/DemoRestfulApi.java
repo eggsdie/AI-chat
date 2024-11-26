@@ -7,6 +7,8 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class DemoRestfulApi {
 
@@ -38,6 +40,32 @@ public class DemoRestfulApi {
         }
         catch (Exception e) {
             return "Request failed due to an exception: " + e.getMessage();
+        }
+    }
+
+    public JsonObject getAllUsersJSON() {
+        String addedTag = "users";
+        String completeUrl = url + addedTag;
+
+        Request request = new Request.Builder()
+                .url(completeUrl)
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                return JsonParser.parseString(response.body().string()).getAsJsonObject();
+            } else {
+                JsonObject errorJson = new JsonObject();
+                errorJson.addProperty("error", "Request failed");
+                errorJson.addProperty("statusCode", response.code());
+                return errorJson;
+            }
+        } catch (Exception e) {
+            JsonObject exceptionJson = new JsonObject();
+            exceptionJson.addProperty("error", "Request failed due to an exception");
+            exceptionJson.addProperty("message", e.getMessage());
+            return exceptionJson;
         }
     }
 
@@ -182,6 +210,32 @@ public class DemoRestfulApi {
             }
         } catch (Exception e) {
             return "Request failed due to an exception: " + e.getMessage();
+        }
+    }
+
+    public JsonObject getAllMessagesJSON() {
+        String addedTag = "messages";
+        String completeUrl = url + addedTag;
+
+        Request request = new Request.Builder()
+                .url(completeUrl)
+                .get()
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                return JsonParser.parseString(response.body().string()).getAsJsonObject();
+            } else {
+                JsonObject errorJson = new JsonObject();
+                errorJson.addProperty("error", "Request failed");
+                errorJson.addProperty("statusCode", response.code());
+                return errorJson;
+            }
+        } catch (Exception e) {
+            JsonObject exceptionJson = new JsonObject();
+            exceptionJson.addProperty("error", "Request failed due to an exception");
+            exceptionJson.addProperty("message", e.getMessage());
+            return exceptionJson;
         }
     }
 
