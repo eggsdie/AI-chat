@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.DemoRestfulApi;
 import data_access.InMemoryFriendRepository;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
@@ -180,7 +181,12 @@ public class AppBuilder {
      */
     public AppBuilder addSignupUseCase() {
         final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel, signupViewModel, loginViewModel);
-        final SignupInputBoundary userSignupInteractor = new SignupInteractor(userDataAccessObject, signupOutputBoundary, userFactory);
+
+        // Create a DemoRestfulApi instance for API communication
+        final DemoRestfulApi demoRestfulApi = new DemoRestfulApi();
+
+        // Use the existing userFactory for creating users
+        final SignupInputBoundary userSignupInteractor = new SignupInteractor(demoRestfulApi, signupOutputBoundary, userFactory);
 
         final SignupController signupController = new SignupController(userSignupInteractor);
         signupView.setSignupController(signupController);
@@ -191,15 +197,23 @@ public class AppBuilder {
      * Adds the Login Use Case to the application.
      * @return this builder
      */
+    /**
+     * Adds the Login Use Case to the application.
+     * @return this builder
+     */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, chatListViewModel,
                 loginViewModel);
-        final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginOutputBoundary);
+
+        // Replace userDataAccessObject with DemoRestfulApi
+        final DemoRestfulApi demoRestfulApi = new DemoRestfulApi();
+        final LoginInputBoundary loginInteractor = new LoginInteractor(demoRestfulApi, loginOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor, viewManagerModel);
         loginView.setLoginController(loginController);
         return this;
     }
+
 
     /**
      * Adds the Change Password Use Case to the application.
