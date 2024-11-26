@@ -39,5 +39,11 @@ public class Main {
         application.pack();
         application.setVisible(true);
     }
-    //test
+     public static void generateRandomNumbers() {
+        // For loop to generate and print 10 random integers
+        for (int i = 0; i < 10; i++) {
+            int randomNumber = 1; // Generate a random integer between 0 and 99
+            System.out.println("Random number " + (i + 1) + ": " + randomNumber);
+        }
+    }
 }
