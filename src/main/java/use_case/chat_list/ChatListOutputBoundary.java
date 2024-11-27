@@ -5,8 +5,8 @@ import entity.ChatEntry;
 import java.util.List;
 
 public interface ChatListOutputBoundary {
-    void presentChatList(List<ChatEntry> chatList);
-    void presentError(String errorMessage);
+//    void presentChatList(List<ChatEntry> chatList);
+//    void presentError(String errorMessage);
 
     /**
      * Prepares the success view for the AddChat Use Case.

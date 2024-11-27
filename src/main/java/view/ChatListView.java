@@ -3,20 +3,19 @@ package view;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import data_access.InMemoryFriendRepository;
+// import data_access.InMemoryFriendRepository;
 import entity.ChatEntry;
-import interface_adapter.change_password.LoggedInState;
 import interface_adapter.chat_list.ChatListController;
 import interface_adapter.chat_list.ChatListState;
 import interface_adapter.chat_list.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.settings.SettingsController;
 import use_case.chat_list.ChatListManager;
-import use_case.chat_list.ChatListOutputBoundary;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatListView extends JPanel implements PropertyChangeListener {
@@ -29,19 +28,18 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     private String searchPlaceholder = "Search chats...";
     private ChatListViewModel chatListViewModel;
     private ChatListController chatListController;
-    private InMemoryFriendRepository friendRepository;
-    private ChatListOutputBoundary chatListOutputBoundary;
+//    private InMemoryFriendRepository friendRepository;
+//    private ChatListOutputBoundary chatListOutputBoundary;
     private EnterChatController enterChatController;
     private SettingsController settingsController;
 
     private final JButton addFriendButton;
 
-    public ChatListView(InMemoryFriendRepository friendRepository, ChatListOutputBoundary chatListOutputBoundary,
-                       ChatListViewModel chatListViewModel) {
+    public ChatListView(ChatListViewModel chatListViewModel) {
         this.chatListViewModel = chatListViewModel;
         this.chatListViewModel.addPropertyChangeListener(this);
-        this.friendRepository = friendRepository;
-        this.chatListOutputBoundary = chatListOutputBoundary;
+//        this.friendRepository = friendRepository;
+//        this.chatListOutputBoundary = chatListOutputBoundary;
 
         frame = new JFrame("Chat Messenger");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,7 +47,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         this.setLayout(new BorderLayout());
 
         // Initialize Use Case
-        chatListManager = new ChatListManager(friendRepository, chatListOutputBoundary);
+//        chatListManager = new ChatListManager(friendRepository, chatListOutputBoundary);
 
         // Top panel with chat search and add friend button
         JPanel topPanel = new JPanel();
@@ -120,23 +118,21 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
         // Action for adding a friend
         addFriendButton.addActionListener(e -> {
-            final ChatListState currentState = chatListViewModel.getState();
-            String friendName = JOptionPane.showInputDialog(this, "Enter Friend's Name:");
-            currentState.setOtherUser(friendName);
-            chatListViewModel.setState(currentState);
+            ChatListState currentState = chatListViewModel.getState();
+            final String friendName = JOptionPane.showInputDialog(this, "Enter Friend's Name:");
 
-            if (currentState.getOtherUser() != null && !currentState.getOtherUser().trim().isEmpty()) {
-                chatListController.addChat(currentState.getCurrentUser(), currentState.getOtherUser(),
+            if (friendName != null && !friendName.trim().isEmpty()) {
+                chatListController.execute(currentState.getCurrentUsername(), friendName,
                         "Hello! This is a new conversation.");
                 refreshChatList("");
             }
-
+            chatListViewModel.setState(currentState);
         });
 
         settingsButton.addActionListener(evt -> {
             if (evt.getSource().equals(settingsButton)) {
                 final ChatListState currentState = chatListViewModel.getState();
-                this.settingsController.execute(currentState.getCurrentUser());
+                this.settingsController.execute(currentState.getActiveUser());
             }
         });
 
@@ -147,20 +143,25 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     // Refresh chat list display
     private void refreshChatList(String query) {
         chatListPanel.removeAll();
+        final ChatListState currentState = chatListViewModel.getState();
 
         // Get chats in reverse order to show the newest at the top
-        List<ChatEntry> chats = chatListManager.getAllChats();
+        final ArrayList<ChatEntry> chats = currentState.getChatList();
 
         // Filter and add chats
-        for (int i = chats.size() - 1; i >= 0; i--) { // Iterate in reverse order
-            ChatEntry chat = chats.get(i);
-            if (query.isEmpty() || chat.getOtherUser().toLowerCase().contains(query.toLowerCase())) {
-                JPanel chatItemPanel = createChatItemPanel(chat);
-                chatListPanel.add(chatItemPanel);
+        if (chats != null) {
+            for (int i = chats.size() - 1; i >= 0; i--) { // Iterate in reverse order
+                ChatEntry chat = chats.get(i);
+                if (query.isEmpty() || chat.getUser2().toLowerCase().contains(query.toLowerCase())) {
+                    JPanel chatItemPanel = createChatItemPanel(chat);
+                    chatListPanel.add(chatItemPanel);
+                }
             }
+            chatListPanel.revalidate();
+            chatListPanel.repaint();
+        } else {
+            System.out.println("chat list null");
         }
-        chatListPanel.revalidate();
-        chatListPanel.repaint();
     }
 
     // Reset search bar and refresh the full chat list
@@ -182,10 +183,10 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         chatItemPanel.setPreferredSize(new Dimension(0, 60)); // 0 width allows resizing
         chatItemPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel nameLabel = new JLabel(chatEntry.getOtherUser());
+        JLabel nameLabel = new JLabel(chatEntry.getUser2());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
-        JLabel timeLabel = new JLabel(chatEntry.getLastMessageTime());
+        JLabel timeLabel = new JLabel(chatEntry.getTime());
         timeLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         timeLabel.setForeground(Color.GRAY);
 
@@ -204,7 +205,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         chatItemPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                enterChatController.execute(chatEntry);
+                enterChatController.execute(chatEntry.getUser1(), chatEntry.getUser2());
             }
         });
 
@@ -213,13 +214,13 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
     // Opens a new chat window for the selected friend
     private void openChatWindow(ChatEntry chatEntry) {
-        JFrame chatFrame = new JFrame("Chat with " + chatEntry.getOtherUser());
+        JFrame chatFrame = new JFrame("Chat with " + chatEntry.getUser2());
         chatFrame.setSize(400, 400);
         chatFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JTextArea chatArea = new JTextArea();
         chatArea.setEditable(false);
-        chatArea.setText("Chat with " + chatEntry.getOtherUser() + "\n\n" + chatEntry.getLastMessagePreview());
+        chatArea.setText("Chat with " + chatEntry.getUser2() + "\n\n" + chatEntry.getLastMessagePreview());
         chatFrame.add(new JScrollPane(chatArea), BorderLayout.CENTER);
 
         chatFrame.setVisible(true);
@@ -232,7 +233,6 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final ChatListState state = (ChatListState) evt.getNewValue();
-        state.setCurrentUser(friendRepository.getActiveUser());
         if (state.getAddFriendError() != null) {
             JOptionPane.showMessageDialog(this, state.getAddFriendError());
         }

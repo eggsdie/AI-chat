@@ -5,9 +5,8 @@ import entity.Message;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.InChatState;
 import interface_adapter.enter_chat.InChatViewModel;
+import interface_adapter.send_message.SendMessageController;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.time.LocalTime;
@@ -18,6 +17,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
 public class InChatView extends JPanel implements PropertyChangeListener {
 
@@ -36,6 +36,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     private JButton sendButton = new JButton("Send");
 
     private EnterChatController enterChatController;
+    private SendMessageController sendMessageController;
 
     public InChatView(InChatViewModel inChatViewModel) {
 
@@ -82,12 +83,14 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         sendButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(sendButton)) {
-                        final InChatState currentState = inChatViewModel.getState();
-                        currentState.addMessage(new Message(currentState.getChatEntry().getCurrentUser(),
-                                textEntryField.getText(), LocalTime.now()));
+                        InChatState currentState = inChatViewModel.getState();
+                        sendMessageController.execute(currentState.getSender(), currentState.getReceiver(),
+                                textEntryField.getText());
                         textEntryField.setText("");
-                        refreshMessages(currentState.getChatEntry());
+
                         inChatViewModel.setState(currentState);
+                        currentState = inChatViewModel.getState();
+                        refreshMessages(currentState.getMessages());
                     }
                 }
         );
@@ -104,10 +107,10 @@ public class InChatView extends JPanel implements PropertyChangeListener {
 
     }
 
-    public void refreshMessages(ChatEntry chatEntry) {
+    public void refreshMessages(ArrayList<Message> messages) {
         chatArea.removeAll();
 
-        for (Message message : chatEntry.getMessages()) {
+        for (Message message : messages) {
             final JPanel messagePanel = createMessagePanel(message);
             chatArea.add(messagePanel);
         }
@@ -125,7 +128,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         messagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         final JPanel northPanel = new JPanel(new BorderLayout());
 
-        final JLabel sender = new JLabel(message.getUser().getName());
+        final JLabel sender = new JLabel(message.getSender());
         sender.setFont(sender.getFont().deriveFont(Font.BOLD));
         northPanel.add(sender, BorderLayout.WEST);
         final JTextArea content = new JTextArea(message.getContent());
@@ -147,12 +150,16 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final InChatState state = (InChatState) evt.getNewValue();
-        otherUser.setText("Chat with " + state.getChatEntry().getOtherUser() + " ");
-        refreshMessages(state.getChatEntry());
+        otherUser.setText("Chat with " + state.getReceiver() + " ");
+        refreshMessages(state.getMessages());
     }
 
     public void setEnterChatController(EnterChatController enterChatController) {
         this.enterChatController = enterChatController;
+    }
+
+    public void setSendMessageController(SendMessageController sendMessageController) {
+        this.sendMessageController = sendMessageController;
     }
 
 }

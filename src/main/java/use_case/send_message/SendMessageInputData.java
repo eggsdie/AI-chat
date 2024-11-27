@@ -4,19 +4,25 @@ import entity.ChatEntry;
 import entity.Message;
 
 public class SendMessageInputData {
-    private final ChatEntry chatEntry;
-    private final Message message;
+    private String sender;
+    private String receiver;
+    private String content;
 
-    public SendMessageInputData(ChatEntry chatEntry, Message message) {
-        this.chatEntry = chatEntry;
-        this.message = message;
+    public SendMessageInputData(String sender, String receiver, String content) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.content = content;
     }
 
-    public ChatEntry getChatEntry() {
-        return chatEntry;
+    public String getSender() {
+        return sender;
     }
 
-    public Message getMessage() {
-        return message;
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public String getContent() {
+        return content;
     }
 }

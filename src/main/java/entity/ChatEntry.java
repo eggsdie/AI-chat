@@ -5,28 +5,28 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ChatEntry {
-    private User currentUser;
-    private String otherUser;
-    private LocalTime time;
+    private final String user1;
+    private final String user2;
+    private String time;
     private String messagePreview;
     private final ArrayList<Message> messages = new ArrayList<>();
 
-    public ChatEntry(User currentUser, String otherUser, LocalTime time, String messagePreview) {
-        this.currentUser = currentUser;
-        this.otherUser = otherUser;
+    public ChatEntry(String user1, String user2, String time, String messagePreview) {
+        this.user1 = user1;
+        this.user2 = user2;
         this.time = time;
         this.messagePreview = messagePreview;
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public String getUser1() {
+        return user1;
     }
 
-    public String getOtherUser() {
-        return otherUser;
+    public String getUser2() {
+        return user2;
     }
 
-    public LocalTime getTime() {
+    public String getTime() {
         return time;
     }
 
@@ -48,9 +48,13 @@ public class ChatEntry {
     }
 
     // Returns a formatted string of the last message time
-    public String getLastMessageTime() {
+    /*public String getLastMessageTime() {
         return time != null
                 ? time.format(DateTimeFormatter.ofPattern("HH:mm"))
                 : "No time available";
+    }*/
+
+    public boolean matchesUsers(String userA, String userB) {
+        return (user1.equals(userA) && user2.equals(userB)) || (user1.equals(userB) && user2.equals(userA));
     }
 }

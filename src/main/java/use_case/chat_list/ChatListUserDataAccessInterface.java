@@ -2,22 +2,26 @@ package use_case.chat_list;
 
 import entity.ChatEntry;
 import entity.Friend;
+import entity.Message;
 import entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ChatListUserDataAccessInterface {
 
-    boolean userExists(String username);
+    boolean existsByName(String username);
 
-    boolean friendExists(String username);
+    boolean chatWithYourself(String username);
 
-    boolean chatWithYourself(User yourUsername, String username);
+//    void saveFriend(Friend friend, ChatEntry chat);
 
-    void saveFriend(Friend friend, ChatEntry chat);
+    ArrayList<Message> messagesWithUser(String username);
 
-    User getActiveUser();
+    ArrayList<ChatEntry> allChatsWithUser(String username);
 
-    public List<ChatEntry> getAllChats();
+    User get(String username);
+
+    void addMessage(String sender, String receiver, String content);
 
 }

@@ -5,7 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.InMemoryFriendRepository;
+import data_access.DemoRestfulApi;
+// import data_access.InMemoryFriendRepository;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
@@ -24,6 +25,7 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.send_message.SendMessageController;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -46,6 +48,8 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.send_message.SendMessageInputBoundary;
+import use_case.send_message.SendMessageInteracter;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -70,8 +74,10 @@ public class AppBuilder {
 
     private final UserFactory userFactory = new CommonUserFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
-    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final InMemoryFriendRepository friendRepository = new InMemoryFriendRepository(userDataAccessObject);
+    private final DemoRestfulApi demoRestfulApi = new DemoRestfulApi();
+    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject(demoRestfulApi,
+            userFactory);
+    // private final InMemoryFriendRepository friendRepository = new InMemoryFriendRepository(userDataAccessObject);
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -148,9 +154,9 @@ public class AppBuilder {
      */
     public AppBuilder addChatListView() {
         chatListViewModel = new ChatListViewModel();
-        final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(
-                viewManagerModel, chatListViewModel);
-        chatListView = new ChatListView(friendRepository, chatListOutputBoundary, chatListViewModel);
+//        final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(
+//                viewManagerModel, chatListViewModel);
+        chatListView = new ChatListView(chatListViewModel);
         cardPanel.add(chatListView, chatListView.getViewName());
         return this;
     }
@@ -244,8 +250,9 @@ public class AppBuilder {
                 new SettingsPresenter(viewManagerModel, settingsViewModel, chatListViewModel);
 
         final ChatListInputBoundary chatListInteractor =
-                new ChatListManager(friendRepository, chatListOutputBoundary);
-        final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(enterChatOutputBoundary);
+                new ChatListManager(userDataAccessObject, chatListOutputBoundary);
+        final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(userDataAccessObject,
+                enterChatOutputBoundary);
         final SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
 
         final ChatListController chatListController = new ChatListController(chatListInteractor);
@@ -265,7 +272,8 @@ public class AppBuilder {
         final EnterChatOutputBoundary enterChatOutputBoundary =
                 new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
 
-        final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(enterChatOutputBoundary);
+        final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(userDataAccessObject,
+                enterChatOutputBoundary);
 
         final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
         inChatView.setEnterChatController(enterChatController);
@@ -279,6 +287,14 @@ public class AppBuilder {
 
         final SettingsController settingsController = new SettingsController(settingsInteractor);
         settingsView.setSettingsController(settingsController);
+        return this;
+    }
+
+    public AppBuilder addSendMessageUseCase() {
+        final SendMessageInputBoundary sendMessageInteractor = new SendMessageInteracter(userDataAccessObject);
+
+        final SendMessageController sendMessageController = new SendMessageController(sendMessageInteractor);
+        inChatView.setSendMessageController(sendMessageController);
         return this;
     }
 

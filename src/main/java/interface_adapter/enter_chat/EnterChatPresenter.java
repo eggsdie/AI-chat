@@ -22,7 +22,9 @@ public class EnterChatPresenter implements EnterChatOutputBoundary {
     public void prepareSuccessView(EnterChatOutputData outputData) {
         // On success, switch to the in chat view.
         final InChatState inChatState = inChatViewModel.getState();
-        inChatState.setChatEntry(outputData.getChatEntry());
+        inChatState.setMessages(outputData.getMessages());
+        inChatState.setSender(outputData.getSender());
+        inChatState.setReceiver(outputData.getReceiver());
         this.inChatViewModel.setState(inChatState);
         this.inChatViewModel.firePropertyChanged();
 

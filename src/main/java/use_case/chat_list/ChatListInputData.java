@@ -1,21 +1,20 @@
 package use_case.chat_list;
 
-import entity.User;
-
 public class ChatListInputData {
-    private final User currentUser;
+    private final String username;
     private final String otherUser;
 
-    public ChatListInputData(User currentUser, String otherUser) {
-        this.currentUser = currentUser;
+    public ChatListInputData(String username, String otherUser) {
+        this.username = username;
         this.otherUser = otherUser;
     }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public String getUsername() {
+        return username;
     }
 
     public String getOtherUser() {
         return otherUser;
     }
+
 }

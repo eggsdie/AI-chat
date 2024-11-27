@@ -1,3 +1,4 @@
+/*
 package data_access;
 
 import java.util.ArrayList;
@@ -22,9 +23,11 @@ public class InMemoryFriendRepository implements ChatListUserDataAccessInterface
         return dao.getCurrentUser();
     }
 
-    public boolean userExists(String username) {
+    */
+/*public boolean userExists(String username) {
         return dao.existsByName(username);
-    }
+    }*//*
+
 
     @Override
     public boolean friendExists(String username) {
@@ -51,3 +54,4 @@ public class InMemoryFriendRepository implements ChatListUserDataAccessInterface
     }
 
 }
+*/

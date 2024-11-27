@@ -5,18 +5,26 @@ import java.time.format.DateTimeFormatter;
 
 public class Message {
 
-    private User user;
+    private String id;
+    private String sender;
     private String content;
     private LocalTime time;
+    private String receiver;
 
-    public Message(User user, String content, LocalTime time) {
-        this.user = user;
+    public Message(String msgId, String sender, String content, String receiver, String time) {
+        this.id = msgId;
+        this.sender = sender;
         this.content = content;
-        this.time = time;
+        this.receiver = receiver;
+        this.time = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
     }
 
-    public User getUser() {
-        return user;
+    public String getSender() {
+        return sender;
+    }
+
+    public String getReceiver() {
+        return receiver;
     }
 
     public String getContent() {

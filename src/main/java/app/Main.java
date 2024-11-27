@@ -33,6 +33,7 @@ public class Main {
                                             .addChatListUseCase()
                                             .addEnterChatUseCase()
                                             .addSettingsUseCase()
+                                            .addSendMessageUseCase()
                                             .addLogoutUseCase()
                                             .build();
 

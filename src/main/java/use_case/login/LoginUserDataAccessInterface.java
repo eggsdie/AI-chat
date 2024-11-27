@@ -1,6 +1,9 @@
 package use_case.login;
 
+import entity.ChatEntry;
 import entity.User;
+
+import java.util.ArrayList;
 
 /**
  * DAO for the Login Use Case.
@@ -38,4 +41,6 @@ public interface LoginUserDataAccessInterface {
      * @param username the new current username; null to indicate that no one is currently logged into the application.
      */
     void setCurrentUsername(String username);
+
+    ArrayList<ChatEntry> allChatsWithUser(String username);
 }

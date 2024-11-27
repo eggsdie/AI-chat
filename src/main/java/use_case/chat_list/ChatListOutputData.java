@@ -1,19 +1,28 @@
 package use_case.chat_list;
 
 import entity.ChatEntry;
+import entity.User;
+
+import java.util.ArrayList;
 
 public class ChatListOutputData {
 
     private final boolean useCaseFailed;
-    private final ChatEntry chatEntry;
+    private final User activeUser;
+    private final ArrayList<ChatEntry> chatList;
 
-    public ChatListOutputData(boolean useCaseFailed, ChatEntry chatEntry) {
+    public ChatListOutputData(boolean useCaseFailed, ArrayList<ChatEntry> chatList, User activeUser) {
         this.useCaseFailed = useCaseFailed;
-        this.chatEntry = chatEntry;
+        this.chatList = chatList;
+        this.activeUser = activeUser;
     }
 
-    public ChatEntry getChatEntry() {
-        return chatEntry;
+    public ArrayList<ChatEntry> getChatList() {
+        return chatList;
+    }
+
+    public User getActiveUser() {
+        return activeUser;
     }
 
     public boolean isUseCaseFailed() {
