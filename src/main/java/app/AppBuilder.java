@@ -154,8 +154,6 @@ public class AppBuilder {
      */
     public AppBuilder addChatListView() {
         chatListViewModel = new ChatListViewModel();
-//        final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(
-//                viewManagerModel, chatListViewModel);
         chatListView = new ChatListView(chatListViewModel);
         cardPanel.add(chatListView, chatListView.getViewName());
         return this;
@@ -200,10 +198,17 @@ public class AppBuilder {
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, chatListViewModel,
                 loginViewModel);
+        final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(viewManagerModel,
+                chatListViewModel);
+
         final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginOutputBoundary);
+        final ChatListInputBoundary chatListInteractor =
+                new ChatListManager(userDataAccessObject, chatListOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor, viewManagerModel);
         loginView.setLoginController(loginController);
+        final ChatListController chatListController = new ChatListController(chatListInteractor);
+        loginView.setChatListController(chatListController);
         return this;
     }
 

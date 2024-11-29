@@ -12,7 +12,7 @@ public class ChatListController {
         this.chatListUseCaseInteractor = chatListUseCaseInteractor;
     }
 
-    public void execute(String currentUser, String otherUser, String messagePreview) {
+    public void execute(User currentUser, String otherUser, String messagePreview) {
         final ChatListInputData chatListInputData = new ChatListInputData(currentUser, otherUser);
 
         chatListUseCaseInteractor.execute(chatListInputData, messagePreview);

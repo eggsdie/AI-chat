@@ -39,6 +39,7 @@ public class Main {
 
         application.pack();
         application.setVisible(true);
+
     }
      public static void generateRandomNumbers() {
         // For loop to generate and print 10 random integers

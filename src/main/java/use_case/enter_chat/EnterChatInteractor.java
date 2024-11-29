@@ -26,8 +26,8 @@ public class EnterChatInteractor implements EnterChatInputBoundary {
     }
 
     @Override
-    public void switchToChatListView() {
-        userPresenter.switchToChatListView();
+    public void switchToChatListView(String activeUser) {
+        userPresenter.switchToChatListView(userDataAccessObject.allChatsWithUser(activeUser));
     }
 }
 

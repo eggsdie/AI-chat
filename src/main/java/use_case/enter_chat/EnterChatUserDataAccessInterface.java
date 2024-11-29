@@ -11,4 +11,6 @@ public interface EnterChatUserDataAccessInterface {
 
     ArrayList<Message> messagesByChat(String sender, String receiver);
 
+    ArrayList<ChatEntry> allChatsWithUser(String sender);
+
 }

@@ -41,18 +41,9 @@ public class ChatEntry {
 
     public void addMessage(Message message) {
         this.messages.add(message);
+        this.messagePreview = message.getContent();
+        this.time = message.getTime();
     }
-
-    public ArrayList<Message> getMessages() {
-        return messages;
-    }
-
-    // Returns a formatted string of the last message time
-    /*public String getLastMessageTime() {
-        return time != null
-                ? time.format(DateTimeFormatter.ofPattern("HH:mm"))
-                : "No time available";
-    }*/
 
     public boolean matchesUsers(String userA, String userB) {
         return (user1.equals(userA) && user2.equals(userB)) || (user1.equals(userB) && user2.equals(userA));

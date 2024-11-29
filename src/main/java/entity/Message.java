@@ -16,7 +16,7 @@ public class Message {
         this.sender = sender;
         this.content = content;
         this.receiver = receiver;
-        this.time = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
+        this.time = LocalTime.parse(time, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     }
 
     public String getSender() {

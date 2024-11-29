@@ -33,7 +33,8 @@ public class LoginInteractor implements LoginInputBoundary {
 
                 userDataAccessObject.setCurrentUsername(user.getName());
                 final LoginOutputData loginOutputData = new LoginOutputData(user.getName(),
-                        userDataAccessObject.allChatsWithUser(userDataAccessObject.getCurrentUsername()), false);
+                        userDataAccessObject.allChatsWithUser(userDataAccessObject.getCurrentUsername()),
+                        userDataAccessObject.get(userDataAccessObject.getCurrentUsername()), false);
                 loginPresenter.prepareSuccessView(loginOutputData);
             }
         }

@@ -30,6 +30,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         final ChatListState chatListState = chatListViewModel.getState();
         chatListState.setCurrentUsername(response.getUsername());
         chatListState.setChatList(response.getChatEntries());
+        chatListState.setActiveUser(response.getUser());
         this.chatListViewModel.setState(chatListState);
         this.chatListViewModel.firePropertyChanged();
 

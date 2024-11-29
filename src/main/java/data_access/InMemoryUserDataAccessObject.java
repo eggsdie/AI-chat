@@ -70,8 +70,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
     @Override
     public void save(User user) {
-        demoRestfulApi.createNewUser(generateUserId(), user.getName(), user.getPassword(), user.getEmail(),
-                "fn", "ln");
+        demoRestfulApi.createNewUser(generateUserId(), user.getName(), user.getPassword(), user.getEmail());
     }
 
     private String generateUserId() {
@@ -95,7 +94,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     }
 
     private String generateMsgId() {
-        final JsonArray jsonArray = JsonParser.parseString(demoRestfulApi.getAllUsers()).getAsJsonArray();
+        final JsonArray jsonArray = JsonParser.parseString(demoRestfulApi.getAllMessages()).getAsJsonArray();
         int newId = 0;
         // Iterate over each element in the array
         for (JsonElement element : jsonArray) {
@@ -132,8 +131,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     @Override
     public void changePassword(User user) {
         // Replace the old entry with the new password
-        demoRestfulApi.updateUser(user.getId(), user.getName(), user.getPassword(), user.getEmail(),
-                "fn", "ln");
+        demoRestfulApi.updateUser(user.getId(), user.getName(), user.getPassword(), user.getEmail());
     }
 
     @Override
@@ -152,8 +150,8 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         msgsJson.forEach(item -> {
             final String messageId = item.getAsJsonObject().get("messageId").getAsString();
             final String content = item.getAsJsonObject().get("messageContent").getAsString();
-            final String senderUsername = item.getAsJsonObject().get("senderId").getAsString();
-            final String receiverUsername = item.getAsJsonObject().get("receiverId").getAsString();
+            final String senderUsername = item.getAsJsonObject().get("senderUsername").getAsString();
+            final String receiverUsername = item.getAsJsonObject().get("receiverUsername").getAsString();
             final String time = item.getAsJsonObject().get("createDate").getAsString();
             final Message message = new Message(messageId, senderUsername, content,
                     receiverUsername, time);
@@ -180,7 +178,8 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     public ArrayList<Message> messagesByChat(String sender, String receiver) {
         final ArrayList<Message> messages = new ArrayList<>();
         for (Message message : getAllMessages()) {
-            if (message.getSender().equals(sender) && message.getReceiver().equals(receiver)) {
+            if ((message.getSender().equals(sender) && message.getReceiver().equals(receiver))
+                    || (message.getSender().equals(receiver) && message.getReceiver().equals(sender))) {
                 messages.add(message);
             }
         }

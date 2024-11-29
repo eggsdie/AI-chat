@@ -20,8 +20,8 @@ public class EnterChatController {
         enterChatUseCaseInteractor.execute(enterChatInputData);
     }
 
-    public void switchToChatListView() {
-        enterChatUseCaseInteractor.switchToChatListView();
+    public void switchToChatListView(String activeUser) {
+        enterChatUseCaseInteractor.switchToChatListView(activeUser);
     }
 
 }

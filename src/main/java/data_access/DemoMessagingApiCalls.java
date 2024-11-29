@@ -1,3 +1,4 @@
+/*
 package data_access;
 
 import java.util.Random;
@@ -115,3 +116,4 @@ public class DemoMessagingApiCalls {
         return randomNumber + "";
     }
 }
+*/

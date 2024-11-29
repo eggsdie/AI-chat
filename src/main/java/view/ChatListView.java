@@ -122,7 +122,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
             final String friendName = JOptionPane.showInputDialog(this, "Enter Friend's Name:");
 
             if (friendName != null && !friendName.trim().isEmpty()) {
-                chatListController.execute(currentState.getCurrentUsername(), friendName,
+                chatListController.execute(currentState.getActiveUser(), friendName,
                         "Hello! This is a new conversation.");
                 refreshChatList("");
             }
@@ -157,11 +157,9 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
                     chatListPanel.add(chatItemPanel);
                 }
             }
-            chatListPanel.revalidate();
-            chatListPanel.repaint();
-        } else {
-            System.out.println("chat list null");
         }
+        chatListPanel.revalidate();
+        chatListPanel.repaint();
     }
 
     // Reset search bar and refresh the full chat list
@@ -173,6 +171,8 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
     // Creates a styled panel for each chat entry
     private JPanel createChatItemPanel(ChatEntry chatEntry) {
+        final ChatListState state = chatListViewModel.getState();
+
         JPanel chatItemPanel = new JPanel(new BorderLayout());
         chatItemPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         chatItemPanel.setBackground(Color.WHITE);
@@ -183,7 +183,13 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         chatItemPanel.setPreferredSize(new Dimension(0, 60)); // 0 width allows resizing
         chatItemPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel nameLabel = new JLabel(chatEntry.getUser2());
+        final JLabel nameLabel;
+        if (chatEntry.getUser1().equals(state.getCurrentUsername())) {
+            nameLabel = new JLabel(chatEntry.getUser2());
+        }
+        else {
+            nameLabel = new JLabel(chatEntry.getUser1());
+        }
         nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         JLabel timeLabel = new JLabel(chatEntry.getTime());
@@ -205,7 +211,12 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         chatItemPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                enterChatController.execute(chatEntry.getUser1(), chatEntry.getUser2());
+                if (chatEntry.getUser1().equals(state.getCurrentUsername())) {
+                    enterChatController.execute(chatEntry.getUser1(), chatEntry.getUser2());
+                }
+                else {
+                    enterChatController.execute(chatEntry.getUser2(), chatEntry.getUser1());
+                }
             }
         });
 
@@ -236,6 +247,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         if (state.getAddFriendError() != null) {
             JOptionPane.showMessageDialog(this, state.getAddFriendError());
         }
+        refreshChatList("");
         chatListViewModel.setState(state);
     }
 

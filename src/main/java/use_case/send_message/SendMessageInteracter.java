@@ -12,7 +12,7 @@ public class SendMessageInteracter implements SendMessageInputBoundary {
 
     @Override
     public void execute(SendMessageInputData inputData) {
-        userDataAccessObject.addMessage(inputData.getSender(), inputData.getReceiver(), inputData.getReceiver());
+        userDataAccessObject.addMessage(inputData.getSender(), inputData.getReceiver(), inputData.getContent());
     }
 }
 

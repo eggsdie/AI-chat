@@ -77,7 +77,7 @@ public class DemoRestfulApi {
         }
     }
 
-    public String createNewUser(String userId, String userName, String password, String email, String firstName, String lastName) {
+    public String createNewUser(String userId, String userName, String password, String email) {
         // Define the URL
         String addedTag = "users";
         String completeUrl = url + addedTag;
@@ -86,7 +86,7 @@ public class DemoRestfulApi {
         String updateDate = createDate;
 
         // Create JSON object for the new user
-        String json = String.format("{\"userId\":\"%s\",\"userName\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"firstName\":\"%s\",\"lastName\":\"%s\", \"createDate\":\"%s\", \"updateDate\":\"%s\"}", userId, userName, password, email, firstName, lastName, createDate, updateDate);
+        String json = String.format("{\"userId\":\"%s\",\"userName\":\"%s\",\"password\":\"%s\",\"email\":\"%s\", \"createDate\":\"%s\", \"updateDate\":\"%s\"}", userId, userName, password, email, createDate, updateDate);
 
         // Create the RequestBody
         RequestBody body = RequestBody.create(
@@ -113,14 +113,14 @@ public class DemoRestfulApi {
         }
     }
 
-    public String updateUser(String userId, String userName, String password, String email, String firstName, String lastName) {
+    public String updateUser(String userId, String userName, String password, String email) {
         String addedTag = "users/" + userId;
         String completeUrl = url + addedTag;
 
         String createDate = convertDateObjectToString(new Date());
         String updateDate = createDate;
 
-        String json = String.format("{\"userId\":\"%s\",\"userName\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"firstName\":\"%s\",\"lastName\":\"%s\", \"createDate\":\"%s\", \"updateDate\":\"%s\"}", userId, userName, password, email, firstName, lastName, createDate, updateDate);
+        String json = String.format("{\"userId\":\"%s\",\"userName\":\"%s\",\"password\":\"%s\",\"email\":\"%s\", \"createDate\":\"%s\", \"updateDate\":\"%s\"}", userId, userName, password, email, createDate, updateDate);
         RequestBody body = RequestBody.create(
                 json,
                 MediaType.get("application/json; charset=utf-8")
@@ -167,7 +167,8 @@ public class DemoRestfulApi {
     }
 
     // Create a new message (C)
-    public String createNewMessage(String messageId, String messageContent, String senderId, String receiverId) {
+    public String createNewMessage(String messageId, String messageContent, String senderUsername,
+                                   String receiverUsername) {
         String addedTag = "messages";
         String completeUrl = url + addedTag;
 
@@ -176,8 +177,7 @@ public class DemoRestfulApi {
 
         // Create JSON object for the message
         String json = String.format(
-                "{\"messageId\":\"%s\",\"createDate\":\"%s\",\"updateDate\":\"%s\",\"messageContent\":\"%s\",\"senderId\":\"%s\",\"receiverId\":\"%s\"}", messageId, createDate, updateDate, messageContent, senderId, receiverId
-        );
+                "{\"messageId\":\"%s\",\"createDate\":\"%s\",\"updateDate\":\"%s\",\"messageContent\":\"%s\",\"senderUsername\":\"%s\",\"receiverUsername\":\"%s\"}", messageId, createDate, updateDate, messageContent, senderUsername, receiverUsername);
 
         RequestBody body = RequestBody.create(
                 json,
