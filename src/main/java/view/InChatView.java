@@ -7,6 +7,8 @@ import interface_adapter.enter_chat.InChatState;
 import interface_adapter.enter_chat.InChatViewModel;
 import interface_adapter.send_message.SendMessageController;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.time.LocalTime;
@@ -102,6 +104,15 @@ public class InChatView extends JPanel implements PropertyChangeListener {
                 e.getAdjustable().setValue(e.getAdjustable().getMaximum());
             }
         });
+
+        final int delay = 1000; //milliseconds
+        final ActionListener refresh = evt -> {
+            final InChatState currentState = inChatViewModel.getState();
+            if (currentState.getMessages() != null) {
+                refreshMessages(currentState.getMessages());
+            }
+        };
+        new Timer(delay, refresh).start();
 
         this.add(topPanel, BorderLayout.NORTH);
         this.add(chatAreaScrollPane, BorderLayout.CENTER);
