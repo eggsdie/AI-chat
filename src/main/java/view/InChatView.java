@@ -93,12 +93,13 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         sendButton.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(sendButton)) {
-                        InChatState currentState = inChatViewModel.getState();
+                        final InChatState currentState = inChatViewModel.getState();
                         sendMessageController.execute(currentState.getSender(), currentState.getReceiver(),
                                 textEntryField.getText());
                         enterChatController.execute(currentState.getSender(), currentState.getReceiver());
                         textEntryField.setText("");
 
+                        verticalScroll.revalidate();
                         verticalScroll.setValue(verticalScroll.getMaximum());
                         currentState.setNewMessage(true);
 
