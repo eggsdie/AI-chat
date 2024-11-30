@@ -253,12 +253,15 @@ public class AppBuilder {
                 new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
         final SettingsOutputBoundary settingsOutputBoundary =
                 new SettingsPresenter(viewManagerModel, settingsViewModel, chatListViewModel);
+        final LoginOutputBoundary loginOutputBoundary =
+                new LoginPresenter(viewManagerModel, chatListViewModel, loginViewModel);
 
         final ChatListInputBoundary chatListInteractor =
                 new ChatListManager(userDataAccessObject, chatListOutputBoundary);
         final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(userDataAccessObject,
                 enterChatOutputBoundary);
         final SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
+        final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginOutputBoundary);
 
         final ChatListController chatListController = new ChatListController(chatListInteractor);
         chatListView.setChatListController(chatListController);
@@ -266,6 +269,8 @@ public class AppBuilder {
         chatListView.setEnterChatController(enterChatController);
         final SettingsController settingsController = new SettingsController(settingsInteractor);
         chatListView.setSettingsController(settingsController);
+        final LoginController loginController = new LoginController(loginInteractor, viewManagerModel);
+        chatListView.setLoginController(loginController);
         return this;
     }
 

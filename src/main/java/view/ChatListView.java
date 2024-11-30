@@ -9,6 +9,7 @@ import interface_adapter.chat_list.ChatListController;
 import interface_adapter.chat_list.ChatListState;
 import interface_adapter.chat_list.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
+import interface_adapter.login.LoginController;
 import interface_adapter.settings.SettingsController;
 import use_case.chat_list.ChatListManager;
 
@@ -28,10 +29,9 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     private String searchPlaceholder = "Search chats...";
     private ChatListViewModel chatListViewModel;
     private ChatListController chatListController;
-//    private InMemoryFriendRepository friendRepository;
-//    private ChatListOutputBoundary chatListOutputBoundary;
     private EnterChatController enterChatController;
     private SettingsController settingsController;
+    private LoginController loginController;
 
     private final JButton addFriendButton;
 
@@ -103,7 +103,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
         // Bottom panel with return and settings buttons
         JPanel bottomPanel = new JPanel(new BorderLayout());
-        JButton returnButton = new JButton("Return to Chat List");
+        JButton returnButton = new JButton("Refresh");
         JButton settingsButton = new JButton("Settings");
 
         bottomPanel.add(returnButton, BorderLayout.WEST);
@@ -166,6 +166,9 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     private void resetSearch() {
         chatSearchField.setText(searchPlaceholder);
         chatSearchField.setForeground(Color.GRAY);
+
+        final ChatListState currentState = chatListViewModel.getState();
+        loginController.execute(currentState.getCurrentUsername(), currentState.getActiveUser().getPassword());
         refreshChatList(""); // Refresh the full list
     }
 
@@ -261,5 +264,9 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
     public void setSettingsController(SettingsController settingsController) {
         this.settingsController = settingsController;
+    }
+
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
     }
 }
