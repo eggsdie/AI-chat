@@ -1,6 +1,9 @@
 package entity;
 
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Message {
@@ -8,7 +11,7 @@ public class Message {
     private String id;
     private String sender;
     private String content;
-    private LocalTime time;
+    private ZonedDateTime time;
     private String receiver;
 
     public Message(String msgId, String sender, String content, String receiver, String time) {
@@ -16,7 +19,8 @@ public class Message {
         this.sender = sender;
         this.content = content;
         this.receiver = receiver;
-        this.time = LocalTime.parse(time, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        final OffsetDateTime parsedTime = OffsetDateTime.parse(time, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        this.time = parsedTime.atZoneSameInstant(ZoneId.systemDefault());
     }
 
     public String getSender() {
