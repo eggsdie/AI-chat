@@ -113,11 +113,6 @@ public class InChatView extends JPanel implements PropertyChangeListener {
             if (currentState.getMessages() != null) {
                 enterChatController.execute(currentState.getSender(), currentState.getReceiver());
                 refreshMessages(currentState.getMessages());
-                if (currentState.isNewMessage()) {
-                    verticalScroll.setValue(verticalScroll.getMaximum());
-                    currentState.setNewMessage(false);
-                    inChatViewModel.setState(currentState);
-                }
             }
         };
         timer = new Timer(500, refresh);
