@@ -3,7 +3,7 @@ package view;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import interface_adapter.chat_list.ChatListController;
+import interface_adapter.add_friend.AddFriendController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsState;
@@ -43,7 +43,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     private JButton settingsButton;
 
     // Controllers for interaction
-    private ChatListController chatListController;
+    private AddFriendController addFriendController;
     private LogoutController logoutController;
     private SettingsController settingsController;
 

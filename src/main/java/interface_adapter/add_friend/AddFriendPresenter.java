@@ -1,26 +1,23 @@
-package interface_adapter.chat_list;
+package interface_adapter.add_friend;
 
-import entity.ChatEntry;
 import interface_adapter.ViewManagerModel;
-import use_case.chat_list.ChatListOutputBoundary;
-import use_case.chat_list.ChatListOutputData;
+import use_case.add_friend.AddFriendOutputBoundary;
+import use_case.add_friend.AddFriendOutputData;
 
-import java.util.List;
-
-public class ChatListPresenter implements ChatListOutputBoundary {
+public class AddFriendPresenter implements AddFriendOutputBoundary {
 
     private final ChatListViewModel chatListViewModel;
     // private final InChatViewModel inChatViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public ChatListPresenter(ViewManagerModel viewManagerModel,
-                             ChatListViewModel chatListViewModel) {
+    public AddFriendPresenter(ViewManagerModel viewManagerModel,
+                              ChatListViewModel chatListViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.chatListViewModel = chatListViewModel;
     }
 
     @Override
-    public void prepareSuccessView(ChatListOutputData outputData) {
+    public void prepareSuccessView(AddFriendOutputData outputData) {
         final ChatListState chatListState = chatListViewModel.getState();
         chatListState.setChatList(outputData.getChatList());
         chatListState.setActiveUser(outputData.getActiveUser());

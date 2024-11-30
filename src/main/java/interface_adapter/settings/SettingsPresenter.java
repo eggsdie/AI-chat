@@ -1,7 +1,7 @@
 package interface_adapter.settings;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.chat_list.ChatListViewModel;
+import interface_adapter.add_friend.ChatListViewModel;
 import use_case.settings.SettingsOutputData;
 import use_case.settings.SettingsOutputBoundary;
 

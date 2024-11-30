@@ -1,14 +1,12 @@
-package use_case.chat_list;
+package use_case.add_friend;
 
 import entity.ChatEntry;
-import entity.Friend;
 import entity.Message;
 import entity.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public interface ChatListUserDataAccessInterface {
+public interface AddFriendUserDataAccessInterface {
 
     boolean existsByName(String username);
 

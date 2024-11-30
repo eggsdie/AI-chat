@@ -2,8 +2,8 @@ package interface_adapter.enter_chat;
 
 import entity.ChatEntry;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.chat_list.ChatListState;
-import interface_adapter.chat_list.ChatListViewModel;
+import interface_adapter.add_friend.ChatListState;
+import interface_adapter.add_friend.ChatListViewModel;
 import use_case.enter_chat.EnterChatOutputBoundary;
 import use_case.enter_chat.EnterChatOutputData;
 
