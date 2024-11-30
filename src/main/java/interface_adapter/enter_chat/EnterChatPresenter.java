@@ -1,9 +1,13 @@
 package interface_adapter.enter_chat;
 
+import entity.ChatEntry;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.chat_list.ChatListState;
 import interface_adapter.chat_list.ChatListViewModel;
 import use_case.enter_chat.EnterChatOutputBoundary;
 import use_case.enter_chat.EnterChatOutputData;
+
+import java.util.ArrayList;
 
 public class EnterChatPresenter implements EnterChatOutputBoundary {
 
@@ -22,7 +26,9 @@ public class EnterChatPresenter implements EnterChatOutputBoundary {
     public void prepareSuccessView(EnterChatOutputData outputData) {
         // On success, switch to the in chat view.
         final InChatState inChatState = inChatViewModel.getState();
-        inChatState.setChatEntry(outputData.getChatEntry());
+        inChatState.setMessages(outputData.getMessages());
+        inChatState.setSender(outputData.getSender());
+        inChatState.setReceiver(outputData.getReceiver());
         this.inChatViewModel.setState(inChatState);
         this.inChatViewModel.firePropertyChanged();
 
@@ -35,7 +41,12 @@ public class EnterChatPresenter implements EnterChatOutputBoundary {
 
     }
 
-    public void switchToChatListView() {
+    public void switchToChatListView(ArrayList<ChatEntry> chatList) {
+        final ChatListState chatListState = chatListViewModel.getState();
+        chatListState.setChatList(chatList);
+        this.chatListViewModel.setState(chatListState);
+        this.chatListViewModel.firePropertyChanged();
+
         viewManagerModel.setState(chatListViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }

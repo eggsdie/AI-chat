@@ -17,12 +17,13 @@ public class ChatListPresenter implements ChatListOutputBoundary {
                              ChatListViewModel chatListViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.chatListViewModel = chatListViewModel;
-        // this.inChatViewModel = inChatViewModel;
     }
 
     @Override
     public void prepareSuccessView(ChatListOutputData outputData) {
-
+        final ChatListState chatListState = chatListViewModel.getState();
+        chatListState.setChatList(outputData.getChatList());
+        chatListState.setActiveUser(outputData.getActiveUser());
     }
 
     @Override
@@ -32,18 +33,18 @@ public class ChatListPresenter implements ChatListOutputBoundary {
         chatListViewModel.firePropertyChanged();
     }
 
-    @Override
-    public void presentChatList(List<ChatEntry> chatList) {
-        System.out.println("Chat List:");
-        for (ChatEntry chat : chatList) {
-            System.out.println(chat.getOtherUser() + " - " + chat.getLastMessagePreview()
-                   + " at " + chat.getLastMessageTime());
-        }
-    }
+//    @Override
+//    public void presentChatList(List<ChatEntry> chatList) {
+//        System.out.println("Chat List:");
+//        for (ChatEntry chat : chatList) {
+//            System.out.println(chat.getUser2() + " - " + chat.getLastMessagePreview()
+//                   + " at " + chat.getLastMessageTime());
+//        }
+//    }
 
-    @Override
-    public void presentError(String errorMessage) {
-        System.out.println("Error: " + errorMessage);
-    }
+//    @Override
+//    public void presentError(String errorMessage) {
+//        System.out.println("Error: " + errorMessage);
+//    }
 
 }

@@ -12,14 +12,14 @@ public class ChatListController {
         this.chatListUseCaseInteractor = chatListUseCaseInteractor;
     }
 
-    public void addChat(User currentUser, String otherUser, String messagePreview) {
+    public void execute(User currentUser, String otherUser, String messagePreview) {
         final ChatListInputData chatListInputData = new ChatListInputData(currentUser, otherUser);
 
-        chatListUseCaseInteractor.addChat(chatListInputData, messagePreview);
+        chatListUseCaseInteractor.execute(chatListInputData, messagePreview);
     }
 
-    public boolean removeChat(String name) {
+    /*public boolean removeChat(String name) {
         return chatListUseCaseInteractor.removeChat(name);
-    }
+    }*/
 
 }

@@ -3,13 +3,19 @@ package use_case.enter_chat;
 import entity.ChatEntry;
 
 public class EnterChatInputData {
-    private final ChatEntry chatEntry;
+    private final String sender;
+    private final String receiver;
 
-    public EnterChatInputData(ChatEntry chatEntry) {
-        this.chatEntry = chatEntry;
+    public EnterChatInputData(String sender, String receiver) {
+       this.sender = sender;
+       this.receiver = receiver;
     }
 
-    public ChatEntry getChatEntry() {
-        return chatEntry;
+    public String getSender() {
+        return sender;
+    }
+
+    public String getReceiver() {
+        return receiver;
     }
 }

@@ -1,25 +1,33 @@
 package use_case.enter_chat;
 
 import entity.ChatEntry;
+import entity.Message;
+
+import java.util.ArrayList;
 
 public class EnterChatInteractor implements EnterChatInputBoundary {
+    private final EnterChatUserDataAccessInterface userDataAccessObject;
     private final EnterChatOutputBoundary userPresenter;
 
-    public EnterChatInteractor(EnterChatOutputBoundary enterChatOutputBoundary) {
+    public EnterChatInteractor(EnterChatUserDataAccessInterface userDataAccessObject,
+                               EnterChatOutputBoundary enterChatOutputBoundary) {
         this.userPresenter = enterChatOutputBoundary;
+        this.userDataAccessObject = userDataAccessObject;
     }
 
     @Override
     public void execute(EnterChatInputData inputData) {
-        final ChatEntry chatEntry = inputData.getChatEntry();
+        final String sender = inputData.getSender();
+        final String receiver = inputData.getReceiver();
+        final ArrayList<Message> messages = userDataAccessObject.messagesByChat(sender, receiver);
         final EnterChatOutputData enterChatOutputData = new EnterChatOutputData(false,
-                chatEntry);
+                sender, receiver, messages);
         userPresenter.prepareSuccessView(enterChatOutputData);
     }
 
     @Override
-    public void switchToChatListView() {
-        userPresenter.switchToChatListView();
+    public void switchToChatListView(String activeUser) {
+        userPresenter.switchToChatListView(userDataAccessObject.allChatsWithUser(activeUser));
     }
 }
 

@@ -14,14 +14,14 @@ public class EnterChatController {
         this.enterChatUseCaseInteractor = enterChatUseCaseInteractor;
     }
 
-    public void execute(ChatEntry chatEntry) {
-        final EnterChatInputData enterChatInputData = new EnterChatInputData(chatEntry);
+    public void execute(String sender, String receiver) {
+        final EnterChatInputData enterChatInputData = new EnterChatInputData(sender, receiver);
 
         enterChatUseCaseInteractor.execute(enterChatInputData);
     }
 
-    public void switchToChatListView() {
-        enterChatUseCaseInteractor.switchToChatListView();
+    public void switchToChatListView(String activeUser) {
+        enterChatUseCaseInteractor.switchToChatListView(activeUser);
     }
 
 }

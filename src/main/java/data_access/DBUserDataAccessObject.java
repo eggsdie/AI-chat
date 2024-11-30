@@ -1,3 +1,4 @@
+/*
 package data_access;
 
 import java.io.IOException;
@@ -17,9 +18,11 @@ import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
+*/
 /**
  * The DAO for user data.
- */
+ *//*
+
 public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
@@ -163,3 +166,4 @@ public class DBUserDataAccessObject implements SignupUserDataAccessInterface,
         return null;
     }
 }
+*/

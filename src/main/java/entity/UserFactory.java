@@ -24,5 +24,5 @@ public interface UserFactory {
      * @param password the password of the new user
      * @return the new user
      */
-    User create(String name, String password);
+//    User create(String name, String password);
 }

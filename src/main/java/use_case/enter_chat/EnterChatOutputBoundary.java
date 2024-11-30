@@ -2,6 +2,7 @@ package use_case.enter_chat;
 
 import entity.ChatEntry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface EnterChatOutputBoundary {
@@ -20,7 +21,8 @@ public interface EnterChatOutputBoundary {
 
     /**
      * Switches to the ChatList View.
-     */
-    void switchToChatListView();
+     * @param chatList chat list for current user
+     * */
+    void switchToChatListView(ArrayList<ChatEntry> chatList);
 }
 

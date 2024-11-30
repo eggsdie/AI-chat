@@ -16,6 +16,11 @@ public class CommonUser implements User {
     }
 
     @Override
+    public String getId() {
+        return "";
+    }
+
+    @Override
     public String getName() {
         return name;
     }
