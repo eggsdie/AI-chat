@@ -1,8 +1,5 @@
 package interface_adapter.enter_chat;
 
-import entity.ChatEntry;
-import use_case.chat_list.ChatListInputBoundary;
-import use_case.chat_list.ChatListInputData;
 import use_case.enter_chat.EnterChatInputBoundary;
 import use_case.enter_chat.EnterChatInputData;
 

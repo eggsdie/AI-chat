@@ -14,9 +14,9 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
-import interface_adapter.chat_list.ChatListController;
-import interface_adapter.chat_list.ChatListPresenter;
-import interface_adapter.chat_list.ChatListViewModel;
+import interface_adapter.add_friend.AddFriendController;
+import interface_adapter.add_friend.AddFriendPresenter;
+import interface_adapter.add_friend.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.EnterChatPresenter;
 import interface_adapter.enter_chat.InChatViewModel;
@@ -32,10 +32,9 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
-import okhttp3.internal.http2.Settings;
-import use_case.chat_list.ChatListInputBoundary;
-import use_case.chat_list.ChatListManager;
-import use_case.chat_list.ChatListOutputBoundary;
+import use_case.add_friend.AddFriendInputBoundary;
+import use_case.add_friend.AddFriendInteractor;
+import use_case.add_friend.AddFriendOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
@@ -61,7 +60,6 @@ import view.LoggedInView;
 import view.LoginView;
 import view.SignupView;
 import view.LandingView;
-import view.ViewManager;
 import view.*;
 
 /**
@@ -198,17 +196,17 @@ public class AppBuilder {
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, chatListViewModel,
                 loginViewModel);
-        final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(viewManagerModel,
+        final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(viewManagerModel,
                 chatListViewModel);
 
         final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginOutputBoundary);
-        final ChatListInputBoundary chatListInteractor =
-                new ChatListManager(userDataAccessObject, chatListOutputBoundary);
+        final AddFriendInputBoundary chatListInteractor =
+                new AddFriendInteractor(userDataAccessObject, addFriendOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor, viewManagerModel);
         loginView.setLoginController(loginController);
-        final ChatListController chatListController = new ChatListController(chatListInteractor);
-        loginView.setChatListController(chatListController);
+        final AddFriendController addFriendController = new AddFriendController(chatListInteractor);
+        loginView.setChatListController(addFriendController);
         return this;
     }
 
@@ -247,21 +245,21 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addChatListUseCase() {
-        final ChatListOutputBoundary chatListOutputBoundary = new ChatListPresenter(viewManagerModel,
+        final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(viewManagerModel,
                 chatListViewModel);
         final EnterChatOutputBoundary enterChatOutputBoundary =
                 new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
         final SettingsOutputBoundary settingsOutputBoundary =
                 new SettingsPresenter(viewManagerModel, settingsViewModel, chatListViewModel);
 
-        final ChatListInputBoundary chatListInteractor =
-                new ChatListManager(userDataAccessObject, chatListOutputBoundary);
+        final AddFriendInputBoundary chatListInteractor =
+                new AddFriendInteractor(userDataAccessObject, addFriendOutputBoundary);
         final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(userDataAccessObject,
                 enterChatOutputBoundary);
         final SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
 
-        final ChatListController chatListController = new ChatListController(chatListInteractor);
-        chatListView.setChatListController(chatListController);
+        final AddFriendController addFriendController = new AddFriendController(chatListInteractor);
+        chatListView.setChatListController(addFriendController);
         final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
         chatListView.setEnterChatController(enterChatController);
         final SettingsController settingsController = new SettingsController(settingsInteractor);

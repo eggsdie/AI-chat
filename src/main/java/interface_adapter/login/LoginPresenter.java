@@ -1,8 +1,8 @@
 package interface_adapter.login;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.chat_list.ChatListState;
-import interface_adapter.chat_list.ChatListViewModel;
+import interface_adapter.add_friend.ChatListState;
+import interface_adapter.add_friend.ChatListViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 
