@@ -1,6 +1,7 @@
 package data_access;
 
 import com.google.gson.JsonArray;
+
 import okhttp3.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,6 @@ public class DemoRestfulApi {
     public DemoRestfulApi() {
         this.client = new OkHttpClient();
     }
-
     public String getAllUsers() {
         // Define the URL
         String addedTag = "users";
@@ -44,7 +44,8 @@ public class DemoRestfulApi {
         }
     }
 
-    public JsonArray getAllUsersJSON() {
+
+    public JsonObject getAllUsersJSON() {
         String addedTag = "users";
         String completeUrl = url + addedTag;
 
@@ -79,22 +80,37 @@ public class DemoRestfulApi {
 
     public String createNewUser(String userId, String userName, String password, String email) {
         // Define the URL
+                return JsonParser.parseString(response.body().string()).getAsJsonObject();
+            } else {
+                JsonObject errorJson = new JsonObject();
+                errorJson.addProperty("error", "Request failed");
+                errorJson.addProperty("statusCode", response.code());
+                return errorJson;
+            }
+        } catch (Exception e) {
+            JsonObject exceptionJson = new JsonObject();
+            exceptionJson.addProperty("error", "Request failed due to an exception");
+            exceptionJson.addProperty("message", e.getMessage());
+            return exceptionJson;
+        }
+    }
+
+    public String createNewUser(String id, String userName, String password, String email, String firstName, String lastName) {
         String addedTag = "users";
         String completeUrl = url + addedTag;
 
         String createDate = convertDateObjectToString(new Date());
         String updateDate = createDate;
-
         // Create JSON object for the new user
         String json = String.format("{\"userId\":\"%s\",\"userName\":\"%s\",\"password\":\"%s\",\"email\":\"%s\", \"createDate\":\"%s\", \"updateDate\":\"%s\"}", userId, userName, password, email, createDate, updateDate);
 
         // Create the RequestBody
+
         RequestBody body = RequestBody.create(
                 json,
                 MediaType.get("application/json; charset=utf-8")
         );
 
-        // Build the POST request
         Request request = new Request.Builder()
                 .url(completeUrl)
                 .post(body)
@@ -109,6 +125,7 @@ public class DemoRestfulApi {
             }
         }
         catch (Exception e) {
+
             return "Request failed due to an exception: " + e.getMessage();
         }
     }
@@ -120,7 +137,9 @@ public class DemoRestfulApi {
         String createDate = convertDateObjectToString(new Date());
         String updateDate = createDate;
 
+
         String json = String.format("{\"userId\":\"%s\",\"userName\":\"%s\",\"password\":\"%s\",\"email\":\"%s\", \"createDate\":\"%s\", \"updateDate\":\"%s\"}", userId, userName, password, email, createDate, updateDate);
+
         RequestBody body = RequestBody.create(
                 json,
                 MediaType.get("application/json; charset=utf-8")
@@ -167,8 +186,10 @@ public class DemoRestfulApi {
     }
 
     // Create a new message (C)
+
     public String createNewMessage(String messageId, String messageContent, String senderUsername,
                                    String receiverUsername) {
+
         String addedTag = "messages";
         String completeUrl = url + addedTag;
 
@@ -177,7 +198,9 @@ public class DemoRestfulApi {
 
         // Create JSON object for the message
         String json = String.format(
+
                 "{\"messageId\":\"%s\",\"createDate\":\"%s\",\"updateDate\":\"%s\",\"messageContent\":\"%s\",\"senderUsername\":\"%s\",\"receiverUsername\":\"%s\"}", messageId, createDate, updateDate, messageContent, senderUsername, receiverUsername);
+
 
         RequestBody body = RequestBody.create(
                 json,
@@ -221,7 +244,9 @@ public class DemoRestfulApi {
         }
     }
 
+
     public JsonArray getAllMessagesJSON() {
+
         String addedTag = "messages";
         String completeUrl = url + addedTag;
 
@@ -251,6 +276,7 @@ public class DemoRestfulApi {
             exceptionJson.addProperty("message", e.getMessage());
             exceptionArray.add(exceptionJson);
             return exceptionArray;
+
         }
     }
 
@@ -330,5 +356,6 @@ public class DemoRestfulApi {
 
         return formattedDate;
     }
+
 
 }

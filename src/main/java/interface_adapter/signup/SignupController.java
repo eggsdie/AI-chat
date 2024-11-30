@@ -16,9 +16,10 @@ public class SignupController {
 
     /**
      * Executes the Signup Use Case.
-     * @param name the name of the user
-     * @param email the email of the user
-     * @param password the password
+     *
+     * @param name     the name of the user
+     * @param email    the email of the user
+     * @param password the password of the user
      */
     public void execute(String name, String email, String password) {
         final SignupInputData signupInputData = new SignupInputData(name, email, password);

@@ -6,6 +6,8 @@ import interface_adapter.login.LoginViewModel;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
 
+import javax.swing.*;
+
 /**
  * The Presenter for the Signup Use Case.
  */
@@ -36,10 +38,12 @@ public class SignupPresenter implements SignupOutputBoundary {
     }
 
     @Override
-    public void prepareFailView(String error) {
-        final SignupState signupState = signupViewModel.getState();
-        signupState.setNameError(error);
-        signupViewModel.firePropertyChanged();
+    public void prepareFailView(String errorMessage) {
+        if (errorMessage.contains("User might already exist")) {
+            switchToLoginView();
+        } else {
+            JOptionPane.showMessageDialog(null, errorMessage, "Message", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     @Override
