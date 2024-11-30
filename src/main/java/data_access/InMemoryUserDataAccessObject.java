@@ -26,7 +26,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         LogoutUserDataAccessInterface,
         ChatListUserDataAccessInterface,
         EnterChatUserDataAccessInterface,
-        SendMessageUserDataAccessInterface {
+        SendMessageUserDataAccessInterface { 
 
     private final Map<String, User> users = new HashMap<>();
 
