@@ -22,6 +22,7 @@ public class SettingsPresenter implements SettingsOutputBoundary {
         final SettingsState settingsState = settingsViewModel.getState();
         settingsState.setUsername(outputData.getUsername());
         settingsState.setEmail(outputData.getEmail());
+        settingsState.setPassword(outputData.getPassword());
         this.settingsViewModel.setState(settingsState);
         this.settingsViewModel.firePropertyChanged();
 
