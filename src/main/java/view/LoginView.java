@@ -1,13 +1,11 @@
 package view;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import interface_adapter.chat_list.ChatListController;
+import interface_adapter.add_friend.AddFriendController;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
@@ -22,7 +20,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     private final JTextField usernameInputField;
     private final JPasswordField passwordInputField;
     private LoginController loginController;
-    private ChatListController chatListController;
+    private AddFriendController addFriendController;
 
     private final JButton loginButton;
     private final JButton cancelButton;
@@ -207,7 +205,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         this.loginController = loginController;
     }
 
-    public void setChatListController(ChatListController chatListController) {
-        this.chatListController = chatListController;
+    public void setChatListController(AddFriendController addFriendController) {
+        this.addFriendController = addFriendController;
     }
 }

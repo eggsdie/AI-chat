@@ -5,13 +5,13 @@ import java.beans.PropertyChangeListener;
 
 // import data_access.InMemoryFriendRepository;
 import entity.ChatEntry;
-import interface_adapter.chat_list.ChatListController;
-import interface_adapter.chat_list.ChatListState;
-import interface_adapter.chat_list.ChatListViewModel;
+import interface_adapter.add_friend.AddFriendController;
+import interface_adapter.add_friend.ChatListState;
+import interface_adapter.add_friend.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.login.LoginController;
 import interface_adapter.settings.SettingsController;
-import use_case.chat_list.ChatListManager;
+import use_case.add_friend.AddFriendInteractor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,11 +24,11 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
     private JFrame frame;
     private JPanel chatListPanel;
-    private ChatListManager chatListManager;
+    private AddFriendInteractor chatListManager;
     private JTextField chatSearchField;
     private String searchPlaceholder = "Search chats...";
     private ChatListViewModel chatListViewModel;
-    private ChatListController chatListController;
+    private AddFriendController addFriendController;
     private EnterChatController enterChatController;
     private SettingsController settingsController;
     private LoginController loginController;
@@ -38,16 +38,11 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     public ChatListView(ChatListViewModel chatListViewModel) {
         this.chatListViewModel = chatListViewModel;
         this.chatListViewModel.addPropertyChangeListener(this);
-//        this.friendRepository = friendRepository;
-//        this.chatListOutputBoundary = chatListOutputBoundary;
 
         frame = new JFrame("Chat Messenger");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 600);
         this.setLayout(new BorderLayout());
-
-        // Initialize Use Case
-//        chatListManager = new ChatListManager(friendRepository, chatListOutputBoundary);
 
         // Top panel with chat search and add friend button
         JPanel topPanel = new JPanel();
@@ -122,7 +117,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
             final String friendName = JOptionPane.showInputDialog(this, "Enter Friend's Name:");
 
             if (friendName != null && !friendName.trim().isEmpty()) {
-                chatListController.execute(currentState.getActiveUser(), friendName,
+                addFriendController.execute(currentState.getActiveUser(), friendName,
                         "Hello! This is a new conversation.");
                 refreshChatList("");
             }
@@ -254,8 +249,8 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         chatListViewModel.setState(state);
     }
 
-    public void setChatListController(ChatListController chatListController) {
-        this.chatListController = chatListController;
+    public void setChatListController(AddFriendController addFriendController) {
+        this.addFriendController = addFriendController;
     }
 
     public void setEnterChatController(EnterChatController enterChatController) {

@@ -1,17 +1,17 @@
-package use_case.chat_list;
+package use_case.add_friend;
 
 import entity.ChatEntry;
 import entity.User;
 
 import java.util.ArrayList;
 
-public class ChatListOutputData {
+public class AddFriendOutputData {
 
     private final boolean useCaseFailed;
     private final User activeUser;
     private final ArrayList<ChatEntry> chatList;
 
-    public ChatListOutputData(boolean useCaseFailed, ArrayList<ChatEntry> chatList, User activeUser) {
+    public AddFriendOutputData(boolean useCaseFailed, ArrayList<ChatEntry> chatList, User activeUser) {
         this.useCaseFailed = useCaseFailed;
         this.chatList = chatList;
         this.activeUser = activeUser;

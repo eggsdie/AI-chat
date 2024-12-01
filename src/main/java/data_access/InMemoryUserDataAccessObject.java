@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import entity.*;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
-import use_case.chat_list.ChatListUserDataAccessInterface;
+import use_case.add_friend.AddFriendUserDataAccessInterface;
 import use_case.enter_chat.EnterChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
@@ -24,7 +24,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         LogoutUserDataAccessInterface,
-        ChatListUserDataAccessInterface,
+        AddFriendUserDataAccessInterface,
         EnterChatUserDataAccessInterface,
         SendMessageUserDataAccessInterface { 
 
