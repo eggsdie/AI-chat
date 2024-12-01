@@ -217,20 +217,6 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         return chatItemPanel;
     }
 
-    // Opens a new chat window for the selected friend
-    private void openChatWindow(ChatEntry chatEntry) {
-        JFrame chatFrame = new JFrame("Chat with " + chatEntry.getUser2());
-        chatFrame.setSize(400, 400);
-        chatFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        JTextArea chatArea = new JTextArea();
-        chatArea.setEditable(false);
-        chatArea.setText("Chat with " + chatEntry.getUser2() + "\n\n" + chatEntry.getLastMessagePreview());
-        chatFrame.add(new JScrollPane(chatArea), BorderLayout.CENTER);
-
-        chatFrame.setVisible(true);
-    }
-
     public String getViewName() {
         return viewName;
     }
