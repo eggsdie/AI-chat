@@ -17,5 +17,4 @@ public class ChangePictureInputData {
     String getUsername() {
         return username;
     }
-
 }
