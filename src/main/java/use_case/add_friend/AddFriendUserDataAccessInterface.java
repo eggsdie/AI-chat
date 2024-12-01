@@ -1,18 +1,16 @@
 package use_case.add_friend;
 
+import java.util.ArrayList;
+
 import entity.ChatEntry;
 import entity.Message;
 import entity.User;
-
-import java.util.ArrayList;
 
 public interface AddFriendUserDataAccessInterface {
 
     boolean existsByName(String username);
 
     boolean chatWithYourself(String username);
-
-//    void saveFriend(Friend friend, ChatEntry chat);
 
     ArrayList<Message> messagesWithUser(String username);
 

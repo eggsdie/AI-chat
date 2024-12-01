@@ -1,7 +1,6 @@
 package interface_adapter.settings;
 
 import entity.User;
-import interface_adapter.ViewManagerModel;
 import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInputData;
 

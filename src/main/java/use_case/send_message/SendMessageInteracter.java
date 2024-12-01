@@ -1,8 +1,5 @@
 package use_case.send_message;
 
-import use_case.enter_chat.EnterChatOutputBoundary;
-import use_case.enter_chat.EnterChatUserDataAccessInterface;
-
 public class SendMessageInteracter implements SendMessageInputBoundary {
     private final SendMessageUserDataAccessInterface userDataAccessObject;
 

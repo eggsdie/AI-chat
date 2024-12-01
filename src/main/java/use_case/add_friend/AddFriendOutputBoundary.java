@@ -1,8 +1,6 @@
 package use_case.add_friend;
 
 public interface AddFriendOutputBoundary {
-//    void presentChatList(List<ChatEntry> chatList);
-//    void presentError(String errorMessage);
 
     /**
      * Prepares the success view for the AddChat Use Case.
@@ -16,8 +14,5 @@ public interface AddFriendOutputBoundary {
      */
     void prepareFailView(String errorMessage);
 
-    /**
-     * Switches to the InChat View.
-     */
 }
 

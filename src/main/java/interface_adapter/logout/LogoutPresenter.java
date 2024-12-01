@@ -1,8 +1,8 @@
 package interface_adapter.logout;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.change_password.LoggedInState;
-import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.settings.SettingsState;
+import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
 import use_case.logout.LogoutOutputBoundary;
 import use_case.logout.LogoutOutputData;
@@ -12,28 +12,27 @@ import use_case.logout.LogoutOutputData;
  */
 public class LogoutPresenter implements LogoutOutputBoundary {
 
-    private final LoggedInViewModel loggedInViewModel;
+    private final SettingsViewModel settingsViewModel;
     private final ViewManagerModel viewManagerModel;
     private final SignupViewModel signupViewModel;
 
     public LogoutPresenter(ViewManagerModel viewManagerModel,
-                           LoggedInViewModel loggedInViewModel,
+                           SettingsViewModel settingsViewModel,
                            SignupViewModel signupViewModel) {
         this.viewManagerModel = viewManagerModel;
-        this.loggedInViewModel = loggedInViewModel;
+        this.settingsViewModel = settingsViewModel;
         this.signupViewModel = signupViewModel;
     }
 
     @Override
     public void prepareSuccessView(LogoutOutputData response) {
         // Clear the LoggedInState's username
-        LoggedInState loggedInState = loggedInViewModel.getState();
-        loggedInState.setUsername("");
-        loggedInViewModel.setState(loggedInState);
-        loggedInViewModel.firePropertyChanged();
+        final SettingsState settingsState = settingsViewModel.getState();
+        settingsState.setUsername("");
+        settingsViewModel.setState(settingsState);
+        settingsViewModel.firePropertyChanged();
 
         // Switch to the SignupView
-        System.out.println("Logging out: Switching to signup view.");
         viewManagerModel.setState(signupViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }

@@ -1,6 +1,5 @@
 package interface_adapter.send_message;
 
-import entity.Message;
 import use_case.send_message.SendMessageInputBoundary;
 import use_case.send_message.SendMessageInputData;
 

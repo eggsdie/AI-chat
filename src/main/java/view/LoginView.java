@@ -251,7 +251,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         this.loginController = loginController;
     }
 
-    public void setChatListController(AddFriendController addFriendController) {
+    public void setAddFriendController(AddFriendController addFriendController) {
         this.addFriendController = addFriendController;
     }
 }

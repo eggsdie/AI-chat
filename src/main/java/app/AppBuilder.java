@@ -1,22 +1,21 @@
 package app;
 
 import java.awt.CardLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import data_access.DemoRestfulApi;
-// import data_access.InMemoryFriendRepository;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.change_password.ChangePasswordController;
-import interface_adapter.change_password.ChangePasswordPresenter;
-import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.add_friend.AddFriendController;
 import interface_adapter.add_friend.AddFriendPresenter;
 import interface_adapter.add_friend.ChatListViewModel;
+import interface_adapter.change_password.ChangePasswordController;
+import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.EnterChatPresenter;
 import interface_adapter.enter_chat.InChatViewModel;
@@ -26,12 +25,12 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.send_message.SendMessageController;
-import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupPresenter;
-import interface_adapter.signup.SignupViewModel;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
+import interface_adapter.signup.SignupController;
+import interface_adapter.signup.SignupPresenter;
+import interface_adapter.signup.SignupViewModel;
 import use_case.add_friend.AddFriendInputBoundary;
 import use_case.add_friend.AddFriendInteractor;
 import use_case.add_friend.AddFriendOutputBoundary;
@@ -49,18 +48,16 @@ import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
 import use_case.send_message.SendMessageInputBoundary;
 import use_case.send_message.SendMessageInteracter;
-import use_case.signup.SignupInputBoundary;
-import use_case.signup.SignupInteractor;
-import use_case.signup.SignupOutputBoundary;
 import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInteractor;
 import use_case.settings.SettingsOutputBoundary;
-
-import view.LoggedInView;
+import use_case.signup.SignupInputBoundary;
+import use_case.signup.SignupInteractor;
+import use_case.signup.SignupOutputBoundary;
+import view.*;
+import view.LandingView;
 import view.LoginView;
 import view.SignupView;
-import view.LandingView;
-import view.*;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -75,13 +72,10 @@ public class AppBuilder {
     private final DemoRestfulApi demoRestfulApi = new DemoRestfulApi();
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject(demoRestfulApi,
             userFactory);
-    // private final InMemoryFriendRepository friendRepository = new InMemoryFriendRepository(userDataAccessObject);
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
-    private LoggedInViewModel loggedInViewModel;
-    private LoggedInView loggedInView;
     private LoginView loginView;
     private ChatListViewModel chatListViewModel;
     private ChatListView chatListView;
@@ -95,7 +89,7 @@ public class AppBuilder {
         cardPanel.setLayout(cardLayout);
 
         viewManagerModel.addPropertyChangeListener(evt -> {
-            String newState = (String) evt.getNewValue();
+            final String newState = (String) evt.getNewValue();
             cardLayout.show(cardPanel, newState);
         });
     }
@@ -105,9 +99,11 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLandingView() {
-        LandingView landingView = new LandingView(
-                evt -> viewManagerModel.setState("log in"),  // Navigate to Login View
-                evt -> viewManagerModel.setState("sign up")  // Navigate to Signup View
+        final LandingView landingView = new LandingView(
+                // Navigate to Login View
+                evt -> viewManagerModel.setState("log in"),
+                // Navigate to Signup View
+                evt -> viewManagerModel.setState("sign up")
         );
         cardPanel.add(landingView, landingView.getViewName());
         return this;
@@ -136,18 +132,7 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the LoggedIn View to the application.
-     * @return this builder
-     */
-    public AppBuilder addLoggedInView() {
-        loggedInViewModel = new LoggedInViewModel();
-        loggedInView = new LoggedInView(loggedInViewModel);
-        cardPanel.add(loggedInView, loggedInView.getViewName());
-        return this;
-    }
-
-    /**
-     * Adds the ChatList View to the application.
+     * Adds the AddFriend View to the application.
      * @return this builder
      */
     public AppBuilder addChatListView() {
@@ -175,14 +160,15 @@ public class AppBuilder {
         return this;
     }
 
-
     /**
      * Adds the Signup Use Case to the application.
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
-        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel, signupViewModel, loginViewModel);
-        final SignupInputBoundary userSignupInteractor = new SignupInteractor(userDataAccessObject, signupOutputBoundary, userFactory);
+        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel, signupViewModel,
+                loginViewModel);
+        final SignupInputBoundary userSignupInteractor = new SignupInteractor(userDataAccessObject,
+                signupOutputBoundary, userFactory);
 
         final SignupController signupController = new SignupController(userSignupInteractor);
         signupView.setSignupController(signupController);
@@ -196,17 +182,16 @@ public class AppBuilder {
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, chatListViewModel,
                 loginViewModel);
-        final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(viewManagerModel,
-                chatListViewModel);
+        final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(chatListViewModel);
 
         final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginOutputBoundary);
-        final AddFriendInputBoundary chatListInteractor =
+        final AddFriendInputBoundary addFriendInteractor =
                 new AddFriendInteractor(userDataAccessObject, addFriendOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor, viewManagerModel);
         loginView.setLoginController(loginController);
-        final AddFriendController addFriendController = new AddFriendController(chatListInteractor);
-        loginView.setChatListController(addFriendController);
+        final AddFriendController addFriendController = new AddFriendController(addFriendInteractor);
+        loginView.setAddFriendController(addFriendController);
         return this;
     }
 
@@ -217,11 +202,12 @@ public class AppBuilder {
     public AppBuilder addChangePasswordUseCase() {
         final ChangePasswordOutputBoundary changePasswordOutputBoundary =
                 new ChangePasswordPresenter(settingsViewModel);
-        final ChangePasswordInputBoundary changePasswordInteractor = new ChangePasswordInteractor(userDataAccessObject, changePasswordOutputBoundary, userFactory);
+        final ChangePasswordInputBoundary changePasswordInteractor = new ChangePasswordInteractor(userDataAccessObject,
+                changePasswordOutputBoundary, userFactory);
 
         final ChangePasswordController changePasswordController =
                 new ChangePasswordController(changePasswordInteractor);
-        loggedInView.setChangePasswordController(changePasswordController);
+        settingsView.setChangePasswordController(changePasswordController);
         return this;
     }
 
@@ -230,11 +216,12 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase() {
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel, loggedInViewModel, signupViewModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel, settingsViewModel,
+                signupViewModel);
         final LogoutInputBoundary logoutInteractor = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
         final LogoutController logoutController = new LogoutController(logoutInteractor, viewManagerModel);
-        loggedInView.setLogoutController(logoutController);
+        settingsView.setLogoutController(logoutController);
         // Connect controller to the view
         settingsView.setLogoutController(logoutController);
         // Ensure the Settings view can also log out
@@ -246,9 +233,8 @@ public class AppBuilder {
      * Adds the AddFriend Use Case to the application.
      * @return this builder
      */
-    public AppBuilder addChatListUseCase() {
-        final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(viewManagerModel,
-                chatListViewModel);
+    public AppBuilder addAddFriendUseCase() {
+        final AddFriendOutputBoundary addFriendOutputBoundary = new AddFriendPresenter(chatListViewModel);
         final EnterChatOutputBoundary enterChatOutputBoundary =
                 new EnterChatPresenter(viewManagerModel, inChatViewModel, chatListViewModel);
         final SettingsOutputBoundary settingsOutputBoundary =
@@ -256,15 +242,15 @@ public class AppBuilder {
         final LoginOutputBoundary loginOutputBoundary =
                 new LoginPresenter(viewManagerModel, chatListViewModel, loginViewModel);
 
-        final AddFriendInputBoundary chatListInteractor =
+        final AddFriendInputBoundary addFriendInteractor =
                 new AddFriendInteractor(userDataAccessObject, addFriendOutputBoundary);
         final EnterChatInputBoundary enterChatInteractor = new EnterChatInteractor(userDataAccessObject,
                 enterChatOutputBoundary);
         final SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
         final LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginOutputBoundary);
 
-        final AddFriendController addFriendController = new AddFriendController(chatListInteractor);
-        chatListView.setChatListController(addFriendController);
+        final AddFriendController addFriendController = new AddFriendController(addFriendInteractor);
+        chatListView.setAddFriendController(addFriendController);
         final EnterChatController enterChatController = new EnterChatController(enterChatInteractor);
         chatListView.setEnterChatController(enterChatController);
         final SettingsController settingsController = new SettingsController(settingsInteractor);
@@ -293,17 +279,9 @@ public class AppBuilder {
     public AppBuilder addSettingsUseCase() {
         final SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(viewManagerModel, settingsViewModel,
                 chatListViewModel);
-        final ChangePasswordOutputBoundary changePasswordOutputBoundary = new ChangePasswordPresenter(settingsViewModel);
-
         final SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
-        final ChangePasswordInputBoundary changePasswordInteractor =
-                new ChangePasswordInteractor(userDataAccessObject, changePasswordOutputBoundary, userFactory);
-
         final SettingsController settingsController = new SettingsController(settingsInteractor);
         settingsView.setSettingsController(settingsController);
-        final ChangePasswordController changePasswordController =
-                new ChangePasswordController(changePasswordInteractor);
-        settingsView.setChangePasswordController(changePasswordController);
         return this;
     }
 
@@ -329,5 +307,4 @@ public class AppBuilder {
 
         return application;
     }
-
 }
