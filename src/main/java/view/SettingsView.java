@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 
 import interface_adapter.add_friend.AddFriendController;
 import interface_adapter.change_password.ChangePasswordController;
+import interface_adapter.change_picture.ChangePictureController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsState;
@@ -44,10 +45,10 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     private JButton settingsButton;
 
     // Controllers for interaction
-    private AddFriendController addFriendController;
     private LogoutController logoutController;
     private SettingsController settingsController;
     private ChangePasswordController changePasswordController;
+    private ChangePictureController changePictureController;
 
     /**
      * Constructor for the Settings View.
@@ -242,15 +243,11 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         // Add an action listener to the chat list button
         chatListButton.addActionListener(e -> settingsController.switchToChatListView());
 
-        // Create the settings button
-        settingsButton = createStyledButton("Settings");
-
         // Create a panel for navigation buttons
-        JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        final JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
         // Add the chat list and settings buttons to the navigation panel
         navPanel.add(chatListButton);
-        navPanel.add(settingsButton);
 
         // Add the logout button to the top of the bottom panel
         bottomPanel.add(logoutButton, BorderLayout.NORTH);
@@ -398,6 +395,10 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
     public void setChangePasswordController(ChangePasswordController changePasswordController) {
         this.changePasswordController = changePasswordController;
+    }
+
+    public void setChangePictureController(ChangePictureController changePictureController) {
+        this.changePictureController = changePictureController;
     }
 
 }
