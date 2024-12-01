@@ -12,6 +12,9 @@ public class ChatListState {
     private String addFriendError;
     private User activeUser;
 
+    public ChatListState() {
+    }
+
     public String getAddFriendError() {
         return addFriendError;
     }

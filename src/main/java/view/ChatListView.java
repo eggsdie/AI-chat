@@ -160,7 +160,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
         final ChatListState currentState = chatListViewModel.getState();
         loginController.execute(currentState.getCurrentUsername(), currentState.getActiveUser().getPassword());
-        refreshChatList(""); // Refresh the full list
+        refreshChatList("");
     }
 
     // Creates a styled panel for each chat entry
@@ -261,4 +261,22 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     public void setLoginController(LoginController loginController) {
         this.loginController = loginController;
     }
+
+    public AbstractButton getAddFriendButton() {
+        return addFriendButton;
+    }
+
+    public void getRefreshChatList() {
+
+    }
+
+    /**
+     * Retrieves the button used to refresh the chat list.
+     *
+     * @return the `AbstractButton` used for refreshing the chat list.
+     */
+//    public AbstractButton getRefreshChatList() {
+//        return returnButton;
+//    }
+
 }
