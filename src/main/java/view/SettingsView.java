@@ -312,9 +312,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
         // Add images to the panel as buttons
         for (String path : picturePaths) {
-            ImageIcon icon = new ImageIcon(path);
-            Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
-            JButton imageButton = new JButton(new ImageIcon(scaledImage));
+            final ImageIcon icon = new ImageIcon(path);
+            final Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            final JButton imageButton = new JButton(new ImageIcon(scaledImage));
             imageButton.setPreferredSize(new Dimension(80, 80));
             imageButton.setBorder(BorderFactory.createEmptyBorder());
             imageButton.setFocusPainted(false);
@@ -326,7 +326,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         }
 
         // Show the dialog with the panel
-        int result = JOptionPane.showConfirmDialog(
+        final int result = JOptionPane.showConfirmDialog(
                 this,
                 panel,
                 "Select Profile Picture",
