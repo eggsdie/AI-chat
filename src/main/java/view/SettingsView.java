@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import interface_adapter.add_friend.AddFriendController;
+import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsState;
@@ -46,6 +47,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     private AddFriendController addFriendController;
     private LogoutController logoutController;
     private SettingsController settingsController;
+    private ChangePasswordController changePasswordController;
 
     /**
      * Constructor for the Settings View.
@@ -263,10 +265,10 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
      * Handles the change password action.
      */
     private void changePassword(ActionEvent e) {
-        SettingsState state = settingsViewModel.getState();
-        String currentPassword = currentPasswordField.getText();
-        String newPassword = newPasswordField.getText();
-        String retypePassword = retypeNewPasswordField.getText();
+        final SettingsState state = settingsViewModel.getState();
+        final String currentPassword = currentPasswordField.getText();
+        final String newPassword = newPasswordField.getText();
+        final String retypePassword = retypeNewPasswordField.getText();
 
         if (!currentPassword.equals(state.getPassword())) {
             JOptionPane.showMessageDialog(this, "Current password is incorrect!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -276,7 +278,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
             JOptionPane.showMessageDialog(this, "Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            state.setPassword(newPassword);
+            changePasswordController.execute(newPassword, state.getUsername());
         }
 
         currentPasswordField.setText("");
@@ -351,4 +353,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     public void setSettingsController(SettingsController settingsController) {
         this.settingsController = settingsController;
     }
+
+    public void setChangePasswordController(ChangePasswordController changePasswordController) {
+        this.changePasswordController = changePasswordController;
+    }
+
 }
