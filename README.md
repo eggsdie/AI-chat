@@ -105,7 +105,7 @@ IntelliJ provides version control integration, including Git.
 
 ## **License**  
 
-The project is currently under review for license selection. Updates will follow.  
+This project is licensed under the terms of the [CC0 1.0 Universal (Public Domain Dedication)](./LICENSE). See the `LICENSE` file for more details.
 
 ---
 
