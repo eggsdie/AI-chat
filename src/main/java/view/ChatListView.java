@@ -244,6 +244,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         final ChatListState state = (ChatListState) evt.getNewValue();
         if (state.getAddFriendError() != null) {
             JOptionPane.showMessageDialog(this, state.getAddFriendError());
+            state.setAddFriendError(null);
         }
         refreshChatList("");
         chatListViewModel.setState(state);
