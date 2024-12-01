@@ -1,5 +1,6 @@
 package use_case.signup;
 
+import data_access.DemoRestfulApi;
 import data_access.InMemoryUserDataAccessObject;
 import entity.CommonUserFactory;
 import entity.User;
@@ -10,11 +11,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SignupInteractorTest {
 
+    private final DemoRestfulApi demoRestfulApi = new DemoRestfulApi(); // Replace with mock if needed
+    private final UserFactory userFactory = new CommonUserFactory();
+
     // Old test cases
     @Test
     void successTest() {
         SignupInputData inputData = new SignupInputData("Paul", "password", "password");
-        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
 
         SignupOutputBoundary successPresenter = new SignupOutputBoundary() {
             @Override
@@ -40,7 +44,7 @@ class SignupInteractorTest {
     @Test
     void failurePasswordMismatchTest() {
         SignupInputData inputData = new SignupInputData("Paul", "password", "wrong");
-        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
 
         SignupOutputBoundary failurePresenter = new SignupOutputBoundary() {
             @Override
@@ -65,10 +69,10 @@ class SignupInteractorTest {
     @Test
     void failureUserExistsTest() {
         SignupInputData inputData = new SignupInputData("Paul", "password", "wrong");
-        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
 
         UserFactory factory = new CommonUserFactory();
-        User user = factory.create("Paul", "pwd");
+        User user = factory.create("Paul", "paul@gmail.com", "pwd");
         userRepository.save(user);
 
         SignupOutputBoundary failurePresenter = new SignupOutputBoundary() {
@@ -95,7 +99,7 @@ class SignupInteractorTest {
     @Test
     void switchToLoginViewIsCalled() {
         SignupInputData inputData = new SignupInputData("Paul", "password", "password");
-        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
 
         SignupOutputBoundary successPresenter = new SignupOutputBoundary() {
             @Override

@@ -5,7 +5,7 @@ import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInputData;
 
 public class SettingsController {
-    private final SettingsInputBoundary settingsUseCaseInteractor;
+    protected final SettingsInputBoundary settingsUseCaseInteractor;
 
     public SettingsController(SettingsInputBoundary settingsUseCaseInteractor) {
         this.settingsUseCaseInteractor = settingsUseCaseInteractor;
