@@ -42,7 +42,6 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
     // Navigation and logout buttons
     private JButton logoutButton;
     private JButton chatListButton;
-    private JButton settingsButton;
 
     // Controllers for interaction
     private LogoutController logoutController;
@@ -247,10 +246,13 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         final JPanel navPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
         // Add the chat list and settings buttons to the navigation panel
-        navPanel.add(chatListButton);
+        // Add the chat list button to the left
+        navPanel.add(chatListButton, BorderLayout.WEST);
+
+        // Add the logout button to the right
+        navPanel.add(logoutButton, BorderLayout.EAST);
 
         // Add the logout button to the top of the bottom panel
-        bottomPanel.add(logoutButton, BorderLayout.NORTH);
 
         // Add the navigation panel to the bottom of the bottom panel
         bottomPanel.add(navPanel, BorderLayout.SOUTH);
@@ -291,8 +293,9 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
      * Handles the profile picture upload action.
      */
     private void uploadProfilePicture(ActionEvent e) {
+        final SettingsState state = settingsViewModel.getState();
         // Predefined image paths
-        String[] picturePaths = {
+        final String[] picturePaths = {
                 "images/basketball.jpg",
                 "images/cartoon_bears.jpg",
                 "images/default.jpg",
@@ -318,7 +321,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
             imageButton.setFocusPainted(false);
 
             // Set action listener for each button
-            imageButton.addActionListener(ev -> selectedImage[0] = path);
+            imageButton.addActionListener(evt -> selectedImage[0] = path);
 
             panel.add(imageButton);
         }
@@ -334,8 +337,13 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
         // If the user confirms selection
         if (result == JOptionPane.OK_OPTION && selectedImage[0] != null) {
-            ImageIcon icon = new ImageIcon(selectedImage[0]);
-            Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            final String selectedPath = selectedImage[0];
+            state.setPicture(selectedPath);
+
+            changePictureController.execute(selectedPath, state.getUsername());
+
+            final ImageIcon icon = new ImageIcon(selectedImage[0]);
+            final Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
             profilePicture.setIcon(new ImageIcon(scaledImage));
         }
     }
@@ -346,9 +354,21 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SettingsState state = (SettingsState) evt.getNewValue();
+        final SettingsState state = (SettingsState) evt.getNewValue();
         usernameLabel.setText(state.getUsername());
         emailLabel.setText(state.getEmail());
+
+        final String profilePicturePath = state.getPicture(); // Get the picture path from the state
+        if (profilePicturePath != null) {
+            // Load the image and set it as the JLabel's icon
+            final ImageIcon profileImage = new ImageIcon(profilePicturePath);
+            final Image scaledImage = profileImage.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            profilePicture.setIcon(new ImageIcon(scaledImage));
+        } else {
+            // No picture path, set a default state
+            profilePicture.setIcon(null); // Remove any existing icon
+            profilePicture.setBackground(Color.LIGHT_GRAY); // Set the default gray background
+        }
     }
 
     /**

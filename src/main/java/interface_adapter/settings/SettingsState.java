@@ -5,6 +5,7 @@ public class SettingsState {
     private String password;
     private String username;
     private String email;
+    private String profilePicture;
 
     public String getUsername() {
         return username;
@@ -28,5 +29,13 @@ public class SettingsState {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPicture() {
+        return profilePicture;
+    }
+
+    public void setPicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
