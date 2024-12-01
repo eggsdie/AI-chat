@@ -215,10 +215,12 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addChangePasswordUseCase() {
-        final ChangePasswordOutputBoundary changePasswordOutputBoundary = new ChangePasswordPresenter(loggedInViewModel);
+        final ChangePasswordOutputBoundary changePasswordOutputBoundary =
+                new ChangePasswordPresenter(settingsViewModel);
         final ChangePasswordInputBoundary changePasswordInteractor = new ChangePasswordInteractor(userDataAccessObject, changePasswordOutputBoundary, userFactory);
 
-        final ChangePasswordController changePasswordController = new ChangePasswordController(changePasswordInteractor);
+        final ChangePasswordController changePasswordController =
+                new ChangePasswordController(changePasswordInteractor);
         loggedInView.setChangePasswordController(changePasswordController);
         return this;
     }
@@ -291,10 +293,17 @@ public class AppBuilder {
     public AppBuilder addSettingsUseCase() {
         final SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(viewManagerModel, settingsViewModel,
                 chatListViewModel);
+        final ChangePasswordOutputBoundary changePasswordOutputBoundary = new ChangePasswordPresenter(settingsViewModel);
+
         final SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
+        final ChangePasswordInputBoundary changePasswordInteractor =
+                new ChangePasswordInteractor(userDataAccessObject, changePasswordOutputBoundary, userFactory);
 
         final SettingsController settingsController = new SettingsController(settingsInteractor);
         settingsView.setSettingsController(settingsController);
+        final ChangePasswordController changePasswordController =
+                new ChangePasswordController(changePasswordInteractor);
+        settingsView.setChangePasswordController(changePasswordController);
         return this;
     }
 
@@ -311,7 +320,7 @@ public class AppBuilder {
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Login Example");
+        final JFrame application = new JFrame("AI Chat");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.add(cardPanel);
 

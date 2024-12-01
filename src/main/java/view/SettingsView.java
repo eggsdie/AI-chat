@@ -272,11 +272,14 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
 
         if (!currentPassword.equals(state.getPassword())) {
             JOptionPane.showMessageDialog(this, "Current password is incorrect!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (!newPassword.equals(retypePassword)) {
+        }
+        else if (!newPassword.equals(retypePassword)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else if (newPassword.isEmpty()) {
+        }
+        else if (newPassword.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
+        }
+        else {
             JOptionPane.showMessageDialog(this, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
             changePasswordController.execute(newPassword, state.getUsername());
         }
