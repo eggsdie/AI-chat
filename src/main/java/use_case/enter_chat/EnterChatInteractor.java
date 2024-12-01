@@ -1,9 +1,8 @@
 package use_case.enter_chat;
 
-import entity.ChatEntry;
-import entity.Message;
-
 import java.util.ArrayList;
+
+import entity.Message;
 
 public class EnterChatInteractor implements EnterChatInputBoundary {
     private final EnterChatUserDataAccessInterface userDataAccessObject;

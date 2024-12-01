@@ -1,9 +1,13 @@
 package view;
 
+import java.awt.*;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
-// import data_access.InMemoryFriendRepository;
+import javax.swing.*;
+
 import entity.ChatEntry;
 import interface_adapter.add_friend.AddFriendController;
 import interface_adapter.add_friend.ChatListState;
@@ -11,20 +15,12 @@ import interface_adapter.add_friend.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.login.LoginController;
 import interface_adapter.settings.SettingsController;
-import use_case.add_friend.AddFriendInteractor;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChatListView extends JPanel implements PropertyChangeListener {
     private final String viewName = "chat list";
 
     private JFrame frame;
     private JPanel chatListPanel;
-    private AddFriendInteractor chatListManager;
     private JTextField chatSearchField;
     private String searchPlaceholder = "Search chats...";
     private ChatListViewModel chatListViewModel;
@@ -250,7 +246,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         chatListViewModel.setState(state);
     }
 
-    public void setChatListController(AddFriendController addFriendController) {
+    public void setAddFriendController(AddFriendController addFriendController) {
         this.addFriendController = addFriendController;
     }
 

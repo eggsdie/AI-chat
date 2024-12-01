@@ -22,7 +22,7 @@ public class LogoutController {
      * @param username the username of the user logging out
      */
     public void execute(String username) {
-        LogoutInputData inputData = new LogoutInputData(username);
+        final LogoutInputData inputData = new LogoutInputData(username);
         logoutUseCaseInteractor.execute(inputData);
 
         // Navigate to the LandingView

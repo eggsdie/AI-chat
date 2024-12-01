@@ -12,7 +12,7 @@ public class LoginOutputData {
 
     private final String username;
     private final boolean useCaseFailed;
-    private User user;
+    private final User user;
     private final ArrayList<ChatEntry> chatEntries;
 
     public LoginOutputData(String username, ArrayList<ChatEntry> chatEntries, User user, boolean useCaseFailed) {

@@ -1,18 +1,13 @@
 package interface_adapter.add_friend;
 
-import interface_adapter.ViewManagerModel;
 import use_case.add_friend.AddFriendOutputBoundary;
 import use_case.add_friend.AddFriendOutputData;
 
 public class AddFriendPresenter implements AddFriendOutputBoundary {
 
     private final ChatListViewModel chatListViewModel;
-    // private final InChatViewModel inChatViewModel;
-    private final ViewManagerModel viewManagerModel;
 
-    public AddFriendPresenter(ViewManagerModel viewManagerModel,
-                              ChatListViewModel chatListViewModel) {
-        this.viewManagerModel = viewManagerModel;
+    public AddFriendPresenter(ChatListViewModel chatListViewModel) {
         this.chatListViewModel = chatListViewModel;
     }
 
@@ -29,19 +24,5 @@ public class AddFriendPresenter implements AddFriendOutputBoundary {
         chatListState.setAddFriendError(errorMessage);
         chatListViewModel.firePropertyChanged();
     }
-
-//    @Override
-//    public void presentChatList(List<ChatEntry> chatList) {
-//        System.out.println("Chat List:");
-//        for (ChatEntry chat : chatList) {
-//            System.out.println(chat.getUser2() + " - " + chat.getLastMessagePreview()
-//                   + " at " + chat.getLastMessageTime());
-//        }
-//    }
-
-//    @Override
-//    public void presentError(String errorMessage) {
-//        System.out.println("Error: " + errorMessage);
-//    }
 
 }

@@ -1,6 +1,5 @@
 package use_case.enter_chat;
 
-import entity.ChatEntry;
 import entity.Message;
 
 import java.util.ArrayList;

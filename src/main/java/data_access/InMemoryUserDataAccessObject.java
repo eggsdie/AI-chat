@@ -3,14 +3,13 @@ package data_access;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import entity.*;
-import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.add_friend.AddFriendUserDataAccessInterface;
+import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.enter_chat.EnterChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
@@ -27,12 +26,10 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         LogoutUserDataAccessInterface,
         AddFriendUserDataAccessInterface,
         EnterChatUserDataAccessInterface,
-        SendMessageUserDataAccessInterface { 
-
-    private final Map<String, User> users = new HashMap<>();
+        SendMessageUserDataAccessInterface {
 
     private String currentUsername;
-    private DemoRestfulApi demoRestfulApi;
+    private final DemoRestfulApi demoRestfulApi;
     private final UserFactory userFactory;
 
     public InMemoryUserDataAccessObject(DemoRestfulApi demoRestfulApi, UserFactory userFactory) {

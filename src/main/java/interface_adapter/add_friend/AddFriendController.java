@@ -18,8 +18,4 @@ public class AddFriendController {
         chatListUseCaseInteractor.execute(addFriendInputData, messagePreview);
     }
 
-    /*public boolean removeChat(String name) {
-        return chatListUseCaseInteractor.removeChat(name);
-    }*/
-
 }

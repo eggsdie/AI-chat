@@ -34,13 +34,6 @@ public class AddFriendInteractor implements AddFriendInputBoundary {
         }
     }
 
-    // Remove a chat entry
-    /*public boolean removeChat(String name) {
-        return chatListUserDataAccessInterface.getAllChats().removeIf(chat -> chat.getOtherUser().equalsIgnoreCase(name));
-    }*/
-
-    // Retrieve all chats
-
     public boolean friendExists(String myUsername, String otherUser) {
         for (ChatEntry chatEntry : addFriendUserDataAccessInterface.allChatsWithUser(myUsername)) {
             if (chatEntry.getUser1().equals(otherUser) || chatEntry.getUser2().equals(otherUser)) {
@@ -50,14 +43,5 @@ public class AddFriendInteractor implements AddFriendInputBoundary {
         return false;
     }
 
-    // Find a chat by name
-    /*public ChatEntry findChat(String name) {
-        for (ChatEntry chat : getAllChats()) {
-            if (chat.getUser2().equalsIgnoreCase(name)) {
-                return chat;
-            }
-        }
-        return null;
-    }*/
 }
 

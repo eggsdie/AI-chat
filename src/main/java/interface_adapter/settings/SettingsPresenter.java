@@ -2,8 +2,8 @@ package interface_adapter.settings;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.add_friend.ChatListViewModel;
-import use_case.settings.SettingsOutputData;
 import use_case.settings.SettingsOutputBoundary;
+import use_case.settings.SettingsOutputData;
 
 public class SettingsPresenter implements SettingsOutputBoundary {
     private final ViewManagerModel viewManagerModel;
