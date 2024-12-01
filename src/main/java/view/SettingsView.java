@@ -293,17 +293,55 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
      * Handles the profile picture upload action.
      */
     private void uploadProfilePicture(ActionEvent e) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg", "gif"));
-        int result = fileChooser.showOpenDialog(this);
+        // Predefined image paths
+        String[] picturePaths = {
+                "images/basketball.jpg",
+                "images/cartoon_bears.jpg",
+                "images/default.jpg",
+                "images/flower.jpg",
+                "images/puppy.jpg",
+                "images/videogames.jpg"
+        };
 
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+        // Create a panel to hold image buttons
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2, 3, 10, 10)); // 2 rows, 3 columns for images
+
+        // Variables to track selected image
+        final String[] selectedImage = {null};
+
+        // Add images to the panel as buttons
+        for (String path : picturePaths) {
+            ImageIcon icon = new ImageIcon(path);
+            Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+            JButton imageButton = new JButton(new ImageIcon(scaledImage));
+            imageButton.setPreferredSize(new Dimension(80, 80));
+            imageButton.setBorder(BorderFactory.createEmptyBorder());
+            imageButton.setFocusPainted(false);
+
+            // Set action listener for each button
+            imageButton.addActionListener(ev -> selectedImage[0] = path);
+
+            panel.add(imageButton);
+        }
+
+        // Show the dialog with the panel
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                panel,
+                "Select Profile Picture",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        // If the user confirms selection
+        if (result == JOptionPane.OK_OPTION && selectedImage[0] != null) {
+            ImageIcon icon = new ImageIcon(selectedImage[0]);
             Image scaledImage = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
             profilePicture.setIcon(new ImageIcon(scaledImage));
         }
     }
+
 
     /**
      * Updates the view based on changes in the ViewModel.
