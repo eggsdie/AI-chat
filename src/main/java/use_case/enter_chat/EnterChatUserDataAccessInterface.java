@@ -1,11 +1,9 @@
 package use_case.enter_chat;
 
-import entity.ChatEntry;
-import entity.Friend;
-import entity.Message;
-
 import java.util.ArrayList;
-import java.util.List;
+
+import entity.ChatEntry;
+import entity.Message;
 
 public interface EnterChatUserDataAccessInterface {
 

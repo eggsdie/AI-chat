@@ -8,8 +8,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import entity.*;
-import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.add_friend.AddFriendUserDataAccessInterface;
+import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.enter_chat.EnterChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
@@ -26,12 +26,10 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         LogoutUserDataAccessInterface,
         AddFriendUserDataAccessInterface,
         EnterChatUserDataAccessInterface,
-        SendMessageUserDataAccessInterface { 
-
-    private final Map<String, User> users = new HashMap<>();
+        SendMessageUserDataAccessInterface {
 
     private String currentUsername;
-    private DemoRestfulApi demoRestfulApi;
+    private final DemoRestfulApi demoRestfulApi;
     private final UserFactory userFactory;
 
     public InMemoryUserDataAccessObject(DemoRestfulApi demoRestfulApi, UserFactory userFactory) {
@@ -41,33 +39,37 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
     private Map<String, User> getUsers() {
         final JsonArray usersJson = JsonParser.parseString(demoRestfulApi.getAllUsers()).getAsJsonArray();
-        final Map<String, User> users1 = new HashMap<>();
+        final Map<String, User> users = new HashMap<>();
         usersJson.forEach(item -> {
-            final String id = item.getAsJsonObject().get("userId").getAsString();
             final String username = item.getAsJsonObject().get("userName").getAsString();
             final String password = item.getAsJsonObject().get("password").getAsString();
             final String email = item.getAsJsonObject().get("email").getAsString();
             // Corrected parameter order
             final User userToAdd = userFactory.create(username, email, password);
-            users1.put(username, userToAdd);
+            users.put(username, userToAdd);
         });
-        return users1;
+        return users;
     }
 
-    /*@Override
-    public boolean existsByName(String identifier) {
-        return users.containsKey(identifier);
-    }*/
+    private Map<String, String> getIds() {
+        final JsonArray usersJson = JsonParser.parseString(demoRestfulApi.getAllUsers()).getAsJsonArray();
+        final Map<String, String> ids = new HashMap<>();
+        usersJson.forEach(item -> {
+            final String username = item.getAsJsonObject().get("userName").getAsString();
+            final String userId = item.getAsJsonObject().get("userId").getAsString();
+            ids.put(username, userId);
+        });
+        return ids;
+    }
+
+    private String getId(String username) {
+        return getIds().get(username);
+    }
 
     @Override
     public boolean existsByName(String identifier) {
         return getUsers().containsKey(identifier);
     }
-
-    /*@Override
-    public void save(User user) {
-        users.put(user.getName(), user);
-    }*/
 
     @Override
     public void save(User user) {
@@ -109,30 +111,15 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         return String.valueOf(newId);
     }
 
-    /*@Override
-    public User get(String username) {
-        return users.get(username);
-    }*/
-
     @Override
     public User get(String username) {
         return getUsers().get(username);
     }
 
-    public String getId(String username) {
-        return get(username).getId();
-    }
-
-    /*@Override
-    public void changePassword(User user) {
-        // Replace the old entry with the new password
-        users.put(user.getName(), user);
-    }*/
-
     @Override
     public void changePassword(User user) {
         // Replace the old entry with the new password
-        demoRestfulApi.updateUser(user.getId(), user.getName(), user.getPassword(), user.getEmail());
+        demoRestfulApi.updateUser(getId(user.getName()), user.getName(), user.getPassword(), user.getEmail());
     }
 
     @Override

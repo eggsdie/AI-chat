@@ -26,11 +26,12 @@ public class LoginPresenter implements LoginOutputBoundary {
     @Override
     public void prepareSuccessView(LoginOutputData response) {
         // Update ChatListState with successful login information
-        ChatListState chatListState = chatListViewModel.getState();
+        final ChatListState chatListState = chatListViewModel.getState();
         chatListState.setCurrentUsername(response.getUsername());
         chatListState.setChatList(response.getChatEntries());
         chatListState.setActiveUser(response.getUser());
         chatListViewModel.setState(chatListState);
+        chatListViewModel.firePropertyChanged();
 
         // Notify the view manager to switch to the chat list view
         viewManagerModel.setState(chatListViewModel.getViewName());
@@ -40,7 +41,7 @@ public class LoginPresenter implements LoginOutputBoundary {
     @Override
     public void prepareFailView(String error) {
         // Update the LoginState with the error message
-        LoginState loginState = loginViewModel.getState();
+        final LoginState loginState = loginViewModel.getState();
         loginState.setLoginError(error);
         loginViewModel.setState(loginState);
         loginViewModel.firePropertyChanged();

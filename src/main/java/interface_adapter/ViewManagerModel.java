@@ -22,7 +22,7 @@ public class ViewManagerModel extends ViewModel<String> {
      */
     @Override
     public void setState(String newState) {
-        String oldState = this.state;
+        final String oldState = this.state;
         this.state = newState;
         support.firePropertyChange("state", oldState, newState);
     }

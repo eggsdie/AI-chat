@@ -5,11 +5,6 @@ package entity;
  */
 public interface User {
 
-    String getId();
-    /**
-     * Returns the username of the user.
-     * @return the username of the user.
-     */
     String getName();
 
     /**

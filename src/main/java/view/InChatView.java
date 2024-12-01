@@ -1,43 +1,38 @@
 package view;
 
-import entity.ChatEntry;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import entity.Message;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.InChatState;
 import interface_adapter.enter_chat.InChatViewModel;
 import interface_adapter.send_message.SendMessageController;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.time.LocalTime;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-
 public class InChatView extends JPanel implements PropertyChangeListener {
 
-    private String viewName = "in chat";
+    private final String viewName = "in chat";
     private final InChatViewModel inChatViewModel;
 
     private Timer timer;
-    private JPanel chatArea;
-    private JScrollPane chatAreaScrollPane;
-    private JScrollBar verticalScroll;
-    private JButton backButton = new JButton("Back");
+    private final JPanel chatArea;
+    private final JScrollPane chatAreaScrollPane;
+    private final JScrollBar verticalScroll;
+    private final JButton backButton = new JButton("Back");
 
-    private JPanel topPanel = new JPanel(new BorderLayout());
-    private JLabel otherUser = new JLabel();
+    private final JPanel topPanel = new JPanel(new BorderLayout());
+    private final JLabel otherUser = new JLabel();
 
-    private JPanel bottomPanel = new JPanel(new BorderLayout());
-    private JTextField textEntryField = new JTextField();
-    private JButton sendButton = new JButton("Send");
+    private final JPanel bottomPanel = new JPanel(new BorderLayout());
+    private final JTextField textEntryField = new JTextField();
+    private final JButton sendButton = new JButton("Send");
 
     private EnterChatController enterChatController;
     private SendMessageController sendMessageController;
@@ -101,7 +96,6 @@ public class InChatView extends JPanel implements PropertyChangeListener {
 
                         verticalScroll.revalidate();
                         verticalScroll.setValue(verticalScroll.getMaximum());
-                        currentState.setNewMessage(true);
 
                         inChatViewModel.setState(currentState);
                         refreshMessages(currentState.getMessages());

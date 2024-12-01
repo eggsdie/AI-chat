@@ -1,101 +1,140 @@
-207 Final Group 16
+# **AIChat**
 
-Creating a chat messenger!
+### **Authors**  
+Eddie, Tiffany, Julian, Dareenat, Alisha  
 
-GROUP MEMBERS:
+---
 
-Eddie - eggsdie
-Dareenat - J.Dareenat
-Julian - JulianFisla
-Alisha - phamali
-Tiffany - Tfeng25
+## **Summary of Project’s Purpose**  
 
+AIChat is a real-time messaging application that allows users to create an account, add other users, and exchange messages.
 
-AI Chat
+What sets AIChat apart is its AI-powered response suggestion feature. By analyzing your past messages, the app suggests example responses, saving time and effort while enhancing communication. This innovative functionality addresses a gap in the current market, offering users a smarter way to engage in conversations.
 
-A chat messaging application that allows users to connect with friends, send messages, and utilize AI-generated responses. Users can create an account, login, and manage their friends and conversations. The application offers features for messaging, saving chat history, and translating messages, providing a seamless experience for connecting across language barriers.
+---
 
-Table of Contents
+## **Table of Contents**  
+- [Features of Software](#features-of-software)  
+- [Installation Instructions](#installation-instructions)  
+- [Usage Guide](#usage-guide)  
+- [License](#license)  
+- [Section for Feedback](#section-for-feedback)  
+- [Section for Contributions](#section-for-contributions)  
 
-Domain
-Software Specification
-User Stories
-Entities for the Domain
-Proposed APIs
-Domain
+---
 
-AI Chat is a messaging application that enables users to connect with friends via one-on-one chats, save message history, generate responses using AI, and support language translation for international communication.
+## **Features of Software**  
 
-Software Specification
+- **Sign Up**: Create a new account to start using AIChat by inputting a username, email, and password.  
+- **Log In**: Access an existing account by entering a username and password.  
+- **Add Friend**: Connect with an existing user. This will create a conversation with the added friend.  
+- **Messaging**: Send and receive real-time messages with friends. Each message includes a timestamp.  
+- **View Conversation**: Access your message history with an individual user.  
+- **View Chat List**: Browse the preview of all individual conversations with added friends. The preview of a conversation includes the most recent message and its timestamp.  
+- **AI Generated Response**: Get an intelligent, context-aware response suggestion based on your recent messages. You can choose to send these suggestions directly in your conversation.  
+- **Change Password**: Securely update your account password by entering the current password and confirming a new password.  
+- **Change Profile Picture**: Personalize your profile by uploading a picture from a set of images.  
+- **Logout**: Sign out of your account.  
 
-The AI Chat program enables the following key functionalities:
+---
 
-Account Management:
-Users can sign up by providing a username, email, and password, or log in with existing credentials.
-A "Forgot Password" feature allows users to reset their password by entering their registered email.
-Friend Management & Chat Creation:
-Users can add friends. A new conversation is automatically created with each added friend, allowing for one-on-one messaging.
-Messaging:
-Users can send messages and images. Conversations are saved with timestamps to preserve chat history in chronological order.
-An AI response generator can analyze conversation history and suggest responses.
-Chat List:
-Displays all past conversations in chronological order, showing each friend’s name, a preview of the last message, and markers for new messages or conversations.
-Settings:
-Allows users to manage account settings (e.g., profile picture, password, etc.).
-User Stories
+## **Installation Instructions**  
 
-Eddie:
-As a user, I want to create an account with a username, email, and password, and then log in to connect with friends.
-Dareenat:
-As a user, I want to start a conversation with a friend and have our messages saved with timestamps to easily continue conversations.
-Tiffany:
-As a user, I want to see my past conversations with all my friends, with a marker to indicate new messages or conversations.
-Alisha:
-As a user, I want the app to analyze my conversation and suggest responses for me to send.
-Julian:
-As a user, I want to communicate easily with international friends, minimizing language barriers.
-Entities for the Domain
+### **Install IntelliJ Ultimate IDEA**  
+Visit the [JetBrains website](https://www.jetbrains.com/idea/) for instructions on how to download IntelliJ Ultimate IDEA.  
+- **Students**: You have access to a student license for IntelliJ Ultimate IDEA. Sign up on [JetBrains Students](https://www.jetbrains.com/student/).  
+- Follow the JetBrains official installation guide for further details.
 
-1. Message Class
-Variables:
+### **Install Java**  
+Download a JDK from version 11 or higher. Version 17 is recommended.  
+- Follow instructions for installing Java [here](https://www.oracle.com/java/technologies/javase-downloads.html).  
 
-String textContent
-String attachment (URL)
-User sender
-String timeStamp
-Methods:
+### **Install Git**  
+IntelliJ provides version control integration, including Git.  
+- Follow the [JetBrains Git Integration Guide](https://www.jetbrains.com/help/idea/enabling-version-control.html).  
+- If Git isn't installed on your computer, download it from [Git SCM](https://git-scm.com/downloads).  
 
-Constructor
-Get Content, Get Attachment, Get Sender, Get Time Stamp
-Send() - Triggers UI to display message
-AddToChatList() - Adds message to the chat history
-2. Chat Log Class
-Represents a single conversation.
+### **Get a GitHub Account**  
+1. Sign up at [GitHub](https://github.com/).  
+2. Fork this repository.  
+3. Copy the HTTPS link to clone the repository.
 
-Variables:
+---
 
-Tuple<User> participants
-List<Message> messages
-Methods:
+## **Usage Guide**  
 
-Constructor
-GetParticipants()
-GetMessages()
-AddMessage() - Orders messages by time
-3. User Class
-Variables:
+1. **Landing Page**:  
+   - If you do not have an account, press **Sign Up**.  
+   - If you have an account, press **Login**.  
+<img src="https://github.com/user-attachments/assets/61e26abe-c49d-4860-a578-afa8e2326b92" alt="Image 1" width="300" />
 
-String email
-String username
-String password
-String profilePicture (URL)
-Dictionary<User, ChatHistory> chatList - Maps users to their respective chat histories
-Methods:
+2. **Sign Up**:  
+   - Create an account with a username, password, and email. After signing up, log in using your credentials.  
 
-GetChatID() - Retrieves conversation with a specific user
-GetEmail(), GetUsername(), GetPassword() - For login/signup
-GetProfilePicture() - For UI display
-GetContacts() - Creates a contact list
-GetConversationUsers() - Creates a chat list
-ChangePassword()
-ChangeProfilePicture()
+<img src="https://github.com/user-attachments/assets/9cfa9f04-5057-4488-a983-4b57bcfbf0a7" alt="Image 3" width="300" />
+<img src="https://github.com/user-attachments/assets/de753d83-c7dd-4c4a-bb1d-42a51c6ffbbc" alt="Image 2" width="300" />
+
+3. **Home Page**:  
+   - Once logged in, you will be redirected to the home page.  
+
+4. **Add Friend**:  
+   - Press the **Add Friend** button at the top right of the home page.  
+   - Enter the username of an existing user to start a conversation.  
+
+5. **View Conversations**:  
+   - The homepage displays previews of conversations.  
+   - Double-click a conversation preview to view or enter the chat with another user.  
+
+6. **Send Messages**:  
+   - Type your message at the bottom of the chat screen and press **Send**.  
+   - Incoming messages from the other user will appear in the chat.  
+
+7. **AI Suggestions**:  
+   - Press the **AI Suggestion** button to generate context-aware responses for your conversation.  
+
+8. **Settings Page**:  
+   - Access settings via the **Settings** button on the homepage.  
+   - Change your profile picture, password, or logout.  
+
+9. **Profile Picture**:  
+   - Press **Upload Profile Picture** and select an image.  
+
+10. **Change Password**:  
+    - Input your current password and confirm the new password.  
+
+11. **Logout**:  
+    - Press the **Logout** button to sign out.
+
+---
+
+## **License**  
+
+This project is licensed under the terms of the [CC0 1.0 Universal (Public Domain Dedication)](./LICENSE). See the `LICENSE` file for more details.
+
+---
+
+## **Section for Feedback**  
+
+We value your feedback to improve this project! You can share your thoughts, suggestions, or issues via our [Google Form](#).  
+
+### **Rules for Valid Feedback**  
+- **Be Specific**: Clearly describe the issue, suggestion, or feature request.  
+- **Be Constructive**: Provide actionable feedback to help us improve.  
+- **Stay Respectful and Professional**: Keep your comments polite and relevant.
+
+### **What to Expect After Submitting Feedback**  
+- Submissions will be reviewed within **7 business days**.  
+- Valid feedback will be acknowledged, and critical issues may be addressed in future updates.  
+- While not all suggestions will result in immediate changes, we appreciate all feedback!  
+
+---
+
+## **Section for Contributions**  
+
+Thank you for your interest in contributing to this project!  
+
+### **Current Status**  
+Contributions are **currently closed**.  
+
+We encourage you to explore the project for learning or inspiration. If contributions open in the future, this section will be updated with detailed guidelines for submitting changes.  
+

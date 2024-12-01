@@ -1,16 +1,14 @@
 package interface_adapter.enter_chat;
 
-import entity.ChatEntry;
-import entity.Message;
-
 import java.util.ArrayList;
+
+import entity.Message;
 
 public class InChatState {
 
     private ArrayList<Message> messages;
     private String sender;
     private String receiver;
-    private boolean newMessage;
 
     public ArrayList<Message> getMessages() {
         return messages;
@@ -34,14 +32,6 @@ public class InChatState {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
-    }
-
-    public boolean isNewMessage() {
-        return newMessage;
-    }
-
-    public void setNewMessage(boolean newMessage) {
-        this.newMessage = newMessage;
     }
 
 }

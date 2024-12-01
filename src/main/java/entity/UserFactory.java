@@ -16,13 +16,4 @@ public interface UserFactory {
      */
     User create(String name, String email, String password);
 
-    /**
-     * Creates a new User with a name and password, intended for cases where
-     * email is not required.
-     *
-     * @param name     the name of the new user
-     * @param password the password of the new user
-     * @return the new user
-     */
-//    User create(String name, String password);
 }

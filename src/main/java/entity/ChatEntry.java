@@ -1,7 +1,5 @@
 package entity;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ChatEntry {
@@ -28,10 +26,6 @@ public class ChatEntry {
 
     public String getTime() {
         return time;
-    }
-
-    public String getMessagePreview() {
-        return messagePreview;
     }
 
     // Returns a formatted preview of the last message

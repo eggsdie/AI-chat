@@ -1,9 +1,9 @@
 package use_case.add_friend;
 
+import java.util.ArrayList;
+
 import entity.ChatEntry;
 import entity.User;
-
-import java.util.ArrayList;
 
 public class AddFriendOutputData {
 

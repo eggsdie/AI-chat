@@ -1,52 +1,44 @@
 package view;
 
+import java.awt.*;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
-// import data_access.InMemoryFriendRepository;
+import javax.swing.*;
+
 import entity.ChatEntry;
 import interface_adapter.add_friend.AddFriendController;
 import interface_adapter.add_friend.ChatListState;
 import interface_adapter.add_friend.ChatListViewModel;
 import interface_adapter.enter_chat.EnterChatController;
+import interface_adapter.login.LoginController;
 import interface_adapter.settings.SettingsController;
-import use_case.add_friend.AddFriendInteractor;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
 
 public class ChatListView extends JPanel implements PropertyChangeListener {
     private final String viewName = "chat list";
 
     private JFrame frame;
     private JPanel chatListPanel;
-    private AddFriendInteractor chatListManager;
     private JTextField chatSearchField;
     private String searchPlaceholder = "Search chats...";
     private ChatListViewModel chatListViewModel;
     private AddFriendController addFriendController;
-//    private InMemoryFriendRepository friendRepository;
-//    private ChatListOutputBoundary chatListOutputBoundary;
     private EnterChatController enterChatController;
     private SettingsController settingsController;
+    private LoginController loginController;
 
     private final JButton addFriendButton;
 
     public ChatListView(ChatListViewModel chatListViewModel) {
         this.chatListViewModel = chatListViewModel;
         this.chatListViewModel.addPropertyChangeListener(this);
-//        this.friendRepository = friendRepository;
-//        this.chatListOutputBoundary = chatListOutputBoundary;
 
         frame = new JFrame("Chat Messenger");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 600);
         this.setLayout(new BorderLayout());
-
-        // Initialize Use Case
-//        chatListManager = new ChatListManager(friendRepository, chatListOutputBoundary);
 
         // Top panel with chat search and add friend button
         JPanel topPanel = new JPanel();
@@ -102,7 +94,7 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
         // Bottom panel with return and settings buttons
         JPanel bottomPanel = new JPanel(new BorderLayout());
-        JButton returnButton = new JButton("Return to Chat List");
+        JButton returnButton = new JButton("Refresh");
         JButton settingsButton = new JButton("Settings");
 
         bottomPanel.add(returnButton, BorderLayout.WEST);
@@ -165,6 +157,9 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
     private void resetSearch() {
         chatSearchField.setText(searchPlaceholder);
         chatSearchField.setForeground(Color.GRAY);
+
+        final ChatListState currentState = chatListViewModel.getState();
+        loginController.execute(currentState.getCurrentUsername(), currentState.getActiveUser().getPassword());
         refreshChatList(""); // Refresh the full list
     }
 
@@ -245,12 +240,13 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
         final ChatListState state = (ChatListState) evt.getNewValue();
         if (state.getAddFriendError() != null) {
             JOptionPane.showMessageDialog(this, state.getAddFriendError());
+            state.setAddFriendError(null);
         }
         refreshChatList("");
         chatListViewModel.setState(state);
     }
 
-    public void setChatListController(AddFriendController addFriendController) {
+    public void setAddFriendController(AddFriendController addFriendController) {
         this.addFriendController = addFriendController;
     }
 
@@ -260,5 +256,9 @@ public class ChatListView extends JPanel implements PropertyChangeListener {
 
     public void setSettingsController(SettingsController settingsController) {
         this.settingsController = settingsController;
+    }
+
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
     }
 }
