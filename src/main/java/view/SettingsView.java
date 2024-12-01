@@ -281,6 +281,7 @@ public class SettingsView extends JPanel implements PropertyChangeListener {
         }
         else {
             JOptionPane.showMessageDialog(this, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            state.setPassword(newPassword);
             changePasswordController.execute(newPassword, state.getUsername());
         }
 
