@@ -22,7 +22,6 @@ public class SignupView extends JPanel implements PropertyChangeListener {
     private SignupController signupController;
 
     private final JButton signUpButton;
-    private final JButton googleSignUpButton;
     private final JLabel loginLink;
 
     public SignupView(SignupViewModel signupViewModel) {
@@ -68,11 +67,6 @@ public class SignupView extends JPanel implements PropertyChangeListener {
             }
         });
 
-        googleSignUpButton = createStyledButton("Sign up with Google", Color.WHITE, Color.BLACK);
-        googleSignUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        googleSignUpButton.addActionListener(evt ->
-                JOptionPane.showMessageDialog(this, "Google Sign Up not implemented.")
-        );
 
         add(Box.createVerticalStrut(10));
         add(title);
@@ -87,9 +81,7 @@ public class SignupView extends JPanel implements PropertyChangeListener {
         add(Box.createVerticalStrut(10));
         add(loginLink);
         add(Box.createVerticalStrut(20));
-        add(createDividerLabel("or"));
         add(Box.createVerticalStrut(10));
-        add(googleSignUpButton);
     }
 
     private JTextField createTextField(String placeholder) {
