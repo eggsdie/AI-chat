@@ -66,9 +66,13 @@ IntelliJ provides version control integration, including Git.
 1. **Landing Page**:  
    - If you do not have an account, press **Sign Up**.  
    - If you have an account, press **Login**.  
+<img src="https://github.com/user-attachments/assets/61e26abe-c49d-4860-a578-afa8e2326b92" alt="Image 1" width="300" />
 
 2. **Sign Up**:  
    - Create an account with a username, password, and email. After signing up, log in using your credentials.  
+
+<img src="https://github.com/user-attachments/assets/9cfa9f04-5057-4488-a983-4b57bcfbf0a7" alt="Image 3" width="300" />
+<img src="https://github.com/user-attachments/assets/de753d83-c7dd-4c4a-bb1d-42a51c6ffbbc" alt="Image 2" width="300" />
 
 3. **Home Page**:  
    - Once logged in, you will be redirected to the home page.  
