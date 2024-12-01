@@ -47,7 +47,8 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
             final String username = item.getAsJsonObject().get("userName").getAsString();
             final String password = item.getAsJsonObject().get("password").getAsString();
             final String email = item.getAsJsonObject().get("email").getAsString();
-            final User userToAdd = userFactory.create(username, password, email);
+            // Corrected parameter order
+            final User userToAdd = userFactory.create(username, email, password);
             users1.put(username, userToAdd);
         });
         return users1;

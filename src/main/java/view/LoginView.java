@@ -19,6 +19,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     private final LoginViewModel loginViewModel;
     private final JTextField usernameInputField;
     private final JPasswordField passwordInputField;
+    private final JLabel errorLabel; // For displaying error messages
     private LoginController loginController;
     private AddFriendController addFriendController;
 
@@ -29,36 +30,54 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         this.loginViewModel = loginViewModel;
         loginViewModel.addPropertyChangeListener(this);
 
+        // Configure layout and styling
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
+        // Title label
         JLabel title = new JLabel("Log In");
         title.setFont(new Font("Arial", Font.BOLD, 24));
         title.setForeground(Color.BLACK);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Error label
+        errorLabel = new JLabel("");
+        errorLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorLabel.setVisible(false);
+
+        // Username input field
         usernameInputField = createTextField("Username");
         usernameInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Password input field
         passwordInputField = createPasswordField("Password");
         passwordInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Login button
         loginButton = createStyledButton("Log In", new Color(66, 133, 244), Color.WHITE);
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.addActionListener(evt -> {
+            // Clear error message on login attempt
+            errorLabel.setVisible(false);
             loginController.execute(
                     usernameInputField.getText(),
                     new String(passwordInputField.getPassword())
             );
         });
 
+        // Cancel button
         cancelButton = createStyledButton("Cancel", Color.WHITE, Color.BLACK);
         cancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         cancelButton.addActionListener(evt -> loginController.switchToSignupView());
 
+        // Add components to the view
         add(Box.createVerticalStrut(10));
         add(title);
+        add(Box.createVerticalStrut(10));
+        add(errorLabel); // Error label below title
         add(Box.createVerticalStrut(20));
         add(usernameInputField);
         add(Box.createVerticalStrut(15));
@@ -69,18 +88,27 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         add(cancelButton);
     }
 
+    /**
+     * Creates a styled text field with placeholder functionality.
+     */
     private JTextField createTextField(String placeholder) {
         JTextField textField = new JTextField(15);
         styleTextField(textField, placeholder);
         return textField;
     }
 
+    /**
+     * Creates a styled password field with placeholder functionality.
+     */
     private JPasswordField createPasswordField(String placeholder) {
         JPasswordField passwordField = new JPasswordField(15);
         stylePasswordField(passwordField, placeholder);
         return passwordField;
     }
 
+    /**
+     * Styles a text field and adds placeholder functionality.
+     */
     private void styleTextField(JTextField field, String placeholder) {
         field.setFont(new Font("Arial", Font.PLAIN, 16));
         field.setPreferredSize(new Dimension(300, 40));
@@ -108,6 +136,9 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Styles a password field and adds placeholder functionality.
+     */
     private void stylePasswordField(JPasswordField field, String placeholder) {
         field.setFont(new Font("Arial", Font.PLAIN, 16));
         field.setPreferredSize(new Dimension(300, 40));
@@ -141,6 +172,9 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Creates a styled button with rounded edges.
+     */
     private JButton createStyledButton(String text, Color bgColor, Color fgColor) {
         JButton button = new JButton(text) {
             @Override
@@ -173,28 +207,40 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         return button;
     }
 
+    /**
+     * Updates the view when the state changes.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         LoginState state = (LoginState) evt.getNewValue();
+
         usernameInputField.setText(state.getUsername());
-        if (state.getPassword() == null || state.getPassword().isEmpty()) {
-            passwordInputField.setEchoChar((char) 0); // Show placeholder text
-            passwordInputField.setText("Password");
-            passwordInputField.setForeground(Color.GRAY);
+        passwordInputField.setText(state.getPassword());
+
+        // Update error message display
+        String errorMessage = state.getLoginError();
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+            errorLabel.setText(errorMessage);
+            errorLabel.setVisible(true);
         } else {
-            passwordInputField.setEchoChar('\u2022'); // Unicode bullet character
-            passwordInputField.setText(state.getPassword());
-            passwordInputField.setForeground(Color.BLACK);
+            errorLabel.setText("");
+            errorLabel.setVisible(false);
         }
     }
 
+    /**
+     * Resets the input fields and hides the error message.
+     */
     public void resetFields() {
         usernameInputField.setText("Username");
         usernameInputField.setForeground(Color.GRAY);
 
-        passwordInputField.setEchoChar((char) 0); // Show placeholder text
         passwordInputField.setText("Password");
         passwordInputField.setForeground(Color.GRAY);
+        passwordInputField.setEchoChar((char) 0);
+
+        errorLabel.setText("");
+        errorLabel.setVisible(false);
     }
 
     public String getViewName() {
