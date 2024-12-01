@@ -10,15 +10,13 @@ import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 
-/**
- * The View for the Login Use Case.
- */
 public class LoginView extends JPanel implements PropertyChangeListener {
     private final String viewName = "log in";
 
     private final LoginViewModel loginViewModel;
     private final JTextField usernameInputField;
     private final JPasswordField passwordInputField;
+    private final JLabel errorLabel; // Error message label
     private LoginController loginController;
     private AddFriendController addFriendController;
 
@@ -38,6 +36,13 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         title.setForeground(Color.BLACK);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Error Label
+        errorLabel = new JLabel("");
+        errorLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        errorLabel.setVisible(false); // Initially hidden
+
         usernameInputField = createTextField("Username");
         usernameInputField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -47,6 +52,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         loginButton = createStyledButton("Log In", new Color(66, 133, 244), Color.WHITE);
         loginButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginButton.addActionListener(evt -> {
+            errorLabel.setVisible(false); // Clear error message on new login attempt
             loginController.execute(
                     usernameInputField.getText(),
                     new String(passwordInputField.getPassword())
@@ -59,6 +65,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
 
         add(Box.createVerticalStrut(10));
         add(title);
+        add(Box.createVerticalStrut(10));
+        add(errorLabel); // Add the error label below the title
         add(Box.createVerticalStrut(20));
         add(usernameInputField);
         add(Box.createVerticalStrut(15));
@@ -186,6 +194,16 @@ public class LoginView extends JPanel implements PropertyChangeListener {
             passwordInputField.setText(state.getPassword());
             passwordInputField.setForeground(Color.BLACK);
         }
+
+        // Update error message display
+        String errorMessage = state.getLoginError();
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+            // Assume there's a JLabel to display error messages
+            errorLabel.setText(errorMessage);
+            errorLabel.setForeground(Color.RED);
+        } else {
+            errorLabel.setText(""); // Clear error message if none
+        }
     }
 
     public void resetFields() {
@@ -195,6 +213,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         passwordInputField.setEchoChar((char) 0); // Show placeholder text
         passwordInputField.setText("Password");
         passwordInputField.setForeground(Color.GRAY);
+        errorLabel.setText("");
+        errorLabel.setVisible(false); // Hide error label
     }
 
     public String getViewName() {
