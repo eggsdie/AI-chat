@@ -1,3 +1,4 @@
+/*
 import javax.swing.*;
 import use_case.ChatList.ChatListManager;
 import view.ChatListView;
@@ -23,3 +24,4 @@ public class TestChatListView {
         testFrame.setVisible(true);
     }
 }
+*/

@@ -6,13 +6,11 @@ import java.util.ArrayList;
 
 public class EnterChatOutputData {
 
-    private final boolean useCaseFailed;
     private final String sender;
     private final String receiver;
     private final ArrayList<Message> messages;
 
-    public EnterChatOutputData(boolean useCaseFailed, String sender, String receiver, ArrayList<Message> messages) {
-        this.useCaseFailed = useCaseFailed;
+    public EnterChatOutputData(String sender, String receiver, ArrayList<Message> messages) {
         this.sender = sender;
         this.receiver = receiver;
         this.messages = messages;
