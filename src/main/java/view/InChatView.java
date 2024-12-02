@@ -11,6 +11,8 @@ import java.util.List;
 
 import javax.swing.*;
 
+import data_access.AiMessaging;
+import data_access.OpenaiApiCall;
 import entity.Message;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.InChatState;
@@ -39,8 +41,12 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     private EnterChatController enterChatController;
     private SendMessageController sendMessageController;
 
+
+    private data_access.AiMessaging aiMessaging = new AiMessaging();
+
     private int lastMessageCount = 0;
     private boolean userIsNearBottom = true;
+
 
     public InChatView(InChatViewModel inChatViewModel) {
 
@@ -84,7 +90,12 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         sendButton.addActionListener(evt -> sendMessage());
 
         // Generate response button action
-        generateResponseButton.addActionListener(evt -> generateResponse());
+
+        generateResponseButton.addActionListener(
+                evt -> {String generatedNewResponse = generateResponse(); textEntryField.setText(generatedNewResponse);
+                }
+        );
+
 
         // Timer for refreshing messages
         final ActionListener refresh = evt -> {
@@ -141,20 +152,13 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private void generateResponse() {
-        final InChatState currentState = inChatViewModel.getState();
-        String generatedResponse = "This is a generated response."; // Replace with actual response generation logic
-        sendMessageController.execute(
-                currentState.getSender(),
-                currentState.getReceiver(),
-                generatedResponse
-        );
 
-        // Fetch updated messages
-        enterChatController.execute(
-                currentState.getSender(),
-                currentState.getReceiver()
-        );
+    private String generateResponse() {
+        final InChatState currentState = inChatViewModel.getState();
+        String str = aiMessaging.generateNewMessage(currentState.getSender(), currentState.getReceiver());
+        System.out.println(str);
+        str = str.substring(str.indexOf(":")+1).strip();
+        return str;
     }
 
     public void refreshMessages(ArrayList<Message> messages) {
