@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import data_access.AiMessaging;
+import data_access.OpenaiApiCall;
 import entity.Message;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.InChatState;
@@ -37,6 +39,8 @@ public class InChatView extends JPanel implements PropertyChangeListener {
 
     private EnterChatController enterChatController;
     private SendMessageController sendMessageController;
+
+    private data_access.AiMessaging aiMessaging = new AiMessaging();
 
     public InChatView(InChatViewModel inChatViewModel) {
 
@@ -83,7 +87,8 @@ public class InChatView extends JPanel implements PropertyChangeListener {
 
         // Generate response button action
         generateResponseButton.addActionListener(
-                evt -> generateResponse()
+                evt -> {String generatedNewResponse = generateResponse(); textEntryField.setText(generatedNewResponse);
+                }
         );
 
         // Timer for refreshing messages
@@ -127,24 +132,12 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    private void generateResponse() {
-        // Simulate generating a response and displaying it
+    private String generateResponse() {
         final InChatState currentState = inChatViewModel.getState();
-        String generatedResponse = "This is a generated response."; // Replace with actual response generation logic
-        sendMessageController.execute(
-                currentState.getSender(),
-                currentState.getReceiver(),
-                generatedResponse
-        );
-        enterChatController.execute(
-                currentState.getSender(),
-                currentState.getReceiver()
-        );
-
-        verticalScroll.revalidate();
-        verticalScroll.setValue(verticalScroll.getMaximum());
-
-        refreshMessages(currentState.getMessages());
+        String str = aiMessaging.generateNewMessage(currentState.getSender(), currentState.getReceiver());
+        System.out.println(str);
+        str = str.substring(str.indexOf(":")+1).strip();
+        return str;
     }
 
     public void refreshMessages(ArrayList<Message> messages) {
