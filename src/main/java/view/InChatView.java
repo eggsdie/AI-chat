@@ -30,9 +30,11 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     private final JPanel topPanel = new JPanel(new BorderLayout());
     private final JLabel otherUser = new JLabel();
 
-    private final JPanel bottomPanel = new JPanel(new BorderLayout());
-    private final JTextField textEntryField = new JTextField();
-    private final JButton sendButton = new JButton("Send");
+    private final JPanel bottomPanel = new JPanel();
+    private final JTextField firstTextEntryField = new JTextField();
+    private final JButton firstSendButton = new JButton("Send");
+    private final JTextField secondTextEntryField = new JTextField();
+    private final JButton secondSendButton = new JButton("Enter Prompt");
 
     private EnterChatController enterChatController;
     private SendMessageController sendMessageController;
@@ -44,6 +46,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
 
         this.setLayout(new BorderLayout());
 
+        // Chat area setup
         chatArea = new JPanel();
         chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.Y_AXIS));
 
@@ -51,11 +54,26 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         chatAreaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         verticalScroll = chatAreaScrollPane.getVerticalScrollBar();
 
+        // Top panel setup
         topPanel.add(backButton, BorderLayout.WEST);
         topPanel.add(otherUser, BorderLayout.EAST);
 
-        bottomPanel.add(textEntryField, BorderLayout.CENTER);
-        bottomPanel.add(sendButton, BorderLayout.EAST);
+        // Bottom panel setup
+        bottomPanel.setLayout(new GridLayout(2, 1, 5, 5)); // Two rows for two message bars
+
+        // First message bar
+        JPanel firstMessageBar = new JPanel(new BorderLayout());
+        firstMessageBar.add(firstTextEntryField, BorderLayout.CENTER);
+        firstMessageBar.add(firstSendButton, BorderLayout.EAST);
+
+        // Second message bar
+        JPanel secondMessageBar = new JPanel(new BorderLayout());
+        secondMessageBar.add(secondTextEntryField, BorderLayout.CENTER);
+        secondMessageBar.add(secondSendButton, BorderLayout.EAST);
+
+        // Add both message bars to the bottom panel
+        bottomPanel.add(firstMessageBar);
+        bottomPanel.add(secondMessageBar);
 
         final InChatState state = inChatViewModel.getState();
         backButton.addActionListener(evt -> {
@@ -63,46 +81,17 @@ public class InChatView extends JPanel implements PropertyChangeListener {
             timer.stop();
         });
 
-        textEntryField.getDocument().addDocumentListener(new DocumentListener() {
-
-            private void documentListenerHelper() {
-
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-        });
-
-        sendButton.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(sendButton)) {
-                        final InChatState currentState = inChatViewModel.getState();
-                        sendMessageController.execute(currentState.getSender(), currentState.getReceiver(),
-                                textEntryField.getText());
-                        enterChatController.execute(currentState.getSender(), currentState.getReceiver());
-                        textEntryField.setText("");
-
-                        verticalScroll.revalidate();
-                        verticalScroll.setValue(verticalScroll.getMaximum());
-
-                        inChatViewModel.setState(currentState);
-                        refreshMessages(currentState.getMessages());
-                    }
-                }
+        // Action listener for the first send button
+        firstSendButton.addActionListener(
+                evt -> sendMessage(firstTextEntryField)
         );
 
+        // Action listener for the second send button
+        secondSendButton.addActionListener(
+                evt -> sendMessage(secondTextEntryField)
+        );
+
+        // Timer for refreshing messages
         final ActionListener refresh = evt -> {
             final InChatState currentState = inChatViewModel.getState();
             if (currentState.getMessages() != null) {
@@ -113,12 +102,34 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         timer = new Timer(500, refresh);
         timer.start();
 
+        // Add components to main panel
         this.add(topPanel, BorderLayout.NORTH);
         this.add(chatAreaScrollPane, BorderLayout.CENTER);
         this.add(bottomPanel, BorderLayout.SOUTH);
 
         verticalScroll.setValue(verticalScroll.getMaximum());
+    }
 
+    private void sendMessage(JTextField textEntryField) {
+        if (!textEntryField.getText().isEmpty()) {
+            final InChatState currentState = inChatViewModel.getState();
+            sendMessageController.execute(
+                    currentState.getSender(),
+                    currentState.getReceiver(),
+                    textEntryField.getText()
+            );
+            enterChatController.execute(
+                    currentState.getSender(),
+                    currentState.getReceiver()
+            );
+            textEntryField.setText("");
+
+            verticalScroll.revalidate();
+            verticalScroll.setValue(verticalScroll.getMaximum());
+
+            inChatViewModel.setState(currentState);
+            refreshMessages(currentState.getMessages());
+        }
     }
 
     public void refreshMessages(ArrayList<Message> messages) {
@@ -129,6 +140,8 @@ public class InChatView extends JPanel implements PropertyChangeListener {
             chatArea.add(messagePanel);
         }
 
+        chatArea.revalidate();
+        chatArea.repaint();
     }
 
     public JPanel createMessagePanel(Message message) {
@@ -174,5 +187,4 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     public void setSendMessageController(SendMessageController sendMessageController) {
         this.sendMessageController = sendMessageController;
     }
-
 }
