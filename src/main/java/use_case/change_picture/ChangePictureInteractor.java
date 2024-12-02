@@ -21,7 +21,7 @@ public class ChangePictureInteractor implements ChangePictureInputBoundary {
         final User user = userFactory.create(changePictureInputData.getUsername(),
                 userDataAccessObject.get(changePictureInputData.getUsername()).getEmail(),
                 userDataAccessObject.get(changePictureInputData.getUsername()).getPassword(),
-                userDataAccessObject.get(changePictureInputData.getUsername()).getPicture());
+                changePictureInputData.getProfilePicture());
 
         userDataAccessObject.updateUser(user);
 
