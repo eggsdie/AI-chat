@@ -10,6 +10,7 @@ import com.google.gson.JsonParser;
 import entity.*;
 import use_case.add_friend.AddFriendUserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
+import use_case.change_picture.ChangePictureUserDataAccessInterface;
 import use_case.enter_chat.EnterChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
@@ -26,7 +27,8 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         LogoutUserDataAccessInterface,
         AddFriendUserDataAccessInterface,
         EnterChatUserDataAccessInterface,
-        SendMessageUserDataAccessInterface {
+        SendMessageUserDataAccessInterface,
+        ChangePictureUserDataAccessInterface {
 
     private String currentUsername;
     private final DemoRestfulApi demoRestfulApi;
@@ -109,6 +111,11 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
             }
         }
         return String.valueOf(newId);
+    }
+
+    @Override
+    public void changePicture(User user) {
+        demoRestfulApi.updateUser(getId(user.getName()), user.getName(), user.getPassword(), user.getEmail());
     }
 
     @Override

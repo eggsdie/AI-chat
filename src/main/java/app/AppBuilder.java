@@ -16,6 +16,8 @@ import interface_adapter.add_friend.AddFriendPresenter;
 import interface_adapter.add_friend.ChatListViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
+import interface_adapter.change_picture.ChangePictureController;
+import interface_adapter.change_picture.ChangePicturePresenter;
 import interface_adapter.enter_chat.EnterChatController;
 import interface_adapter.enter_chat.EnterChatPresenter;
 import interface_adapter.enter_chat.InChatViewModel;
@@ -37,6 +39,9 @@ import use_case.add_friend.AddFriendOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.change_picture.ChangePictureInputBoundary;
+import use_case.change_picture.ChangePictureInteractor;
+import use_case.change_picture.ChangePictureOutputBoundary;
 import use_case.enter_chat.EnterChatInputBoundary;
 import use_case.enter_chat.EnterChatInteractor;
 import use_case.enter_chat.EnterChatOutputBoundary;
@@ -208,6 +213,18 @@ public class AppBuilder {
         final ChangePasswordController changePasswordController =
                 new ChangePasswordController(changePasswordInteractor);
         settingsView.setChangePasswordController(changePasswordController);
+        return this;
+    }
+
+    public AppBuilder addChangePictureUseCase() {
+        final ChangePictureOutputBoundary changePictureOutputBoundary =
+                new ChangePicturePresenter(settingsViewModel);
+        final ChangePictureInputBoundary changePictureInteractor = new ChangePictureInteractor(userDataAccessObject,
+                changePictureOutputBoundary, userFactory);
+
+        final ChangePictureController changePictureController =
+                new ChangePictureController(changePictureInteractor);
+        settingsView.setChangePictureController(changePictureController);
         return this;
     }
 

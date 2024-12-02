@@ -18,4 +18,6 @@ public interface User {
      * @return the password of the user.
      */
     String getPassword();
+
+    String getPicture();
 }

@@ -10,7 +10,7 @@ public class SettingsInteractor implements SettingsInputBoundary {
     @Override
     public void execute(SettingsInputData settingsInputData) {
         final SettingsOutputData settingsOutputData = new SettingsOutputData(settingsInputData.getUsername(),
-                settingsInputData.getEmail(), settingsInputData.getPassword(), false);
+                settingsInputData.getEmail(), settingsInputData.getPassword(), settingsInputData.getPicture(), false);
         settingsPresenter.prepareSuccessView(settingsOutputData);
     }
 
