@@ -9,7 +9,7 @@ Eddie, Tiffany, Julian, Dareenat, Alisha
 
 AIChat is a real-time messaging application that allows users to create an account, add other users, and exchange messages.
 
-What sets AIChat apart is its AI-powered response suggestion feature. By analyzing your past messages, the app suggests example responses, saving time and effort while enhancing communication. This innovative functionality addresses a gap in the current market, offering users a smarter way to engage in conversations.
+What sets AIChat apart is its AI-powered response suggestion feature. By analyzing your past messages, the app will suggest an intelligent and context aware example response which can be sent directly into the chat.
 
 ---
 
@@ -115,7 +115,7 @@ This project is licensed under the terms of the [CC0 1.0 Universal (Public Domai
 
 ## **Section for Feedback**  
 
-We value your feedback to improve this project! You can share your thoughts, suggestions, or issues via our [Google Form](#).  
+We value your feedback to improve this project! You can share your thoughts, suggestions, or issues via our [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSdO6iQ9f_fjr8MujrHnM52fhtJDO8qyA0wFTb7KJ3RHjWNsEg/viewform?usp=pp_url).  
 
 ### **Rules for Valid Feedback**  
 - **Be Specific**: Clearly describe the issue, suggestion, or feature request.  
