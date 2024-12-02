@@ -158,6 +158,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         String str = aiMessaging.generateNewMessage(currentState.getSender(), currentState.getReceiver());
         System.out.println(str);
         str = str.substring(str.indexOf(":")+1).strip();
+        str = str.replaceAll("[<>']", "");
         return str;
     }
 
