@@ -2,13 +2,14 @@ package view;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import data_access.AiMessaging;
 import data_access.OpenaiApiCall;
@@ -26,21 +27,26 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     private Timer timer;
     private final JPanel chatArea;
     private final JScrollPane chatAreaScrollPane;
-    private final JScrollBar verticalScroll;
+    private final JScrollBar verticalScrollBar;
     private final JButton backButton = new JButton("Back");
 
     private final JPanel topPanel = new JPanel(new BorderLayout());
     private final JLabel otherUser = new JLabel();
 
-    private final JPanel bottomPanel = new JPanel(new BorderLayout());
+    private final JPanel bottomPanel = new JPanel();
     private final JTextField textEntryField = new JTextField();
     private final JButton sendButton = new JButton("Send");
-    private final JButton generateResponseButton = new JButton("Generate Response"); // New button
+    private final JButton generateResponseButton = new JButton("Generate Response");
 
     private EnterChatController enterChatController;
     private SendMessageController sendMessageController;
 
+
     private data_access.AiMessaging aiMessaging = new AiMessaging();
+
+    private int lastMessageCount = 0;
+    private boolean userIsNearBottom = true;
+
 
     public InChatView(InChatViewModel inChatViewModel) {
 
@@ -55,7 +61,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
 
         chatAreaScrollPane = new JScrollPane(chatArea);
         chatAreaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        verticalScroll = chatAreaScrollPane.getVerticalScrollBar();
+        verticalScrollBar = chatAreaScrollPane.getVerticalScrollBar();
 
         // Top panel setup
         topPanel.add(backButton, BorderLayout.WEST);
@@ -74,29 +80,28 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         bottomPanel.add(generateResponseButton);
 
         // Back button action
-        final InChatState state = inChatViewModel.getState();
         backButton.addActionListener(evt -> {
+            final InChatState state = inChatViewModel.getState();
             enterChatController.switchToChatListView(state.getSender());
             timer.stop();
         });
 
         // Send button action
-        sendButton.addActionListener(
-                evt -> sendMessage()
-        );
+        sendButton.addActionListener(evt -> sendMessage());
 
         // Generate response button action
+
         generateResponseButton.addActionListener(
                 evt -> {String generatedNewResponse = generateResponse(); textEntryField.setText(generatedNewResponse);
                 }
         );
+
 
         // Timer for refreshing messages
         final ActionListener refresh = evt -> {
             final InChatState currentState = inChatViewModel.getState();
             if (currentState.getMessages() != null) {
                 enterChatController.execute(currentState.getSender(), currentState.getReceiver());
-                refreshMessages(currentState.getMessages());
             }
         };
         timer = new Timer(500, refresh);
@@ -107,7 +112,26 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         this.add(chatAreaScrollPane, BorderLayout.CENTER);
         this.add(bottomPanel, BorderLayout.SOUTH);
 
-        verticalScroll.setValue(verticalScroll.getMaximum());
+        // Initialize scroll bar adjustment
+        verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+
+        // Add adjustment listener to the scroll bar
+        verticalScrollBar.addAdjustmentListener(new AdjustmentListener() {
+            @Override
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                int extent = verticalScrollBar.getModel().getExtent();
+                int maximum = verticalScrollBar.getMaximum();
+                int value = verticalScrollBar.getValue();
+
+                int scrollBarPosition = value + extent;
+                int scrollBarMax = maximum;
+
+                // Threshold to consider if the user is near the bottom (e.g., 50 pixels)
+                int threshold = 50;
+
+                userIsNearBottom = (scrollBarMax - scrollBarPosition) <= threshold;
+            }
+        });
     }
 
     private void sendMessage() {
@@ -118,19 +142,16 @@ public class InChatView extends JPanel implements PropertyChangeListener {
                     currentState.getReceiver(),
                     textEntryField.getText()
             );
+            textEntryField.setText("");
+
+            // Fetch updated messages
             enterChatController.execute(
                     currentState.getSender(),
                     currentState.getReceiver()
             );
-            textEntryField.setText("");
-
-            verticalScroll.revalidate();
-            verticalScroll.setValue(verticalScroll.getMaximum());
-
-            inChatViewModel.setState(currentState);
-            refreshMessages(currentState.getMessages());
         }
     }
+
 
     private String generateResponse() {
         final InChatState currentState = inChatViewModel.getState();
@@ -141,15 +162,31 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     }
 
     public void refreshMessages(ArrayList<Message> messages) {
-        chatArea.removeAll();
+        int totalMessages = messages.size();
 
-        for (Message message : messages) {
-            final JPanel messagePanel = createMessagePanel(message);
-            chatArea.add(messagePanel);
+        if (totalMessages > lastMessageCount) {
+            List<Message> newMessages = messages.subList(lastMessageCount, totalMessages);
+
+            for (Message message : newMessages) {
+                final JPanel messagePanel = createMessagePanel(message);
+                chatArea.add(messagePanel);
+            }
+
+            lastMessageCount = totalMessages;
+
+            chatArea.revalidate();
+            chatArea.repaint();
+
+            scrollToBottomIfNeeded();
         }
+    }
 
-        chatArea.revalidate();
-        chatArea.repaint();
+    private void scrollToBottomIfNeeded() {
+        if (userIsNearBottom) {
+            SwingUtilities.invokeLater(() -> {
+                verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+            });
+        }
     }
 
     public JPanel createMessagePanel(Message message) {
@@ -158,6 +195,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         messagePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         messagePanel.setPreferredSize(new Dimension(0, 60)); // 0 width allows resizing
         messagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         final JPanel northPanel = new JPanel(new BorderLayout());
 
         final JLabel sender = new JLabel(message.getSender());
@@ -184,8 +222,23 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         final InChatState state = (InChatState) evt.getNewValue();
         otherUser.setText("Chat with " + state.getReceiver() + " ");
 
+        // Reset message count and clear chat area if the chat partner has changed
+        if (stateChangedToNewChat(evt)) {
+            lastMessageCount = 0;
+            chatArea.removeAll();
+        }
+
         refreshMessages(state.getMessages());
         timer.start();
+    }
+
+    private boolean stateChangedToNewChat(PropertyChangeEvent evt) {
+        InChatState oldState = (InChatState) evt.getOldValue();
+        InChatState newState = (InChatState) evt.getNewValue();
+        if (oldState == null) {
+            return true;
+        }
+        return !oldState.getReceiver().equals(newState.getReceiver());
     }
 
     public void setEnterChatController(EnterChatController enterChatController) {
@@ -195,5 +248,4 @@ public class InChatView extends JPanel implements PropertyChangeListener {
     public void setSendMessageController(SendMessageController sendMessageController) {
         this.sendMessageController = sendMessageController;
     }
-
 }
