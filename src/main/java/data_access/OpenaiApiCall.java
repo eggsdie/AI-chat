@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class OpenaiApiCall {
 
-    private final String API_KEY = "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";
+    private final String API_KEY = System.getenv("OPENAI_API_KEY");
     private final String ENDPOINT = "https://api.openai.com/v1/chat/completions";
 
     private final OkHttpClient client = new OkHttpClient();

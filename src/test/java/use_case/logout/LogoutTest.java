@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LogoutInteractorTest {
+class LogoutTest {
 
     private final DemoRestfulApi demoRestfulApi = new DemoRestfulApi(); // Replace with mock if needed
     private final UserFactory userFactory = new CommonUserFactory();
