@@ -25,7 +25,8 @@ public class AddFriendInteractor implements AddFriendInputBoundary {
             userPresenter.prepareFailView("Friend already added.");
         }
         else {
-            addFriendUserDataAccessInterface.addMessage(addFriendInputData.getUsername(), addFriendInputData.getOtherUser(),
+            addFriendUserDataAccessInterface.addMessage(addFriendInputData.getUsername(),
+                    addFriendInputData.getOtherUser(),
                     messagePreview);
             final AddFriendOutputData addChatOutputData = new AddFriendOutputData(false,
                     addFriendUserDataAccessInterface.allChatsWithUser(addFriendInputData.getUsername()),

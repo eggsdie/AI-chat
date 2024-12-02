@@ -10,11 +10,11 @@ public class CommonUser implements User {
     private final String password;
     private final String profilePicture;
 
-    public CommonUser(String name, String email, String password) {
+    public CommonUser(String name, String email, String password, String profilePicture) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.profilePicture = "img/default.jpg";
+        this.profilePicture = profilePicture;
     }
 
     @Override

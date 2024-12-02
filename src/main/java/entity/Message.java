@@ -12,14 +12,18 @@ public class Message {
     private String content;
     private ZonedDateTime time;
     private String receiver;
+    private String senderPic;
+    private String receiverPic;
 
-    public Message(String msgId, String sender, String content, String receiver, String time) {
+    public Message(String msgId, String sender, String content, String receiver, String time,
+                   String senderPic) {
         this.id = msgId;
         this.sender = sender;
         this.content = content;
         this.receiver = receiver;
         final OffsetDateTime parsedTime = OffsetDateTime.parse(time, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         this.time = parsedTime.atZoneSameInstant(ZoneId.systemDefault());
+        this.senderPic = senderPic;
     }
 
     public String getSender() {
@@ -39,4 +43,9 @@ public class Message {
                 ? time.format(DateTimeFormatter.ofPattern("HH:mm"))
                 : "No time available";
     }
+
+    public String getSenderPic() {
+        return senderPic;
+    }
+
 }

@@ -43,11 +43,18 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
         final JsonArray usersJson = JsonParser.parseString(demoRestfulApi.getAllUsers()).getAsJsonArray();
         final Map<String, User> users = new HashMap<>();
         usersJson.forEach(item -> {
-            final String username = item.getAsJsonObject().get("userName").getAsString();
+            final String usernamePfp = item.getAsJsonObject().get("userName").getAsString();
             final String password = item.getAsJsonObject().get("password").getAsString();
             final String email = item.getAsJsonObject().get("email").getAsString();
-            // Corrected parameter order
-            final User userToAdd = userFactory.create(username, email, password);
+
+            final String[] str = usernamePfp.split("::");
+            final String username = str[0];
+            String picture = "images/default.jpg";
+            if (!(str.length == 1)) {
+                picture = str[1];
+            }
+
+            final User userToAdd = userFactory.create(username, email, password, picture);
             users.put(username, userToAdd);
         });
         return users;
@@ -75,7 +82,8 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
 
     @Override
     public void save(User user) {
-        demoRestfulApi.createNewUser(generateUserId(), user.getName(), user.getPassword(), user.getEmail());
+        final String usernamePfp = user.getName() + "::" + user.getPicture();
+        demoRestfulApi.createNewUser(generateUserId(), usernamePfp, user.getPassword(), user.getEmail());
     }
 
     private String generateUserId() {
@@ -114,19 +122,14 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
     }
 
     @Override
-    public void changePicture(User user) {
-        demoRestfulApi.updateUser(getId(user.getName()), user.getName(), user.getPassword(), user.getEmail());
-    }
-
-    @Override
     public User get(String username) {
         return getUsers().get(username);
     }
 
     @Override
-    public void changePassword(User user) {
-        // Replace the old entry with the new password
-        demoRestfulApi.updateUser(getId(user.getName()), user.getName(), user.getPassword(), user.getEmail());
+    public void updateUser(User user) {
+        final String usernamePfp = user.getName() + "::" + user.getPicture();
+        demoRestfulApi.updateUser(getId(user.getName()), usernamePfp, user.getPassword(), user.getEmail());
     }
 
     @Override
@@ -149,7 +152,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
             final String receiverUsername = item.getAsJsonObject().get("receiverUsername").getAsString();
             final String time = item.getAsJsonObject().get("createDate").getAsString();
             final Message message = new Message(messageId, senderUsername, content,
-                    receiverUsername, time);
+                    receiverUsername, time, get(senderUsername).getPicture());
             messages.add(message);
         });
         return messages;

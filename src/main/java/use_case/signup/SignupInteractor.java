@@ -25,7 +25,8 @@ public class SignupInteractor implements SignupInputBoundary {
             userPresenter.prepareFailView("User already exists.");
         }
         else {
-            final User user = userFactory.create(signupInputData.getName(), signupInputData.getEmail(), signupInputData.getPassword());
+            final User user = userFactory.create(signupInputData.getName(), signupInputData.getEmail(),
+                    signupInputData.getPassword(), "images/default.png");
             userDataAccessObject.save(user);
 
             final SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);

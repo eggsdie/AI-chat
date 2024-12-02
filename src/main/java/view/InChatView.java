@@ -135,7 +135,7 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         final JPanel messagePanel = new JPanel(new BorderLayout());
         messagePanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.lightGray));
         messagePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
-        messagePanel.setPreferredSize(new Dimension(0, 60)); // 0 width allows resizing
+        messagePanel.setPreferredSize(new Dimension(0, 60));
         messagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         final JPanel northPanel = new JPanel(new BorderLayout());
 
@@ -148,6 +148,13 @@ public class InChatView extends JPanel implements PropertyChangeListener {
         content.setWrapStyleWord(true);
         final JLabel time = new JLabel(message.getTime());
 
+        final JPanel westPanel = new JPanel(new BorderLayout());
+        final ImageIcon icon = new ImageIcon(message.getSenderPic());
+        final Image scaledImage = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        final ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        westPanel.add(new JLabel(scaledIcon), BorderLayout.WEST);
+
+        messagePanel.add(westPanel, BorderLayout.WEST);
         messagePanel.add(northPanel, BorderLayout.NORTH);
         messagePanel.add(content, BorderLayout.CENTER);
         messagePanel.add(time, BorderLayout.EAST);

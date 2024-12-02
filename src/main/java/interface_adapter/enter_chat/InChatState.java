@@ -9,6 +9,8 @@ public class InChatState {
     private ArrayList<Message> messages;
     private String sender;
     private String receiver;
+    private String senderPicture;
+    private String receiverPicture;
 
     public ArrayList<Message> getMessages() {
         return messages;
@@ -34,4 +36,19 @@ public class InChatState {
         this.receiver = receiver;
     }
 
+    public String getSenderPicture() {
+        return senderPicture;
+    }
+
+    public void setSenderPicture(String senderPicture) {
+        this.senderPicture = senderPicture;
+    }
+
+    public String getReceiverPicture() {
+        return receiverPicture;
+    }
+
+    public void setReceiverPicture(String receiverPicture) {
+        this.receiverPicture = receiverPicture;
+    }
 }
