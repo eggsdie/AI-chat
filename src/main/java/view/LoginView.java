@@ -215,7 +215,19 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         LoginState state = (LoginState) evt.getNewValue();
 
         usernameInputField.setText(state.getUsername());
-        passwordInputField.setText(state.getPassword());
+
+        // Handle password field
+        String password = state.getPassword();
+
+        if (password == null || password.isEmpty()) {
+            passwordInputField.setEchoChar((char) 0); // Show placeholder text
+            passwordInputField.setForeground(Color.GRAY);
+            passwordInputField.setText("Password");
+        } else {
+            passwordInputField.setEchoChar('\u2022'); // Mask the password
+            passwordInputField.setForeground(Color.BLACK);
+            passwordInputField.setText(password);
+        }
 
         // Update error message display
         String errorMessage = state.getLoginError();
