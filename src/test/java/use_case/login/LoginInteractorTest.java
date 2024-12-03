@@ -1,4 +1,3 @@
-/*
 package use_case.login;
 
 import data_access.InMemoryUserDataAccessObject;
@@ -140,4 +139,3 @@ class LoginInteractorTest {
         assertEquals("Paul", userRepository.getCurrentUsername());
     }
 }
-*/
