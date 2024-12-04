@@ -5,7 +5,7 @@ import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
 
 /**
- * The Main class of our application.
+ * The Main class of our applicationa.
  */
 public class Main {
     /**

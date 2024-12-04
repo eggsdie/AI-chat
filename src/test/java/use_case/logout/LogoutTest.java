@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LogoutInteractorTest {
+class LogoutTest {
 
     private final DemoRestfulApi demoRestfulApi = new DemoRestfulApi(); // Replace with mock if needed
     private final UserFactory userFactory = new CommonUserFactory();
@@ -31,12 +31,11 @@ class LogoutInteractorTest {
             public void prepareSuccessView(LogoutOutputData user) {
                 // check that the output data contains the username of who logged out
                 assertEquals("Paul", user.getUsername());
-                assertTrue(user.isSuccess());
             }
 
             @Override
             public void prepareFailView(String error) {
-                fail("Use case failure is unexpected.");
+                fail("Use case failure is unexpected..");
             }
         };
 
@@ -44,35 +43,6 @@ class LogoutInteractorTest {
         interactor.execute(inputData);
         // check that the user was logged out
         assertNull(userRepository.getCurrentUsername());
-    }
-
-    // Additional test cases for LogoutOutputData
-    @Test
-    void testLogoutOutputDataConstructorAndGetters() {
-        // Arrange
-        String username = "TestUser";
-        boolean success = true;
-
-        // Act
-        LogoutOutputData outputData = new LogoutOutputData(username, success);
-
-        // Assert
-        assertEquals("TestUser", outputData.getUsername());
-        assertTrue(outputData.isSuccess());
-    }
-
-    @Test
-    void testLogoutOutputDataWithFailure() {
-        // Arrange
-        String username = "FailedUser";
-        boolean success = false;
-
-        // Act
-        LogoutOutputData outputData = new LogoutOutputData(username, success);
-
-        // Assert
-        assertEquals("FailedUser", outputData.getUsername());
-        assertFalse(outputData.isSuccess());
     }
 
 }

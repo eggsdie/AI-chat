@@ -2,11 +2,14 @@ package use_case.login;
 
 import data_access.DemoRestfulApi;
 import data_access.InMemoryUserDataAccessObject;
+import entity.ChatEntry;
 import entity.CommonUserFactory;
 import entity.User;
 import entity.UserFactory;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,21 +30,46 @@ class LoginInteractorTest {
         interactor.execute(inputData);
     }
 
-    @NotNull
-    private static LoginInputBoundary getLoginInputBoundary(LoginUserDataAccessInterface userRepository) {
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+    @Test
+    void failureUserDoesNotExistTest() {
+        LoginInputData inputData = new LoginInputData("NonExistentUser", "password");
+        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
+
+        LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", user.getUsername(), "Username should match after successful login.");
+                fail("Unexpected success for a non-existent user.");
             }
 
             @Override
             public void prepareFailView(String error) {
-                fail("Unexpected failure: " + error);
+                assertEquals("NonExistentUser: Account does not exist.", error, "Error message should indicate user does not exist.");
             }
         };
 
-        return new LoginInteractor(userRepository, successPresenter);
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void testEmptyUsername() {
+        LoginInputData inputData = new LoginInputData("", "password");
+        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
+
+        LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
+            @Override
+            public void prepareSuccessView(LoginOutputData user) {
+                fail("Unexpected success for empty username.");
+            }
+
+            @Override
+            public void prepareFailView(String error) {
+                assertEquals(": Account does not exist.", error, "Error message should indicate username is missing.");
+            }
+        };
+
+        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
+        interactor.execute(inputData);
     }
 
     @Test
@@ -57,24 +85,6 @@ class LoginInteractorTest {
 
         interactor.execute(inputData);
         assertEquals("Paul", userRepository.getCurrentUsername(), "Username should be set after login.");
-    }
-
-    @NotNull
-    private static LoginInputBoundary getInputBoundary(LoginUserDataAccessInterface userRepository) {
-        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
-            @Override
-            public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", userRepository.getCurrentUsername(), "Logged-in username should be set.");
-            }
-
-            @Override
-            public void prepareFailView(String error) {
-                fail("Unexpected failure: " + error);
-            }
-        };
-
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
-        return interactor;
     }
 
     @Test
@@ -102,47 +112,42 @@ class LoginInteractorTest {
     }
 
     @Test
-    void failureUserDoesNotExistTest() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
+    void testLoginOutputData() {
+        // Arrange
+        String username = "TestUser";
+        ArrayList<ChatEntry> chatEntries = new ArrayList<>();
+        User user = userFactory.create("TestUser", "test@gmail.com", "password"); // Use factory to create user
+        // Act
+        LoginOutputData outputData = new LoginOutputData(username, chatEntries, user, false);
 
-        LoginOutputBoundary failurePresenter = new LoginOutputBoundary() {
-            @Override
-            public void prepareSuccessView(LoginOutputData user) {
-                fail("Unexpected success when user does not exist.");
-            }
-
-            @Override
-            public void prepareFailView(String error) {
-                assertEquals("Paul: Account does not exist.", error, "Error message should indicate non-existent user.");
-            }
-        };
-
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
-        interactor.execute(inputData);
+        // Assert
+        assertEquals("TestUser", outputData.getUsername());
+        assertEquals(user, outputData.getUser());
+        assertEquals(chatEntries, outputData.getChatEntries());
     }
 
     @Test
-    void successLoggedInUsernameIsSet() {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
+    void testLoginOutputDataNullFields() {
+        // Arrange
+        String username = null;
+        ArrayList<ChatEntry> chatEntries = null;
+        User user = null;
 
-        User user = userFactory.create("Paul", "paul@gmail.com", "password");
-        userRepository.save(user);
+        // Act
+        LoginOutputData outputData = new LoginOutputData(username, chatEntries, user, true);
 
-        LoginInputBoundary interactor = getBoundary(userRepository);
-        assertNull(userRepository.getCurrentUsername(), "Username should be null before login.");
-
-        interactor.execute(inputData);
-        assertEquals("Paul", userRepository.getCurrentUsername(), "Username should be set after login.");
+        // Assert
+        assertNull(outputData.getUsername());
+        assertNull(outputData.getUser());
+        assertNull(outputData.getChatEntries());
     }
 
     @NotNull
-    private static LoginInputBoundary getBoundary(LoginUserDataAccessInterface userRepository) {
+    private static LoginInputBoundary getLoginInputBoundary(LoginUserDataAccessInterface userRepository) {
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
-                assertEquals("Paul", userRepository.getCurrentUsername(), "Logged-in username should be correctly set.");
+                assertEquals("Paul", user.getUsername(), "Username should match after successful login.");
             }
 
             @Override
@@ -151,7 +156,23 @@ class LoginInteractorTest {
             }
         };
 
-        LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
-        return interactor;
+        return new LoginInteractor(userRepository, successPresenter);
+    }
+
+    @NotNull
+    private static LoginInputBoundary getInputBoundary(LoginUserDataAccessInterface userRepository) {
+        LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+            @Override
+            public void prepareSuccessView(LoginOutputData user) {
+                assertEquals("Paul", userRepository.getCurrentUsername(), "Logged-in username should be set.");
+            }
+
+            @Override
+            public void prepareFailView(String error) {
+                fail("Unexpected failure: " + error);
+            }
+        };
+
+        return new LoginInteractor(userRepository, successPresenter);
     }
 }
