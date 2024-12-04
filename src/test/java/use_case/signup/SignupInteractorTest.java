@@ -14,17 +14,16 @@ class SignupInteractorTest {
     private final DemoRestfulApi demoRestfulApi = new DemoRestfulApi(); // Replace with mock if needed
     private final UserFactory userFactory = new CommonUserFactory();
 
-    // Old test cases
     @Test
     void successTest() {
-        SignupInputData inputData = new SignupInputData("Paul", "password", "password");
+        SignupInputData inputData = new SignupInputData("Paul", "paul@gmail.com", "password");
         SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
 
         SignupOutputBoundary successPresenter = new SignupOutputBoundary() {
             @Override
             public void prepareSuccessView(SignupOutputData user) {
+                // Verify the success presenter
                 assertEquals("Paul", user.getUsername());
-                assertTrue(userRepository.existsByName("Paul"));
             }
 
             @Override
@@ -39,41 +38,19 @@ class SignupInteractorTest {
 
         SignupInputBoundary interactor = new SignupInteractor(userRepository, successPresenter, new CommonUserFactory());
         interactor.execute(inputData);
-    }
 
-    @Test
-    void failurePasswordMismatchTest() {
-        SignupInputData inputData = new SignupInputData("Paul", "password", "wrong");
-        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
-
-        SignupOutputBoundary failurePresenter = new SignupOutputBoundary() {
-            @Override
-            public void prepareSuccessView(SignupOutputData user) {
-                fail("Use case success is unexpected.");
-            }
-
-            @Override
-            public void prepareFailView(String error) {
-                assertEquals("Passwords don't match.", error);
-            }
-
-            @Override
-            public void switchToLoginView() {
-            }
-        };
-
-        SignupInputBoundary interactor = new SignupInteractor(userRepository, failurePresenter, new CommonUserFactory());
-        interactor.execute(inputData);
+        // Verify that the user was saved
+        assertTrue(userRepository.existsByName("Paul"));
     }
 
     @Test
     void failureUserExistsTest() {
-        SignupInputData inputData = new SignupInputData("Paul", "password", "wrong");
+        SignupInputData inputData = new SignupInputData("Paul", "paul@gmail.com", "password");
         SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
 
-        UserFactory factory = new CommonUserFactory();
-        User user = factory.create("Paul", "paul@gmail.com", "pwd");
-        userRepository.save(user);
+        // Simulate existing user
+        User existingUser = userFactory.create("Paul", "paul@gmail.com", "password");
+        userRepository.save(existingUser);
 
         SignupOutputBoundary failurePresenter = new SignupOutputBoundary() {
             @Override
@@ -83,6 +60,7 @@ class SignupInteractorTest {
 
             @Override
             public void prepareFailView(String error) {
+                // Verify the failure presenter
                 assertEquals("User already exists.", error);
             }
 
@@ -93,12 +71,65 @@ class SignupInteractorTest {
 
         SignupInputBoundary interactor = new SignupInteractor(userRepository, failurePresenter, new CommonUserFactory());
         interactor.execute(inputData);
+
+        // Verify that the user still exists
+        assertTrue(userRepository.existsByName("Paul"));
     }
 
-    // New test case
+    @Test
+    void testEmptyUsername() {
+        SignupInputData inputData = new SignupInputData("", "paul@gmail.com", "password");
+        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
+
+        SignupOutputBoundary failurePresenter = new SignupOutputBoundary() {
+            @Override
+            public void prepareSuccessView(SignupOutputData user) {
+                fail("Use case success is unexpected.");
+            }
+
+            @Override
+            public void prepareFailView(String error) {
+                // Verify the failure presenter
+                assertEquals("Invalid username.", error);
+            }
+
+            @Override
+            public void switchToLoginView() {
+            }
+        };
+
+        SignupInputBoundary interactor = new SignupInteractor(userRepository, failurePresenter, new CommonUserFactory());
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void testNullEmail() {
+        SignupInputData inputData = new SignupInputData("Paul", null, "password");
+        SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
+
+        SignupOutputBoundary failurePresenter = new SignupOutputBoundary() {
+            @Override
+            public void prepareSuccessView(SignupOutputData user) {
+                fail("Use case success is unexpected.");
+            }
+
+            @Override
+            public void prepareFailView(String error) {
+                // Verify the failure presenter
+                assertEquals("Invalid email.", error);
+            }
+
+            @Override
+            public void switchToLoginView() {
+            }
+        };
+
+        SignupInputBoundary interactor = new SignupInteractor(userRepository, failurePresenter, new CommonUserFactory());
+        interactor.execute(inputData);
+    }
+
     @Test
     void switchToLoginViewIsCalled() {
-        SignupInputData inputData = new SignupInputData("Paul", "password", "password");
         SignupUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject(demoRestfulApi, userFactory);
 
         SignupOutputBoundary successPresenter = new SignupOutputBoundary() {
@@ -120,5 +151,30 @@ class SignupInteractorTest {
 
         SignupInputBoundary interactor = new SignupInteractor(userRepository, successPresenter, new CommonUserFactory());
         interactor.switchToLoginView();
+    }
+
+    // Tests for SignupOutputData
+    @Test
+    void testSignupOutputDataConstructorAndGetUsername() {
+        // Arrange
+        String username = "TestUser";
+
+        // Act
+        SignupOutputData outputData = new SignupOutputData(username, false);
+
+        // Assert
+        assertEquals("TestUser", outputData.getUsername());
+    }
+
+    @Test
+    void testSignupOutputDataWithNullUsername() {
+        // Arrange
+        String username = null;
+
+        // Act
+        SignupOutputData outputData = new SignupOutputData(username, false);
+
+        // Assert
+        assertNull(outputData.getUsername());
     }
 }
