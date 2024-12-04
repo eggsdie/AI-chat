@@ -74,4 +74,5 @@ class LogoutInteractorTest {
         assertEquals("FailedUser", outputData.getUsername());
         assertFalse(outputData.isSuccess());
     }
+
 }

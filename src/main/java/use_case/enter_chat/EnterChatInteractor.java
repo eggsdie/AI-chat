@@ -19,7 +19,7 @@ public class EnterChatInteractor implements EnterChatInputBoundary {
         final String sender = inputData.getSender();
         final String receiver = inputData.getReceiver();
         final ArrayList<Message> messages = userDataAccessObject.messagesByChat(sender, receiver);
-        final EnterChatOutputData enterChatOutputData = new EnterChatOutputData(false,
+        final EnterChatOutputData enterChatOutputData = new EnterChatOutputData(
                 sender, receiver, messages);
         userPresenter.prepareSuccessView(enterChatOutputData);
     }
