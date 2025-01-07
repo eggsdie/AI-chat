@@ -14,7 +14,7 @@ import com.google.gson.JsonParser;
 public class DemoRestfulApi {
 
     private OkHttpClient client;
-    private final String url = "https://csc207-restfulapi-115940950435.us-central1.run.app/";
+    private final String url = "Removed-for-privacy";
 
     public DemoRestfulApi() {
         this.client = new OkHttpClient();
